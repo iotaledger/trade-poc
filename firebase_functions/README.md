@@ -19,7 +19,7 @@ node_modules/.bin/babel login.js --out-file generated/login.js
 To use Firebase cloud functions you need to generate a private key and save it in `functions/service_account.json`
 
 Go to Firebase console of your project
-https://console.firebase.google.com/project/item-tracking/settings/serviceaccounts/adminsdk
+https://console.firebase.google.com/project/window-transport-rack-tracking/settings/serviceaccounts/adminsdk
 then press `GENERATE NEW PRIVATE KEY` button. This will produce a JSON file.
 
 ## Testing
@@ -36,11 +36,11 @@ See https://cloud.google.com/storage/docs/configuring-cors
 You can also use the `gsutil cors` command to get the CORS configuration of a bucket:
 
 ```
-gsutil cors get gs://item-tracking.appspot.com
+gsutil cors get gs://window-transport-rack-tracking.appspot.com
 ```
 
 Use the `gsutil cors` command to configure CORS on a bucket:
 
 ```
-gsutil cors set firebase_storage.json gs://item-tracking.appspot.com
+gsutil cors set firebase_storage.json gs://window-transport-rack-tracking.appspot.com
 ```

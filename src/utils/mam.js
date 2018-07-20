@@ -91,9 +91,6 @@ export const createItemChannel = (project, itemId, request, userId) => {
       const messageBody = {
         ...request,
         ...eventBody,
-        temperature: null,
-        position: null,
-        lastPositionIndex: 0,
         documents: [],
       };
 

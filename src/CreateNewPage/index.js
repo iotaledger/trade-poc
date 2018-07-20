@@ -2,20 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { isEmpty, upperFirst } from 'lodash';
-import { FocusContainer, TextField, SelectField, Button, CardActions, FontIcon } from 'react-md';
+import { FocusContainer, TextField, Button, CardActions } from 'react-md';
 import { toast } from 'react-toastify';
 import Loader from '../SharedComponents/Loader';
 import Header from '../SharedComponents/Header';
 import Notification from '../SharedComponents/Notification';
 import { addItem } from '../store/items/actions';
 import { storeItem } from '../store/item/actions';
-import { getFirebaseSnapshot, reassignOwnership } from '../utils/firebase';
+import { getFirebaseSnapshot } from '../utils/firebase';
 import { createItemChannel } from '../utils/mam';
 import '../assets/scss/createItemPage.scss';
-
-const PORTS = ['Rotterdam', 'Singapore'];
-const CARGO = ['Car', 'Consumer Goods', 'Heavy Machinery', 'Pharma'];
-const TYPE = ['Dry storage', 'Refrigerated'];
 
 class CreateItemPage extends Component {
   state = {
@@ -40,20 +36,9 @@ class CreateItemPage extends Component {
   validate = () => {
     this.setState({
       idError: !this.itemId.value,
-      departureError: !this.departure.value,
-      destinationError: !this.destination.value,
-      cargoError: !this.cargo.value,
-      typeError: !this.type.value,
     });
 
-    return (
-      !this.itemId.value ||
-      !this.departure.value ||
-      !this.destination.value ||
-      !this.cargo.value ||
-      !this.type.value ||
-      this.departure.value === this.destination.value
-    );
+    return !this.itemId.value;
   };
 
   onError = error => {
@@ -69,10 +54,6 @@ class CreateItemPage extends Component {
     if (!formError) {
       const { id, previousEvent } = user;
       const request = {
-        departure: this.departure.value,
-        destination: this.destination.value,
-        load: this.cargo.value,
-        type: this.type.value,
         owner: id,
         status: previousEvent[0],
       };
@@ -85,7 +66,6 @@ class CreateItemPage extends Component {
 
         await addItem(itemId);
         await storeItem([eventBody]);
-        reassignOwnership(project, user, { itemId, status: previousEvent[0] }, false);
 
         history.push(`/details/${itemId}`);
       } else {
@@ -97,14 +77,7 @@ class CreateItemPage extends Component {
   };
 
   render() {
-    const {
-      showLoader,
-      idError,
-      departureError,
-      destinationError,
-      cargoError,
-      typeError,
-    } = this.state;
+    const { showLoader, idError } = this.state;
     const {
       history,
       project: { trackingUnit },
@@ -112,13 +85,6 @@ class CreateItemPage extends Component {
 
     const unit = upperFirst(trackingUnit);
 
-    const selectFieldProps = {
-      dropdownIcon: <FontIcon>expand_more</FontIcon>,
-      position: SelectField.Positions.BELOW,
-      required: true,
-      className: 'md-cell',
-      errorText: 'This field is required.',
-    };
     return (
       <div>
         <Header>
@@ -148,42 +114,6 @@ class CreateItemPage extends Component {
               type="text"
               error={idError}
               errorText="This field is required."
-            />
-            <SelectField
-              ref={departure => (this.departure = departure)}
-              id="departure"
-              required
-              label="Departure Port"
-              className="md-cell"
-              menuItems={PORTS}
-              position={SelectField.Positions.BELOW}
-              error={departureError}
-              errorText="This field is required."
-              dropdownIcon={<FontIcon>expand_more</FontIcon>}
-            />
-            <SelectField
-              ref={destination => (this.destination = destination)}
-              id="destination"
-              label="Destination Port"
-              menuItems={PORTS}
-              error={destinationError}
-              {...selectFieldProps}
-            />
-            <SelectField
-              ref={cargo => (this.cargo = cargo)}
-              id="cargo"
-              label="Cargo"
-              menuItems={CARGO}
-              error={cargoError}
-              {...selectFieldProps}
-            />
-            <SelectField
-              ref={type => (this.type = type)}
-              id="type"
-              label={`${unit} type`}
-              menuItems={TYPE}
-              error={typeError}
-              {...selectFieldProps}
             />
           </FocusContainer>
           <Notification />

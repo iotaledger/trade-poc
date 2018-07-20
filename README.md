@@ -1,6 +1,6 @@
 ## IOTA Items Tracking DEMO App
 
-https://item-tracking.firebaseapp.com
+https://window-transport-rack-tracking.firebaseapp.com
 
 ## Solution
 

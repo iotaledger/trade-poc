@@ -5,7 +5,7 @@ const login = require('./login');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://item-tracking.firebaseio.com',
+  databaseURL: 'https://window-transport-rack-tracking.firebaseio.com',
 });
 
 exports.login = functions.https.onRequest(login);

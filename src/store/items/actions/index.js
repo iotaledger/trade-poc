@@ -21,9 +21,6 @@ export const storeItems = user => {
           const queryByOwner = ref.orderByChild('owner').equalTo(user.id);
           promises.push(queryByOwner.once('value'));
           break;
-        case 'observer':
-          promises.push(ref.once('value'));
-          break;
         default:
           const queryByStatus = ref.orderByChild('status');
           user.previousEvent.forEach(status => {

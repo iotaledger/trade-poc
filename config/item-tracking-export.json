@@ -1,96 +1,72 @@
 {
   "roleEventMapping": {
-    "customs": {
+    "distributor": {
       "canAppendToStream": true,
       "canCreateStream": false,
       "canUploadDocuments": true,
       "nextEvents": {
-        "containerdischarged": "Container cleared for import",
-        "gatein": "Container cleared for export"
+        "deliverytodistributor": ["Handover to forwarder", "Delivery to manufacturer"],
+        "returntodistributor": "Return to owner"
       },
-      "previousEvent": ["Gate-in", "Container discharged"]
+      "previousEvent": ["Delivery to distributor", "Return to distributor"]
     },
     "forwarder": {
       "canAppendToStream": true,
       "canCreateStream": false,
       "canUploadDocuments": true,
       "nextEvents": {
-        "containerannounced": "Gate-in",
-        "containerclearedforimport": "Gate-out"
+        "handovertoforwarder": "Delivery to manufacturer",
+        "returntoforwarder": "Return to distributor"
       },
-      "previousEvent": ["Container announced", "Container cleared for import"]
-    },
-    "observer": {
-      "canAppendToStream": false,
-      "canCreateStream": false,
-      "canUploadDocuments": false
+      "previousEvent": ["Handover to forwarder", "Return to forwarder"]
     },
     "owner": {
-      "canAppendToStream": false,
+      "canAppendToStream": true,
       "canCreateStream": true,
       "canUploadDocuments": true,
       "nextEvents": {
-        "containerannounced": "Container announced",
-        "gateout": "Container delivered"
+        "rackannounced": "Delivery to distributor"
       },
-      "previousEvent": ["Container announced", "Gate-out"]
+      "previousEvent": ["Rack announced", "Return to owner"]
     },
-    "port": {
+    "manufacturer": {
       "canAppendToStream": true,
       "canCreateStream": false,
       "canUploadDocuments": true,
       "nextEvents": {
-        "containerclearedforexport": "Container loaded on vessel",
-        "containerloadedonvessel": "Vessel departure",
-        "vesselarrival": "Container discharged",
-        "vesseldeparture": "Vessel arrival"
+        "deliverytomanufacturer": [
+          "Return to forwarder",
+          "Return to distributor",
+          "Return to owner"
+        ]
       },
-      "previousEvent": [
-        "Container cleared for export",
-        "Container loaded on vessel",
-        "Vessel departure",
-        "Vessel arrival"
-      ]
+      "previousEvent": ["Delivery to manufacturer"]
     }
   },
   "settings": {
     "detailsPage": {
-      "body": ["owner", "itemId", "status", "load", "type", "timestamp"],
-      "headers": ["Shipper", "Container ID", "Status", "Load", "Type", "Last updated"],
-      "title": ["departure", "destination"]
+      "body": ["owner", "itemId", "status", "timestamp"],
+      "headers": ["Glass manufacturer", "Window Transport Rack ID", "Status", "Last updated"],
+      "title": "itemId"
     },
     "documentStorage": true,
-    "fields": [
-      "itemId",
-      "owner",
-      "status",
-      "timestamp",
-      "type",
-      "load",
-      "departure",
-      "destination",
-      "temperature",
-      "position",
-      "documents",
-      "lastPositionIndex"
-    ],
-    "firebaseFields": ["itemId", "owner", "status", "timestamp", "departure", "destination"],
+    "fields": ["itemId", "owner", "status", "timestamp"],
+    "firebaseFields": ["itemId", "owner", "status", "timestamp"],
     "listPage": {
-      "body": ["itemId", ["departure", "destination"], "status"],
-      "headers": ["Container ID", "Route", "Status"]
+      "body": ["itemId", "owner", "status"],
+      "headers": ["Window transport rack ID", "Glass manufacturer", "Status"]
     },
-    "locationTracking": true,
-    "projectName": "container tracking",
+    "locationTracking": false,
+    "projectName": "window transport rack tracking",
     "roleUserMapping": {
-      "customs": "user003",
+      "distributor": "user003",
       "forwarder": "user002",
-      "observer": "user005",
       "owner": "user001",
-      "port": "user004"
+      "manufacturer": "user004"
     },
-    "roles": ["owner", "forwarder", "customs", "port", "observer"],
-    "temperatureChart": true,
-    "trackingUnit": "container"
+    "roles": ["owner", "distributor", "forwarder", "manufacturer"],
+    "temperatureChart": false,
+    "trackingUnit": "rack"
   },
   "users": {
     "user001": {
@@ -99,29 +75,23 @@
       "password": "c23162ffc1a535af2ee09588469194816e60cb437e30d78c5617b5d3f1304d6a",
       "role": "owner"
     },
+    "user003": {
+      "id": "user003",
+      "name": "Mr. Victor Schmitt",
+      "password": "1bafcb67e3009476f422803e3bda7fd9773c0f3ffee51162fc2abf83c9c9a000",
+      "role": "distributor"
+    },
     "user002": {
       "id": "user002",
       "name": "Mr. Bruce Hunt",
       "password": "e3ce8de04a926e54c5a1f64b1babd835ae2f43eef75354ebd6c9a86b21d8575c",
       "role": "forwarder"
     },
-    "user003": {
-      "id": "user003",
-      "name": "Mr. Victor Schmitt",
-      "password": "1bafcb67e3009476f422803e3bda7fd9773c0f3ffee51162fc2abf83c9c9a000",
-      "role": "customs"
-    },
     "user004": {
       "id": "user004",
       "name": "Mr. Reinhold Walter",
       "password": "ef892ecf414a9d0497e7cf1636c0b0e47ad31993e11f28127bf0d11e2472f5ef",
-      "role": "port"
-    },
-    "user005": {
-      "id": "user005",
-      "name": "Mr. melvin Duval",
-      "password": "beaa651892ab94db191478989226d6e919a811eb6e32083e5dba8046235d40a8",
-      "role": "observer"
+      "role": "manufacturer"
     }
   }
 }
