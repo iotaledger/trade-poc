@@ -1,0 +1,16 @@
+@import 'globals';
+
+@include react-md-everything;
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6, div, span, p, label, input, select, button {
+  font-family: "Nunito Sans";
+}
+
+.hidden {
+  display: none;
+}

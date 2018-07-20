@@ -1,0 +1,12 @@
+@mixin button {
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  color: #ffffff;
+  background: linear-gradient(90deg,#18817c,#22b1ab);
+}

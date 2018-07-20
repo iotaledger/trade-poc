@@ -1,0 +1,84 @@
+@import 'components';
+
+.createItemWrapper {
+  max-width: 630px;
+  width: 40%;
+  margin: 30px auto 0;
+
+  .md-grid {
+
+    & > div {
+      width: 100%;
+    }
+
+    input {
+      font-size: 18px;
+      font-weight: 700;
+      padding-left: 10px;
+    }
+
+    .md-divider {
+      background-color: rgb(151, 151, 151);
+    }
+
+    .md-floating-label {
+      color: rgb(63, 63, 63);
+      font-size: 18px;
+      font-weight: 400;
+      padding-left: 10px;
+    }
+
+    .md-layover {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border-bottom: 1px solid rgb(151, 151, 151);
+      margin-bottom: 20px;
+
+      .md-select-field--btn {
+        color: rgb(63, 63, 63);
+        font-size: 18px;
+        font-weight: 700;
+        padding-left: 10px;
+      }
+
+      .md-icon-separator {
+        padding-right: 0;
+      }
+    }
+
+    .md-tile-content {
+      .md-text {
+        color: rgb(63, 63, 63);
+        font-size: 18px;
+        font-weight: 700;
+      }
+    }
+
+    .md-list--menu-below {
+      top: 80%;
+    }
+  }
+
+  button.md-btn {
+    @include button();
+    width: 100%;
+    margin-top: 20px;
+    font-size: 22px;
+    padding: 35px 50px;
+    line-height: 2px;
+    border-radius: 45px;
+  }
+}
+
+@media (max-width: 900px) {
+  .createItemWrapper {
+    width: 70%;
+  }
+}
+
+@media (max-width: 500px) {
+  .createItemWrapper {
+    width: 85%;
+  }
+}

@@ -1,0 +1,52 @@
+@import 'components';
+
+.loaderWrapper {
+  height: 30px;
+  width: 100%;
+  margin: 30px auto;
+}
+
+.detailsWrapper {
+  max-width: 1092px;
+  width: 100%;
+  display: flex;
+  margin: 0 auto;
+
+  .md-block-centered  {
+    width: 100%;
+  }
+
+  .routeCtaWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 50px 20px;
+
+    @media (max-width: 768px) {
+      margin: 20px;
+    }
+
+    h1 {
+      font-size: 40px;
+      font-weight: 700;
+      color: rgb(63,63,63);
+    }
+
+    button.md-btn {
+      @include button();
+      width: auto;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 26px;
+      line-height: 2px;
+      border-radius: 45px;
+
+      @media (max-width: 768px) {
+        white-space: normal;
+        line-height: unset;
+        height: auto;
+        padding: 5px 26px;
+      }
+    }
+  }
+}

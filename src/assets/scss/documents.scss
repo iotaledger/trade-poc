@@ -1,0 +1,44 @@
+.documentsWrapper {
+  max-width: 1092px;
+  width: 100%;
+  margin: 0 auto;
+
+  .md-table-row {
+    cursor: default;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .md-table-column {
+      a {
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 700;
+        color: rgb(63, 63, 63);
+        padding: 2px 0 5px 55px;
+      }
+    }
+  }
+
+  .icon {
+    background-repeat: no-repeat;
+    background-size: 28px;
+
+    &.pdf {
+      background-image: url(../images/pdf_icon.png);
+    }
+
+    &.doc {
+      background-image: url(../images/doc_icon.png);
+    }
+
+    &.excel {
+      background-image: url(../images/excel_icon.png);
+    }
+
+    &.img {
+      background-image: url(../images/img_icon.png);
+    }
+  }
+}

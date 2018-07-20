@@ -1,0 +1,127 @@
+{
+  "roleEventMapping": {
+    "customs": {
+      "canAppendToStream": true,
+      "canCreateStream": false,
+      "canUploadDocuments": true,
+      "nextEvents": {
+        "containerdischarged": "Container cleared for import",
+        "gatein": "Container cleared for export"
+      },
+      "previousEvent": ["Gate-in", "Container discharged"]
+    },
+    "forwarder": {
+      "canAppendToStream": true,
+      "canCreateStream": false,
+      "canUploadDocuments": true,
+      "nextEvents": {
+        "containerannounced": "Gate-in",
+        "containerclearedforimport": "Gate-out"
+      },
+      "previousEvent": ["Container announced", "Container cleared for import"]
+    },
+    "observer": {
+      "canAppendToStream": false,
+      "canCreateStream": false,
+      "canUploadDocuments": false
+    },
+    "owner": {
+      "canAppendToStream": false,
+      "canCreateStream": true,
+      "canUploadDocuments": true,
+      "nextEvents": {
+        "containerannounced": "Container announced",
+        "gateout": "Container delivered"
+      },
+      "previousEvent": ["Container announced", "Gate-out"]
+    },
+    "port": {
+      "canAppendToStream": true,
+      "canCreateStream": false,
+      "canUploadDocuments": true,
+      "nextEvents": {
+        "containerclearedforexport": "Container loaded on vessel",
+        "containerloadedonvessel": "Vessel departure",
+        "vesselarrival": "Container discharged",
+        "vesseldeparture": "Vessel arrival"
+      },
+      "previousEvent": [
+        "Container cleared for export",
+        "Container loaded on vessel",
+        "Vessel departure",
+        "Vessel arrival"
+      ]
+    }
+  },
+  "settings": {
+    "detailsPage": {
+      "body": ["owner", "itemId", "status", "load", "type", "timestamp"],
+      "headers": ["Shipper", "Container ID", "Status", "Load", "Type", "Last updated"],
+      "title": ["departure", "destination"]
+    },
+    "documentStorage": true,
+    "fields": [
+      "itemId",
+      "owner",
+      "status",
+      "timestamp",
+      "type",
+      "load",
+      "departure",
+      "destination",
+      "temperature",
+      "position",
+      "documents",
+      "lastPositionIndex"
+    ],
+    "firebaseFields": ["itemId", "owner", "status", "timestamp", "departure", "destination"],
+    "listPage": {
+      "body": ["itemId", ["departure", "destination"], "status"],
+      "headers": ["Container ID", "Route", "Status"]
+    },
+    "locationTracking": true,
+    "projectName": "container tracking",
+    "roleUserMapping": {
+      "customs": "user003",
+      "forwarder": "user002",
+      "observer": "user005",
+      "owner": "user001",
+      "port": "user004"
+    },
+    "roles": ["owner", "forwarder", "customs", "port", "observer"],
+    "temperatureChart": true,
+    "trackingUnit": "container"
+  },
+  "users": {
+    "user001": {
+      "id": "user001",
+      "name": "Mr. John Doe",
+      "password": "c23162ffc1a535af2ee09588469194816e60cb437e30d78c5617b5d3f1304d6a",
+      "role": "owner"
+    },
+    "user002": {
+      "id": "user002",
+      "name": "Mr. Bruce Hunt",
+      "password": "e3ce8de04a926e54c5a1f64b1babd835ae2f43eef75354ebd6c9a86b21d8575c",
+      "role": "forwarder"
+    },
+    "user003": {
+      "id": "user003",
+      "name": "Mr. Victor Schmitt",
+      "password": "1bafcb67e3009476f422803e3bda7fd9773c0f3ffee51162fc2abf83c9c9a000",
+      "role": "customs"
+    },
+    "user004": {
+      "id": "user004",
+      "name": "Mr. Reinhold Walter",
+      "password": "ef892ecf414a9d0497e7cf1636c0b0e47ad31993e11f28127bf0d11e2472f5ef",
+      "role": "port"
+    },
+    "user005": {
+      "id": "user005",
+      "name": "Mr. melvin Duval",
+      "password": "beaa651892ab94db191478989226d6e919a811eb6e32083e5dba8046235d40a8",
+      "role": "observer"
+    }
+  }
+}
