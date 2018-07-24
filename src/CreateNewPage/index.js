@@ -12,6 +12,7 @@ import { storeItem } from '../store/item/actions';
 import { getFirebaseSnapshot } from '../utils/firebase';
 import { createItemChannel } from '../utils/mam';
 import '../assets/scss/createItemPage.scss';
+import { BrowserQRCodeReader, VideoInputDevice } from '@zxing/library/umd/index.min'
 
 class CreateItemPage extends Component {
   state = {
@@ -21,9 +22,21 @@ class CreateItemPage extends Component {
     departureError: false,
     cargoError: false,
     typeError: false,
+    id: ''
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const codeReader = new BrowserQRCodeReader();
+
+    const devices = await codeReader.getVideoInputDevices()
+    const firstDeviceId = devices[0].deviceId;
+
+    codeReader.decodeFromInputVideoDevice(firstDeviceId, 'video')
+    .then(result => {
+      this.setState({ id: result.text })
+    })
+    .catch(err => console.error(err));
+
     const { user, history } = this.props;
     if (isEmpty(user)) {
       history.push('/login');
@@ -41,6 +54,9 @@ class CreateItemPage extends Component {
     return !this.itemId.value;
   };
 
+  handleTextChange = e => {
+
+  }
   onError = error => {
     this.setState({ showLoader: false });
     this.notifyError(error || 'Something went wrong');
@@ -108,6 +124,8 @@ class CreateItemPage extends Component {
           >
             <TextField
               ref={id => (this.itemId = id)}
+              value={this.state.id}
+              onChange={this.handleTextChange}
               id="itemId"
               label={`${unit} ID`}
               required
@@ -115,6 +133,8 @@ class CreateItemPage extends Component {
               error={idError}
               errorText="This field is required."
             />
+            <video id="video" width="300" height="200" style={{border: '1px solid gray'}}></video>
+
           </FocusContainer>
           <Notification />
           <div>
