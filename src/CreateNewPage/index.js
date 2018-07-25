@@ -12,7 +12,7 @@ import { storeItem } from '../store/item/actions';
 import { getFirebaseSnapshot } from '../utils/firebase';
 import { createItemChannel } from '../utils/mam';
 import '../assets/scss/createItemPage.scss';
-import { BrowserQRCodeReader, VideoInputDevice } from '@zxing/library/umd/index.min'
+import { BrowserQRCodeReader, VideoInputDevice } from '@zxing/library'
 
 class CreateItemPage extends Component {
   state = {
@@ -35,7 +35,7 @@ class CreateItemPage extends Component {
     .then(result => {
       this.setState({ id: result.text })
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error('mee', err));
 
     const { user, history } = this.props;
     if (isEmpty(user)) {
@@ -122,17 +122,22 @@ class CreateItemPage extends Component {
             onSubmit={this.createItem}
             aria-labelledby="create-item"
           >
-            <TextField
-              ref={id => (this.itemId = id)}
-              value={this.state.id}
-              onChange={this.handleTextChange}
-              id="itemId"
-              label={`${unit} ID`}
-              required
-              type="text"
-              error={idError}
-              errorText="This field is required."
-            />
+            <div style={{display: 'flex', alignItems: 'center'}}>
+              <TextField
+                ref={id => (this.itemId = id)}
+                value={this.state.id}
+                onChange={this.handleTextChange}
+                id="itemId"
+                label={`${unit} ID`}
+                required
+                type="text"
+                error={idError}
+                errorText="This field is required."
+              />
+
+              <Button raised primary swapTheming>Start</Button>
+              <Button raised secondary iconChildren="close" swapTheming>Stop</Button>
+            </div>
             <video id="video" width="300" height="200" style={{border: '1px solid gray'}}></video>
 
           </FocusContainer>
@@ -140,7 +145,7 @@ class CreateItemPage extends Component {
           <div>
             <Loader showLoader={showLoader} />
             <CardActions className={`md-cell md-cell--12 ${showLoader ? 'hidden' : ''}`}>
-              <Button raised onClick={this.createItem}>
+              <Button className="iota-theme" raised onClick={this.createItem}>
                 Create
               </Button>
             </CardActions>
