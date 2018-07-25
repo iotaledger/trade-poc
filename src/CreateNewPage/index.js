@@ -45,7 +45,7 @@ class CreateItemPage extends Component {
     return !this.itemId.value;
   };
 
-  startScanner = async () => {
+  startScanner = async () => {    
     const devices = await codeReader.getVideoInputDevices()
     if(devices.length) {
       const firstDeviceId = devices[0].deviceId;
@@ -56,7 +56,7 @@ class CreateItemPage extends Component {
       })
       .catch(err => console.error(err));
     } else {
-      alert('Please check your video inputs!, we cant find any')
+      this.notifyError('Please check your video inputs!, we cant find any');
     }
 
   }
