@@ -12,7 +12,9 @@ import { storeItem } from '../store/item/actions';
 import { getFirebaseSnapshot } from '../utils/firebase';
 import { createItemChannel } from '../utils/mam';
 import '../assets/scss/createItemPage.scss';
-import { BrowserQRCodeReader, VideoInputDevice } from '@zxing/library'
+import { BrowserQRCodeReader } from '@zxing/library'
+
+const codeReader = new BrowserQRCodeReader();
 
 class CreateItemPage extends Component {
   state = {
@@ -25,18 +27,7 @@ class CreateItemPage extends Component {
     id: ''
   };
 
-  async componentDidMount() {
-    const codeReader = new BrowserQRCodeReader();
-
-    const devices = await codeReader.getVideoInputDevices()
-    const firstDeviceId = devices[0].deviceId;
-
-    codeReader.decodeFromInputVideoDevice(firstDeviceId, 'video')
-    .then(result => {
-      this.setState({ id: result.text })
-    })
-    .catch(err => console.error('mee', err));
-
+  componentDidMount() {
     const { user, history } = this.props;
     if (isEmpty(user)) {
       history.push('/login');
@@ -54,6 +45,20 @@ class CreateItemPage extends Component {
     return !this.itemId.value;
   };
 
+  startScanner = async () => {
+    const devices = await codeReader.getVideoInputDevices()
+    const firstDeviceId = devices[0].deviceId;
+
+    codeReader.decodeFromInputVideoDevice(firstDeviceId, 'video')
+    .then(result => {
+      this.setState({ id: result.text })
+    })
+    .catch(err => console.error(err));
+  }
+
+  stopScanner = () => {
+    codeReader.reset()
+  }
   handleTextChange = e => {
 
   }
@@ -135,8 +140,8 @@ class CreateItemPage extends Component {
                 errorText="This field is required."
               />
 
-              <Button raised primary swapTheming>Start</Button>
-              <Button raised secondary iconChildren="close" swapTheming>Stop</Button>
+              <Button onClick={this.startScanner} raised primary swapTheming>Start</Button>
+              <Button onClick={this.stopScanner} raised secondary iconChildren="close" swapTheming>Stop</Button>
             </div>
             <video id="video" width="300" height="200" style={{border: '1px solid gray'}}></video>
 
