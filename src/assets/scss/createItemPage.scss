@@ -10,7 +10,14 @@
     & > div {
       width: 100%;
     }
-
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    #video-area {
+      border: 1px solid gray;
+      width: 100%;
+    }
     input {
       font-size: 18px;
       font-weight: 700;

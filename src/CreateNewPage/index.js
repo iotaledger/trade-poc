@@ -49,7 +49,7 @@ class CreateItemPage extends Component {
     const devices = await codeReader.getVideoInputDevices()
     const firstDeviceId = devices[0].deviceId;
 
-    codeReader.decodeFromInputVideoDevice(firstDeviceId, 'video')
+    codeReader.decodeFromInputVideoDevice(firstDeviceId, 'video-area')
     .then(result => {
       this.setState({ id: result.text })
     })
@@ -127,7 +127,7 @@ class CreateItemPage extends Component {
             onSubmit={this.createItem}
             aria-labelledby="create-item"
           >
-            <div style={{display: 'flex', alignItems: 'center'}}>
+            <div className="input-wrapper">
               <TextField
                 ref={id => (this.itemId = id)}
                 value={this.state.id}
@@ -143,7 +143,7 @@ class CreateItemPage extends Component {
               <Button onClick={this.startScanner} raised primary swapTheming>Start</Button>
               <Button onClick={this.stopScanner} raised secondary iconChildren="close" swapTheming>Stop</Button>
             </div>
-            <video id="video" width="300" height="200" style={{border: '1px solid gray'}}></video>
+            <video id="video-area"></video>
 
           </FocusContainer>
           <Notification />
