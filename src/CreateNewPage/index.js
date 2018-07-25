@@ -47,13 +47,18 @@ class CreateItemPage extends Component {
 
   startScanner = async () => {
     const devices = await codeReader.getVideoInputDevices()
-    const firstDeviceId = devices[0].deviceId;
+    if(devices.length) {
+      const firstDeviceId = devices[0].deviceId;
 
-    codeReader.decodeFromInputVideoDevice(firstDeviceId, 'video-area')
-    .then(result => {
-      this.setState({ id: result.text })
-    })
-    .catch(err => console.error(err));
+      codeReader.decodeFromInputVideoDevice(firstDeviceId, 'video-area')
+      .then(result => {
+        this.setState({ id: result.text })
+      })
+      .catch(err => console.error(err));
+    } else {
+      alert('Please check your video inputs!, we cant find any')
+    }
+
   }
 
   stopScanner = () => {
