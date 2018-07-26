@@ -1,6 +1,6 @@
 @import 'components';
 
-.createItemWrapper {
+.create-item-wrapper {
   max-width: 630px;
   width: 40%;
   margin: 30px auto 0;
@@ -67,7 +67,7 @@
     }
   }
 
-  button.iota-theme.md-btn {
+  .iota-theme-button {
     @include button();
     width: 100%;
     margin-top: 20px;
@@ -79,13 +79,13 @@
 }
 
 @media (max-width: 900px) {
-  .createItemWrapper {
+  .create-item-wrapper {
     width: 70%;
   }
 }
 
 @media (max-width: 500px) {
-  .createItemWrapper {
+  .create-item-wrapper {
     width: 85%;
   }
 }

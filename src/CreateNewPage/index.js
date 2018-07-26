@@ -45,7 +45,7 @@ class CreateItemPage extends Component {
     return !this.itemId.value;
   };
 
-  startScanner = async () => {    
+  startScanner = async () => {
     const devices = await codeReader.getVideoInputDevices()
     if(devices.length) {
       const firstDeviceId = devices[0].deviceId;
@@ -123,7 +123,7 @@ class CreateItemPage extends Component {
             </div>
           </div>
         </Header>
-        <div className="createItemWrapper">
+        <div className="create-item-wrapper">
           <FocusContainer
             focusOnMount
             containFocus
@@ -155,7 +155,7 @@ class CreateItemPage extends Component {
           <div>
             <Loader showLoader={showLoader} />
             <CardActions className={`md-cell md-cell--12 ${showLoader ? 'hidden' : ''}`}>
-              <Button className="iota-theme" raised onClick={this.createItem}>
+              <Button className="iota-theme-button" raised onClick={this.createItem}>
                 Create
               </Button>
             </CardActions>
