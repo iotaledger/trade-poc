@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import '../../assets/scss/status.scss';
 
 const StatusList = ({ statuses }) => (
-  <div className="statusWrapper">
+  <div className="status-wrapper">
     {statuses.map(({ status, timestamp }) => (
       <div key={timestamp} className="status">
         <span className="value">{status}</span>
