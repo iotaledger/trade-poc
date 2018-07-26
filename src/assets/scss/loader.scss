@@ -8,17 +8,27 @@
     flex-direction: row;
   }
 }
-.bouncing-loader {
+
+
+@mixin bouncing-loader-mix {
   width: 1rem;
   height: 1rem;
   margin: 3rem 0.2rem;
   background: #22b1ab;
   border-radius: 50%;
   animation: bouncing-loader 0.6s infinite alternate;
+}
+
+.bouncing-loader {
+  &__item-1 {
+    @include bouncing-loader-mix;
+  }
   &__item-2 {
+    @include bouncing-loader-mix;
     animation-delay: 0.2s;
   }
   &__item-3 {
+    @include bouncing-loader-mix;
     animation-delay: 0.4s;
   }
 }
