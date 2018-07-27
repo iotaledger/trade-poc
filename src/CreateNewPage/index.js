@@ -39,10 +39,10 @@ class CreateItemPage extends Component {
 
   validate = () => {
     this.setState({
-      idError: !this.itemId.value,
+      idError: !this.state.id,
     });
 
-    return !this.itemId.value;
+    return !this.state.id;
   };
 
   startScanner = async () => {
@@ -64,8 +64,8 @@ class CreateItemPage extends Component {
   stopScanner = () => {
     codeReader.reset()
   }
-  handleTextChange = e => {
-
+  handleTextChange = textID => {
+    this.setState({ id : textID })
   }
   onError = error => {
     this.setState({ showLoader: false });
@@ -84,7 +84,7 @@ class CreateItemPage extends Component {
         status: previousEvent[0],
       };
       // Format the item ID to remove dashes and parens
-      const itemId = this.itemId.value.replace(/[^0-9a-zA-Z_-]/g, '');
+      const itemId = this.state.id.replace(/[^0-9a-zA-Z_-]/g, '');
       const firebaseSnapshot = await getFirebaseSnapshot(itemId, this.onError);
       if (firebaseSnapshot === null) {
         this.setState({ showLoader: true });
@@ -134,7 +134,6 @@ class CreateItemPage extends Component {
           >
             <div className="input-wrapper">
               <TextField
-                ref={id => (this.itemId = id)}
                 value={this.state.id}
                 onChange={this.handleTextChange}
                 id="itemId"
