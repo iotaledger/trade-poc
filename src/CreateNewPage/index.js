@@ -43,6 +43,7 @@ class CreateItemPage extends Component {
 
   validate = () => {
     this.setState({
+<<<<<<< HEAD
       idError: !this.itemId.value,
       departureError: !this.departure.value,
       destinationError: !this.destination.value,
@@ -58,6 +59,12 @@ class CreateItemPage extends Component {
       !this.type.value ||
       this.departure.value === this.destination.value
     );
+=======
+      idError: !this.state.id,
+    });
+
+    return !this.state.id;
+>>>>>>> 26faeee... Got rid of Ref and make the component Controlled
   };
 
   startScanner = async () => {
@@ -79,8 +86,8 @@ class CreateItemPage extends Component {
   stopScanner = () => {
     codeReader.reset()
   }
-  handleTextChange = e => {
-
+  handleTextChange = textID => {
+    this.setState({ id : textID })
   }
   onError = error => {
     this.setState({ showLoader: false });
@@ -103,7 +110,7 @@ class CreateItemPage extends Component {
         status: previousEvent[0],
       };
       // Format the item ID to remove dashes and parens
-      const itemId = this.itemId.value.replace(/[^0-9a-zA-Z_-]/g, '');
+      const itemId = this.state.id.replace(/[^0-9a-zA-Z_-]/g, '');
       const firebaseSnapshot = await getFirebaseSnapshot(itemId, this.onError);
       if (firebaseSnapshot === null) {
         this.setState({ showLoader: true });
@@ -168,7 +175,6 @@ class CreateItemPage extends Component {
           >
             <div className="input-wrapper">
               <TextField
-                ref={id => (this.itemId = id)}
                 value={this.state.id}
                 onChange={this.handleTextChange}
                 id="itemId"
