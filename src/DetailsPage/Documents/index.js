@@ -24,7 +24,7 @@ class Documents extends Component {
     const { item } = this.props;
 
     return (
-      <div className="documentsWrapper">
+      <div className="documents-wrapper">
         <DataTable plain>
           <TableBody>
             {item.documents.map(doc => (

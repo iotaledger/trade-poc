@@ -14,7 +14,7 @@ class Header extends Component {
   render() {
     return (
       <div className="header">
-        <span role="button" onClick={this.logout}>
+        <span className="header__logo"role="button" onClick={this.logout}>
           <Logo />
         </span>
         {this.props.children}

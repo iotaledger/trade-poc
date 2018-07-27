@@ -3,8 +3,8 @@ import '../../assets/scss/loader.scss';
 
 export default ({ showLoader }) => (
   <div className={`bouncing-loader ${showLoader ? 'visible' : ''}`}>
-    <div />
-    <div />
-    <div />
+    <div className="bouncing-loader__item-1" />
+    <div className="bouncing-loader__item-2"/>
+    <div className="bouncing-loader__item-3" />
   </div>
 );
