@@ -43,8 +43,7 @@ class CreateItemPage extends Component {
 
   validate = () => {
     this.setState({
-<<<<<<< HEAD
-      idError: !this.itemId.value,
+      idError: !this.state.id,
       departureError: !this.departure.value,
       destinationError: !this.destination.value,
       cargoError: !this.cargo.value,
@@ -52,19 +51,13 @@ class CreateItemPage extends Component {
     });
 
     return (
-      !this.itemId.value ||
+      !this.state.id ||
       !this.departure.value ||
       !this.destination.value ||
       !this.cargo.value ||
       !this.type.value ||
       this.departure.value === this.destination.value
     );
-=======
-      idError: !this.state.id,
-    });
-
-    return !this.state.id;
->>>>>>> 26faeee... Got rid of Ref and make the component Controlled
   };
 
   startScanner = async () => {
