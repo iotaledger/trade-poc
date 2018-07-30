@@ -81,6 +81,7 @@
     },
     "locationTracking": true,
     "projectName": "container tracking",
+    "qrReader": false,
     "roleUserMapping": {
       "customs": "user003",
       "forwarder": "user002",

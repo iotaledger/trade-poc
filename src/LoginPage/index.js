@@ -60,19 +60,19 @@ class LoginPage extends Component {
 
     return (
       <div className="wrapper">
-        <div className="graphic">
-          <img src="desktop_bg.png" alt="background" className="background desktop" />
-          <img src="tablet_bg.png" alt="background" className="background tablet" />
-          <img src="mobile_bg.png" alt="background" className="background mobile" />
-          <div className="welcome">
+        <div className="wrapper-graphic">
+          <img src="desktop_bg.png" alt="background" className="wrapper-graphic-background desktop" />
+          <img src="tablet_bg.png" alt="background" className="wrapper-graphic-background tablet" />
+          <img src="mobile_bg.png" alt="background" className="wrapper-graphic-background mobile" />
+          <div className="wrapper-welcome">
             <Logo />
             <p>Welcome back!</p>
             <p>Login to access {projectName}</p>
           </div>
         </div>
-        <div className="login">
-          <form onSubmit={this.login}>
-            <h3>Login</h3>
+        <div className="wrapper-login">
+          <form className="wrapper-login-form" onSubmit={this.login}>
+            <h3 className="title">Login</h3>
             <SelectField
               ref={username => (this.username = username)}
               id="username"
@@ -92,7 +92,7 @@ class LoginPage extends Component {
               required
             />
             <Loader showLoader={showLoader} />
-            <Button raised onClick={this.login} className={showLoader ? 'hidden' : ''}>
+            <Button raised onClick={this.login} className={`form-button ${showLoader ? 'hidden' : ''}`}>
               Login
             </Button>
             <Notification />

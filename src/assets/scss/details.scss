@@ -1,4 +1,4 @@
-.detailSectionWrapper {
+.detail-section-wrapper {
   border-top: 1px solid rgb(201, 201, 201);
   display: flex;
   flex-direction: row;
@@ -6,7 +6,7 @@
   flex-wrap: wrap;
   margin-bottom: 100px;
 
-  .detailsSection {
+  .details-section {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;

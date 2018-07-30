@@ -12,6 +12,9 @@ import { storeItem } from '../store/item/actions';
 import { getFirebaseSnapshot, reassignOwnership } from '../utils/firebase';
 import { createItemChannel } from '../utils/mam';
 import '../assets/scss/createItemPage.scss';
+import { BrowserQRCodeReader } from '@zxing/library';
+
+const codeReader = new BrowserQRCodeReader();
 
 const PORTS = ['Rotterdam', 'Singapore'];
 const CARGO = ['Car', 'Consumer Goods', 'Heavy Machinery', 'Pharma'];
@@ -20,11 +23,13 @@ const TYPE = ['Dry storage', 'Refrigerated'];
 class CreateItemPage extends Component {
   state = {
     showLoader: false,
+    showQR: false,
     idError: false,
     destinationError: false,
     departureError: false,
     cargoError: false,
     typeError: false,
+    id: '',
   };
 
   componentDidMount() {
@@ -39,7 +44,7 @@ class CreateItemPage extends Component {
 
   validate = () => {
     this.setState({
-      idError: !this.itemId.value,
+      idError: !this.state.id,
       departureError: !this.departure.value,
       destinationError: !this.destination.value,
       cargoError: !this.cargo.value,
@@ -47,13 +52,39 @@ class CreateItemPage extends Component {
     });
 
     return (
-      !this.itemId.value ||
+      !this.state.id ||
       !this.departure.value ||
       !this.destination.value ||
       !this.cargo.value ||
       !this.type.value ||
       this.departure.value === this.destination.value
     );
+  };
+
+  startScanner = async () => {
+    this.setState({ showQR: true });
+    const devices = await codeReader.getVideoInputDevices();
+    if (devices.length) {
+      const firstDeviceId = devices[0].deviceId;
+
+      codeReader
+        .decodeFromInputVideoDevice(firstDeviceId, 'video-area')
+        .then(result => {
+          this.setState({ id: result.text });
+        })
+        .catch(err => console.error(err));
+    } else {
+      this.notifyError('Please check your video inputs!, we cant find any');
+    }
+  };
+
+  stopScanner = () => {
+    codeReader.reset();
+    this.setState({ showQR: false });
+  };
+
+  handleTextChange = textID => {
+    this.setState({ id: textID });
   };
 
   onError = error => {
@@ -77,7 +108,7 @@ class CreateItemPage extends Component {
         status: previousEvent[0],
       };
       // Format the item ID to remove dashes and parens
-      const itemId = this.itemId.value.replace(/[^0-9a-zA-Z_-]/g, '');
+      const itemId = this.state.id.replace(/[^0-9a-zA-Z_-]/g, '');
       const firebaseSnapshot = await getFirebaseSnapshot(itemId, this.onError);
       if (firebaseSnapshot === null) {
         this.setState({ showLoader: true });
@@ -99,6 +130,7 @@ class CreateItemPage extends Component {
   render() {
     const {
       showLoader,
+      showQR,
       idError,
       departureError,
       destinationError,
@@ -107,7 +139,7 @@ class CreateItemPage extends Component {
     } = this.state;
     const {
       history,
-      project: { trackingUnit },
+      project: { trackingUnit, qrReader },
     } = this.props;
 
     const unit = upperFirst(trackingUnit);
@@ -131,7 +163,7 @@ class CreateItemPage extends Component {
             </div>
           </div>
         </Header>
-        <div className="createItemWrapper">
+        <div className="create-item-wrapper">
           <FocusContainer
             focusOnMount
             containFocus
@@ -140,15 +172,35 @@ class CreateItemPage extends Component {
             onSubmit={this.createItem}
             aria-labelledby="create-item"
           >
-            <TextField
-              ref={id => (this.itemId = id)}
-              id="itemId"
-              label={`${unit} ID`}
-              required
-              type="text"
-              error={idError}
-              errorText="This field is required."
-            />
+            <div className="input-wrapper">
+              <TextField
+                value={this.state.id}
+                onChange={this.handleTextChange}
+                id="itemId"
+                label={`${unit} ID`}
+                required
+                type="text"
+                error={idError}
+                errorText="This field is required."
+              />
+              {qrReader ? (
+                <div className="create-item-wrapper__qr-code-btn-container">
+                  <Button onClick={this.startScanner} raised primary swapTheming>
+                    Start
+                  </Button>
+                  <Button
+                    onClick={this.stopScanner}
+                    raised
+                    secondary
+                    iconChildren="close"
+                    swapTheming
+                  >
+                    Stop
+                  </Button>
+                </div>
+              ) : null}
+            </div>
+            {qrReader && showQR ? <video id="video-area" /> : null}
             <SelectField
               ref={departure => (this.departure = departure)}
               id="departure"
@@ -190,7 +242,7 @@ class CreateItemPage extends Component {
           <div>
             <Loader showLoader={showLoader} />
             <CardActions className={`md-cell md-cell--12 ${showLoader ? 'hidden' : ''}`}>
-              <Button raised onClick={this.createItem}>
+              <Button className="iota-theme-button" raised onClick={this.createItem}>
                 Create
               </Button>
             </CardActions>

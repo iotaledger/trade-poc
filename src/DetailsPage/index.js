@@ -18,14 +18,14 @@ import '../assets/scss/detailsPage.scss';
 const StatusButtons = ({ statuses, onClick }) => {
   if (typeof statuses === 'string') {
     return (
-      <Button raised onClick={() => onClick(statuses)}>
+      <Button className="details-page-button" raised onClick={() => onClick(statuses)}>
         Confirm {statuses}
       </Button>
     );
   }
 
   return (
-    <div className="detailSectionStatusButtons">
+    <div className="detail-section-status-buttons">
       {statuses.map(status => (
         <Button key={status} raised onClick={() => onClick(status)}>
           Confirm {status}
@@ -178,13 +178,13 @@ class DetailsPage extends Component {
             {user.name || user.role}
           </p>
         </Header>
-        <div className={`loaderWrapper ${showLoader ? '' : 'hidden'}`}>
+        <div className={`loader-wrapper ${showLoader ? '' : 'hidden'}`}>
           <Loader showLoader={showLoader} />
         </div>
-        <div className="detailsWrapper">
+        <div className="details-wrapper">
           <div className="md-block-centered">
-            <div className="routeCtaWrapper">
-              <h1>
+            <div className="route-cta-wrapper">
+              <h1 className="ca-title">
                 {typeof detailsPage.title === 'string'
                   ? item[detailsPage.title]
                   : detailsPage.title.map(field => item[field]).join(' → ')}

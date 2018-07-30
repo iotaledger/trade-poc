@@ -1,12 +1,12 @@
 @import 'components';
 
-.loaderWrapper {
+.loader-wrapper {
   height: 30px;
   width: 100%;
   margin: 30px auto;
 }
 
-.detailsWrapper {
+.details-wrapper {
   max-width: 1092px;
   width: 100%;
   display: flex;
@@ -16,7 +16,7 @@
     width: 100%;
   }
 
-  .routeCtaWrapper {
+  .route-cta-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -26,13 +26,13 @@
       margin: 20px;
     }
 
-    h1 {
+    .ca-title {
       font-size: 40px;
       font-weight: 700;
       color: rgb(63,63,63);
     }
 
-    button.md-btn {
+    .details-page-button {
       @include button();
       width: auto;
       font-size: 18px;
