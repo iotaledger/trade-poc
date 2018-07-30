@@ -177,6 +177,42 @@ class CreateItemPage extends Component {
                 error={idError}
                 errorText="This field is required."
               />
+              <SelectField
+                ref={departure => (this.departure = departure)}
+                id="departure"
+                required
+                label="Departure Port"
+                className="md-cell"
+                menuItems={PORTS}
+                position={SelectField.Positions.BELOW}
+                error={departureError}
+                errorText="This field is required."
+                dropdownIcon={<FontIcon>expand_more</FontIcon>}
+              />
+              <SelectField
+               ref={destination => (this.destination = destination)}
+               id="destination"
+               label="Destination Port"
+               menuItems={PORTS}
+               error={destinationError}
+               {...selectFieldProps}
+              />
+              <SelectField
+               ref={cargo => (this.cargo = cargo)}
+               id="cargo"
+               label="Cargo"
+               menuItems={CARGO}
+               error={cargoError}
+               {...selectFieldProps}
+              />
+              <SelectField
+               ref={type => (this.type = type)}
+               id="type"
+               label={`${unit} type`}
+               menuItems={TYPE}
+               error={typeError}
+               {...selectFieldProps}
+              />
 
               <Button onClick={this.startScanner} raised primary swapTheming>Start</Button>
               <Button onClick={this.stopScanner} raised secondary iconChildren="close" swapTheming>Stop</Button>
