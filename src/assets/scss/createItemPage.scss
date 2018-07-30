@@ -4,7 +4,9 @@
   max-width: 630px;
   width: 40%;
   margin: 30px auto 0;
-
+  &__qr-code-btn-container {
+    display: flex;
+  }
   .md-grid {
 
     & > div {

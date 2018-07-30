@@ -177,12 +177,15 @@ class CreateItemPage extends Component {
                 error={idError}
                 errorText="This field is required."
               />
+              {this.props.project.qrReader ? (<div className="create-item-wrapper__qr-code-btn-container">
+                <Button onClick={this.startScanner} raised primary swapTheming>Start</Button>
+                <Button onClick={this.stopScanner} raised secondary iconChildren="close" swapTheming>Stop</Button>
+                </div>)
+               : null}
 
-              <Button onClick={this.startScanner} raised primary swapTheming>Start</Button>
-              <Button onClick={this.stopScanner} raised secondary iconChildren="close" swapTheming>Stop</Button>
             </div>
-            <video id="video-area"></video>
-            
+            {this.props.project.qrReader ? (<video id="video-area"></video>)
+             : null}
             <SelectField
               ref={departure => (this.departure = departure)}
               id="departure"
