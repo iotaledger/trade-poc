@@ -12,7 +12,7 @@ import { storeItem } from '../store/item/actions';
 import { getFirebaseSnapshot, reassignOwnership } from '../utils/firebase';
 import { createItemChannel } from '../utils/mam';
 import '../assets/scss/createItemPage.scss';
-import { BrowserQRCodeReader } from '@zxing/library'
+import { BrowserQRCodeReader } from '@zxing/library';
 
 const codeReader = new BrowserQRCodeReader();
 
@@ -23,12 +23,13 @@ const TYPE = ['Dry storage', 'Refrigerated'];
 class CreateItemPage extends Component {
   state = {
     showLoader: false,
+    showQR: false,
     idError: false,
     destinationError: false,
     departureError: false,
     cargoError: false,
     typeError: false,
-    id: ''
+    id: '',
   };
 
   componentDidMount() {
@@ -61,27 +62,31 @@ class CreateItemPage extends Component {
   };
 
   startScanner = async () => {
-    const devices = await codeReader.getVideoInputDevices()
-    if(devices.length) {
+    this.setState({ showQR: true });
+    const devices = await codeReader.getVideoInputDevices();
+    if (devices.length) {
       const firstDeviceId = devices[0].deviceId;
 
-      codeReader.decodeFromInputVideoDevice(firstDeviceId, 'video-area')
-      .then(result => {
-        this.setState({ id: result.text })
-      })
-      .catch(err => console.error(err));
+      codeReader
+        .decodeFromInputVideoDevice(firstDeviceId, 'video-area')
+        .then(result => {
+          this.setState({ id: result.text });
+        })
+        .catch(err => console.error(err));
     } else {
       this.notifyError('Please check your video inputs!, we cant find any');
     }
-
-  }
+  };
 
   stopScanner = () => {
-    codeReader.reset()
-  }
+    codeReader.reset();
+    this.setState({ showQR: false });
+  };
+
   handleTextChange = textID => {
-    this.setState({ id : textID })
-  }
+    this.setState({ id: textID });
+  };
+
   onError = error => {
     this.setState({ showLoader: false });
     this.notifyError(error || 'Something went wrong');
@@ -125,6 +130,7 @@ class CreateItemPage extends Component {
   render() {
     const {
       showLoader,
+      showQR,
       idError,
       departureError,
       destinationError,
@@ -133,7 +139,7 @@ class CreateItemPage extends Component {
     } = this.state;
     const {
       history,
-      project: { trackingUnit },
+      project: { trackingUnit, qrReader },
     } = this.props;
 
     const unit = upperFirst(trackingUnit);
@@ -177,15 +183,24 @@ class CreateItemPage extends Component {
                 error={idError}
                 errorText="This field is required."
               />
-              {this.props.project.qrReader ? (<div className="create-item-wrapper__qr-code-btn-container">
-                <Button onClick={this.startScanner} raised primary swapTheming>Start</Button>
-                <Button onClick={this.stopScanner} raised secondary iconChildren="close" swapTheming>Stop</Button>
-                </div>)
-               : null}
-
+              {qrReader ? (
+                <div className="create-item-wrapper__qr-code-btn-container">
+                  <Button onClick={this.startScanner} raised primary swapTheming>
+                    Start
+                  </Button>
+                  <Button
+                    onClick={this.stopScanner}
+                    raised
+                    secondary
+                    iconChildren="close"
+                    swapTheming
+                  >
+                    Stop
+                  </Button>
+                </div>
+              ) : null}
             </div>
-            {this.props.project.qrReader ? (<video id="video-area"></video>)
-             : null}
+            {qrReader && showQR ? <video id="video-area" /> : null}
             <SelectField
               ref={departure => (this.departure = departure)}
               id="departure"
@@ -199,30 +214,29 @@ class CreateItemPage extends Component {
               dropdownIcon={<FontIcon>expand_more</FontIcon>}
             />
             <SelectField
-             ref={destination => (this.destination = destination)}
-             id="destination"
-             label="Destination Port"
-             menuItems={PORTS}
-             error={destinationError}
-             {...selectFieldProps}
+              ref={destination => (this.destination = destination)}
+              id="destination"
+              label="Destination Port"
+              menuItems={PORTS}
+              error={destinationError}
+              {...selectFieldProps}
             />
             <SelectField
-             ref={cargo => (this.cargo = cargo)}
-             id="cargo"
-             label="Cargo"
-             menuItems={CARGO}
-             error={cargoError}
-             {...selectFieldProps}
+              ref={cargo => (this.cargo = cargo)}
+              id="cargo"
+              label="Cargo"
+              menuItems={CARGO}
+              error={cargoError}
+              {...selectFieldProps}
             />
             <SelectField
-             ref={type => (this.type = type)}
-             id="type"
-             label={`${unit} type`}
-             menuItems={TYPE}
-             error={typeError}
-             {...selectFieldProps}
+              ref={type => (this.type = type)}
+              id="type"
+              label={`${unit} type`}
+              menuItems={TYPE}
+              error={typeError}
+              {...selectFieldProps}
             />
-
           </FocusContainer>
           <Notification />
           <div>
