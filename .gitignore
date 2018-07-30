@@ -14,4 +14,3 @@
 /firebase_functions/appengine
 
 *.log
-yarn.lock
