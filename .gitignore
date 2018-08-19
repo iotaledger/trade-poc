@@ -3,7 +3,7 @@
 
 # build artifacts
 /build
-
+.next
 .git
 
 # misc
