@@ -5,6 +5,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@zeit/next-css": "^0.2.0",
     "@zeit/next-sass": "^0.2.0",
     "axios": "^0.18.0",
     "js-sha256": "^0.9.0",

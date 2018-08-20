@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { logout } from '../../store/user/actions';
+
 import Logo from '../Logo';
-// import '../../assets/scss/header.scss';
+import '../../static/assets/scss/header.scss';
+const logout = () => {}
 
 class Header extends Component {
   logout = () => {
-    this.props.logout();
-    this.props.history.push('/login');
+     // this.props.logout();
+     // this.props.history.push('/login');
   };
 
   render() {
@@ -23,11 +24,5 @@ class Header extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(logout()),
-});
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(withRouter(Header));
+export default Header;

@@ -26,19 +26,19 @@
     background-size: 28px;
 
     &.pdf {
-      background-image: url(../images/pdf_icon.png);
+      background-image: url(/static/images/pdf_icon.png);
     }
 
     &.doc {
-      background-image: url(../images/doc_icon.png);
+      background-image: url(/static/images/doc_icon.png);
     }
 
     &.excel {
-      background-image: url(../images/excel_icon.png);
+      background-image: url(/static/images/excel_icon.png);
     }
 
     &.img {
-      background-image: url(../images/img_icon.png);
+      background-image: url(/static/images/img_icon.png);
     }
   }
 }

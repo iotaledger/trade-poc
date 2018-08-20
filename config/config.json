@@ -1,3 +1,4 @@
 {
-  "rootURL" : "localhost"
+  "rootURL": "localhost",
+  "provider": "https://nodes.testnet.iota.org"
 }
