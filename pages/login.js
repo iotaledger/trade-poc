@@ -13,29 +13,48 @@ import config from '../config/config.json';
 import '../static/assets/scss/loginPage.scss';
 
 class LoginPage extends Component {
-  state = {
-    showLoader: false,
-  };
+  constructor(props) {
+    super(props)
+    this.state = {
+      showLoader: false,
+      username: '',
+      password: ''
+    };
+    this.login = this.login.bind(this)
+    this.onTextChange = this.onTextChange.bind(this)
+  }
 
   componentDidMount() {
     // this.props.loadProjectSettings();
     // this.props.loadEventMappings();
   }
 
-  login = event => {
-    event.preventDefault();
-    this.setState({ showLoader: true });
-    if (!this.username.value) return;
+  onTextChange({ username, password }, e) {
+      if (e.target.id === 'username') {
+        this.setState({username})
+      }
+      if (e.target.id === 'password') {
+        this.setState({password})
+      }
+  }
 
-    const username = this.props.project.roleUserMapping[this.username.value.toLowerCase()];
-    const password = sha256(username.toLowerCase());
+  login(event) {
+  //  event.preventDefault();
+    this.setState({ showLoader: true });
+    /*
+      if (!this.username.value) return;
+    */
+    const username = this.state.username;
+  //  const password = sha256(username.toLowerCase());
+    const password = this.state.password;
 
     axios
-      .post(`${config.rootURL}/login`, { username, password })
+      .post(`/api/login`, { username, password })
       .then(response => {
-        this.props.storeCredentials(response.data);
-        this.props.storeEvents(response.data.role);
-        this.props.history.push('/');
+        console.log(response.data)
+      //  this.props.storeCredentials(response.data);
+      //  this.props.storeEvents(response.data.role);
+      //  this.props.history.push('/');
       })
       .catch(error => {
         this.setState({ showLoader: false });
@@ -55,7 +74,6 @@ class LoginPage extends Component {
     if (isEmpty(roleUserMapping)) {
       return <div />;
     }
-    const ROLES = Object.keys(roleUserMapping).map(role => upperFirst(role));
 
     return (
       <div className="wrapper">
@@ -70,26 +88,25 @@ class LoginPage extends Component {
           </div>
         </div>
         <div className="wrapper-login">
-          <form className="wrapper-login-form" onSubmit={this.login}>
-            <h3 className="title">Login</h3>
-            <SelectField
-              ref={username => (this.username = username)}
+          <form className="wrapper-login-form">
+          <h3 className="title">Login</h3>
+            <TextField
               id="username"
+              label="Username"
+              type="text"
+              value={this.state.username}
+              onChange={(username, e) => this.onTextChange({ username }, e)}
               required
-              simplifiedMenu
-              className="md-cell"
-              placeholder="Select role"
-              menuItems={ROLES}
-              position={SelectField.Positions.BELOW}
-              dropdownIcon={<FontIcon>expand_more</FontIcon>}
             />
             <TextField
-              ref={password => (this.password = password)}
               id="password"
-              label="Enter password"
+              label="Password"
               type="password"
+              value={this.state.password}
+              onChange={(password, e) => this.onTextChange({ password }, e)}
               required
             />
+
             <Loader showLoader={showLoader} />
             <Button raised onClick={this.login} className={`form-button ${showLoader ? 'hidden' : ''}`}>
               Login
