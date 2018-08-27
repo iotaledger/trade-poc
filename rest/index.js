@@ -17,9 +17,8 @@ module.exports = {
     login: function(req, res) {
       users.findOne({ _id: req.body.username, password: req.body.password }, function (err, user) {
         if(err) return res.send("error happen")
-        console.log(user)
         if(user) {
-          res.send(user)
+          res.send({ username: user._id, role: user.role, name: user.name })
         } else {
           res.send('nothin to show')
         }

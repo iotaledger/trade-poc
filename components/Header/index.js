@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import Logo from '../Logo';
 import '../../static/assets/scss/header.scss';

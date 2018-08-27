@@ -17,6 +17,7 @@
     "node-sass": "^4.9.3",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
+    "react-autosuggest": "^9.3.4",
     "react-dom": "^16.4.2",
     "react-md": "^1.5.0",
     "react-toastify": "^4.2.0"

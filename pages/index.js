@@ -9,6 +9,7 @@ import Logo from '../components/Logo';
 import Loader from '../components/Loader';
 import Notification from '../components/Notification';
 import config from '../config/config.json';
+import Router from 'next/router'
 
 import '../static/assets/scss/loginPage.scss';
 
@@ -51,10 +52,17 @@ class LoginPage extends Component {
     axios
       .post(`/api/login`, { username, password })
       .then(response => {
-        console.log(response.data)
       //  this.props.storeCredentials(response.data);
       //  this.props.storeEvents(response.data.role);
       //  this.props.history.push('/');
+        this.setState({ showLoader: false });
+        if(response.data.username) {
+          // redic to List
+          Router.push('/list')
+
+        } else {
+            alert('auth failed')
+        }
       })
       .catch(error => {
         this.setState({ showLoader: false });
