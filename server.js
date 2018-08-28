@@ -20,6 +20,8 @@ const handle = app.getRequestHandler()
 app.prepare().then(() => {
   server.post('/api/login', rest.login);
   server.post('/api/user', rest.createUser); //create new user
+  server.get('/api/channel', rest.getRootChannelList);
+  server.post('/api/channel', rest.createChannelRoot);
 
 
   server.get('*', (req, res) => handle(req, res))

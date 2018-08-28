@@ -1,4 +1,5 @@
 {
   "rootURL": "localhost",
-  "provider": "https://nodes.testnet.iota.org"
+  "provider": "https://nodes.testnet.iota.org",
+  "sideKey": "JMZJB9TGPQQHZTMZBUKO"
 }

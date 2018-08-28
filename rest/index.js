@@ -1,6 +1,7 @@
 
 const Datastore = require('nedb')
 const users = new Datastore({ filename: './db/users.db', autoload: true });
+const channels = new Datastore({ filename: './db/channels.db', autoload: true });
 
 module.exports = {
     createUser: function(req, res) {
@@ -21,6 +22,27 @@ module.exports = {
           res.send({ username: user._id, role: user.role, name: user.name })
         } else {
           res.send('nothin to show')
+        }
+      });
+    },
+    getRootChannelList: function(req, res) {
+      channels.find({ }, function (err, roots) {
+        if(err) return res.send("error happen")
+        if(roots) {
+          res.send(roots)
+        } else {
+          res.send('nor roots found')
+        }
+      });
+    },
+    createChannelRoot: function(req, res) {
+      const newRoot = { _id: req.body.root };
+      channels.insert(newRoot, function (err, newChannel) {
+        if(err) return res.send("error happen")
+        if(newChannel) {
+          res.send(newChannel)
+        } else {
+          res.send('no channel root saved')
         }
       });
     }

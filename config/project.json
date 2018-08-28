@@ -1,0 +1,61 @@
+{
+  "roleEventMapping": {
+    "distributor": {
+      "canAppendToStream": true,
+      "canCreateStream": false,
+      "canUploadDocuments": true,
+      "nextEvents": {
+        "deliverytodistributor": ["Handover to forwarder", "Delivery to manufacturer"],
+        "returntodistributor": "Return to owner"
+      }
+    },
+    "forwarder": {
+      "canAppendToStream": true,
+      "canCreateStream": false,
+      "canUploadDocuments": true,
+      "nextEvents": {
+        "handovertoforwarder": "Delivery to manufacturer",
+        "returntoforwarder": "Return to distributor"
+      }
+    },
+    "owner": {
+      "canAppendToStream": true,
+      "canCreateStream": true,
+      "canUploadDocuments": true,
+      "nextEvents": {
+        "rackannounced": "Delivery to distributor"
+      }
+    },
+    "manufacturer": {
+      "canAppendToStream": true,
+      "canCreateStream": false,
+      "canUploadDocuments": true,
+      "nextEvents": {
+        "deliverytomanufacturer": [
+          "Return to forwarder",
+          "Return to distributor",
+          "Return to owner"
+        ]
+      }
+    }
+  },
+  "settings": {
+    "detailsPage": {
+      "body": ["owner", "itemId", "status", "timestamp"],
+      "headers": ["Glass manufacturer", "Window Transport Rack ID", "Status", "Last updated"],
+      "title": "itemId"
+    },
+    "documentStorage": true,
+    "fields": ["itemId", "owner", "status", "timestamp"],
+    "firebaseFields": ["itemId", "owner", "status", "timestamp"],
+    "listPage": {
+      "body": ["itemId", "owner", "status"],
+      "headers": ["Window transport rack ID", "Glass manufacturer", "Status"]
+    },
+    "locationTracking": false,
+    "projectName": "window transport rack tracking",
+    "roles": ["owner", "distributor", "forwarder", "manufacturer"],
+    "temperatureChart": false,
+    "trackingUnit": "rack"
+  }
+}

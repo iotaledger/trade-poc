@@ -3,28 +3,38 @@ import PropTypes from 'prop-types'; // ES6
 import { toast } from 'react-toastify';
 import { Button, DataTable, TableHeader, TableBody, TableRow, TableColumn } from 'react-md';
 import { isEmpty } from 'lodash';
-//import { storeItems } from '../store/items/actions';
+import axios from 'axios';
 import Loader from '../components/Loader';
 import Header from '../components/Header';
 import Notification from '../components/Notification';
 import Autosuggest from '../components/Autosuggest';
 import '../static/assets/scss/listPage.scss';
+import { fetchChannels } from '../utils/mam'
+import projectJson from '../config/project.json'
 
 class ListPage extends Component {
-  state = {
-    showLoader: false,
-  };
 
-  componentDidMount() {
-    /* const { project, user, history, items } = this.props;
-    if (isEmpty(user) || isEmpty(project)) {
-      history.push('/login');
-    } else {
-      if (isEmpty(items.data) && user.previousEvent) {
-        this.setState({ showLoader: true });
-         this.props.storeItems(user);
-      }
-    } */
+  static async getInitialProps(context) {
+    return { settings: projectJson.settings }
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      showLoader: false,
+      items: []
+    };
+  }
+
+  async componentDidMount() {
+      axios
+      .get(`/api/channel`)
+      .then(async response => {
+        this.setState({ showLoader: false });
+        const channelRoots = response.data.map(root => root._id)
+        const allChannelData = await fetchChannels(channelRoots)
+        this.setState({ items: allChannelData })
+      })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,35 +69,34 @@ class ListPage extends Component {
     const history = { push: () => {} }
     const { showLoader } = this.state;
 
-    if (!project || !project.listPage) return <div />;
-
+    if (!project || !this.props.settings.listPage) return <div />;
     return (
       <div className="app">
         <Header>
           <p>
-            Welcome to {project.projectName},<br />
+            Welcome to {this.props.settings.projectName},<br />
             {user.name}
           </p>
         </Header>
         {user.canCreateStream ? (
           <div className="cta-wrapper">
             <Button className="listPage-button" raised onClick={() => history.push('/new')}>
-              Create new {project.trackingUnit}
+              Create new {this.props.settings.trackingUnit}
             </Button>
           </div>
         ) : null}
         <Loader showLoader={showLoader} />
         <div className={`md-block-centered ${showLoader ? 'hidden' : ''}`}>
           <Autosuggest
-            items={data}
+            items={this.state.items}
             project={project}
             onSelect={item => history.push(`/details/${item.itemId}`)}
-            trackingUnit={project.trackingUnit}
+            trackingUnit={this.props.settings.trackingUnit}
           />
           <DataTable plain>
             <TableHeader>
               <TableRow>
-                {project.listPage.headers.map((header, index) => (
+                {this.props.settings.listPage.headers.map((header, index) => (
                   <TableColumn
                     key={header}
                     className={index === 1 ? 'md-text-center' : index === 2 ? 'md-text-right' : ''}
@@ -98,9 +107,9 @@ class ListPage extends Component {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map(item => (
-                <TableRow key={item.itemId} onClick={() => history.push(`/details/${item.itemId}`)}>
-                  {project.listPage.body.map((entry, index) => (
+              {this.state.items.map(item => (
+                <TableRow key={item.timestamp} onClick={() => history.push(`/details/${item.itemId}`)}>
+                  {this.props.settings.listPage.body.map((entry, index) => (
                     <TableColumn
                       key={`${item.itemId}-${index}`}
                       className={
