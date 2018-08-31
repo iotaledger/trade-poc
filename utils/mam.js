@@ -1,5 +1,5 @@
-import Mam from 'mam.client.js';
 import IOTA from 'iota.lib.js';
+import Mam from 'mam.client.js';
 import { isEmpty, uniqBy, pick, find, last } from 'lodash';
 // import { createItem, updateItem } from './firebase';
 import config from '../config/config.json';
