@@ -12,9 +12,9 @@ import Notification from '../components/Notification';
 // import { storeItem } from '../store/item/actions';
 // import { getFirebaseSnapshot, reassignOwnership } from '../utils/firebase';
 import { createNewChannel } from '../utils/mam';
-import '../static/assets/scss/createItemPage.scss';
+//import '../static/assets/scss/createItemPage.scss';
 //import { BrowserQRCodeReader } from '@zxing/library';
-import projectJson from '../config/project.json'  
+import projectJson from '../config/project.json'
 import axios from 'axios';
 
 // const codeReader = new BrowserQRCodeReader();
@@ -120,7 +120,7 @@ class CreateItemPage extends Component {
       });
     };
   }
-  
+
   render() {
       const { showLoader, idError } = this.state;
       const {

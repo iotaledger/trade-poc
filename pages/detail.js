@@ -15,7 +15,7 @@ import Details from '../components/Details';
 import { validateIntegrity } from '../components/Documents/DocumentIntegrityValidator';
 //import { fetchItem, appendItemChannel } from '../utils/mam';
 // import { reassignOwnership } from '../utils/firebase';
-import '../static/assets/scss/detailsPage.scss';
+//import '../static/assets/scss/detailsPage.scss';
 import { fetchChannel } from '../utils/mam'
 import projectJson from '../config/project.json'
 
@@ -62,7 +62,7 @@ class DetailsPage extends Component {
     };
   }
 
-  async componentDidMount() {    
+  async componentDidMount() {
     const channelData = await fetchChannel(this.props.root)
     this.setState({
       showLoader: false,
@@ -175,8 +175,8 @@ class DetailsPage extends Component {
     const {
       user,
     } = this.props;
-    
-    const { 
+
+    const {
       trackingUnit, documentStorage, locationTracking, temperatureChart, detailsPage
     } = this.props.settings;
 

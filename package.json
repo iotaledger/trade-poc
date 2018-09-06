@@ -31,5 +31,9 @@
     "react-sizeme": "^2.4.3",
     "react-toastify": "^4.2.0",
     "sass-loader": "^7.1.0"
+  },
+  "devDependencies": {
+    "node-sass": "^4.9.3",
+    "styled-jsx-plugin-sass": "^0.2.4"
   }
 }

@@ -8,9 +8,9 @@ import Loader from '../components/Loader';
 import Header from '../components/Header';
 import Notification from '../components/Notification';
 import Autosuggest from '../components/Autosuggest';
-import '../static/assets/scss/listPage.scss';
+//import '../static/assets/scss/listPage.scss';
 import { fetchChannels } from '../utils/mam'
-import projectJson from '../config/project.json'  
+import projectJson from '../config/project.json'
 import Router from 'next/router'
 
 class ListPage extends Component {
