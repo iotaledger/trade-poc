@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'; // ES6
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+//import { connect } from 'react-redux';
+//import { withRouter } from 'react-router';
 import { isEmpty, upperFirst } from 'lodash';
 import { FocusContainer, TextField, SelectField, Button, CardActions, FontIcon } from 'react-md';
 import { toast } from 'react-toastify';
@@ -11,15 +11,19 @@ import Notification from '../components/Notification';
 // import { addItem } from '../store/items/actions';
 // import { storeItem } from '../store/item/actions';
 // import { getFirebaseSnapshot, reassignOwnership } from '../utils/firebase';
-import { createItemChannel } from '../utils/mam';
+import { createNewChannel } from '../utils/mam';
 import '../static/assets/scss/createItemPage.scss';
 //import { BrowserQRCodeReader } from '@zxing/library';
-
+import projectJson from '../config/project.json'  
+import axios from 'axios';
 
 // const codeReader = new BrowserQRCodeReader();
 let codeReader = null;
 
 class CreateItemPage extends Component {
+  static async getInitialProps(context) {
+    return { settings: projectJson.settings, events: projectJson.roleEventMapping, user: {canCreateStream: true, name: 'fake name'}, project: {} }
+  }
   state = {
      showLoader: false,
      idError: false,
@@ -82,35 +86,41 @@ class CreateItemPage extends Component {
   };
 
   createItem = async event => {
-    event.preventDefault();
     const formError = this.validate();
-    const { history, storeItem, addItem, user, project } = this.props;
+    //const { history, storeItem, addItem, user, project } = this.props;
 
     if (!formError) {
-      const { id, previousEvent } = user;
-      const request = {
-        owner: id,
-        status: previousEvent[0],
-      };
       // Format the item ID to remove dashes and parens
-      const itemId = this.state.id.replace(/[^0-9a-zA-Z_-]/g, '');
-      const firebaseSnapshot = await getFirebaseSnapshot(itemId, this.onError);
-      if (firebaseSnapshot === null) {
+        const itemId = this.state.id.replace(/[^0-9a-zA-Z_-]/g, '');
+        const userID = 'fakeUserID'
+        const status = this.props.events.owner.initEvent
+
         this.setState({ showLoader: true });
-        const eventBody = await createItemChannel(project, itemId, request, id);
-
-        await addItem(itemId);
-        await storeItem([eventBody]);
-
-        history.push(`/details/${itemId}`);
-      } else {
-        this.notifyError(`${upperFirst(project.trackingUnit)} exists`);
-      }
-    } else {
-      this.notifyError('Error with some of the input fields');
-    }
-  };
-
+        const newChannel = {
+          itemId,
+          owner: userID,
+          status,
+          timestamp: Date.now()
+        }
+        let mamResp = null
+        try {
+          mamResp = await createNewChannel(newChannel);
+        } catch(e) {
+          console.error('something went wrong when fetching from mam', e)
+        }
+      mamResp && axios
+      .post(`/api/channel`, { root: mamResp.root })
+      .then(response => {
+        this.setState({ showLoader: false });
+        console.log(response.data._id)
+      })
+      .catch(error => {
+        this.setState({ showLoader: false });
+        console.error('something NOT ok', error)
+      });
+    };
+  }
+  
   render() {
       const { showLoader, idError } = this.state;
       const {

@@ -11,6 +11,7 @@ import Autosuggest from '../components/Autosuggest';
 import '../static/assets/scss/listPage.scss';
 import { fetchChannels } from '../utils/mam'
 import projectJson from '../config/project.json'  
+import Router from 'next/router'
 
 class ListPage extends Component {
 
@@ -27,15 +28,14 @@ class ListPage extends Component {
   }
 
   async componentDidMount() {
-      axios
-      .get(`/api/channel`)
-      .then(async response => {
-        this.setState({ showLoader: false });
-        const channelRoots = response.data.map(root => root._id)
-      
-        const allChannelData = await fetchChannels(['a', 'b'])
-        this.setState({ items: allChannelData })
-      })
+    axios
+    .get(`/api/channel`)
+    .then(async response => {
+      this.setState({ showLoader: false });
+      const channelRoots = response.data.map(root => root._id)
+      const allChannelData = await fetchChannels(channelRoots)
+      this.setState({ items: allChannelData })
+    })
   }
 
   notifyError = message => toast.error(message);
@@ -59,7 +59,7 @@ class ListPage extends Component {
         </Header>
         {user.canCreateStream ? (
           <div className="cta-wrapper">
-            <Button className="listPage-button" raised onClick={() => history.push('/new')}>
+            <Button className="listPage-button" raised onClick={() => Router.push('/new')}>
               Create new {this.props.settings.trackingUnit}
             </Button>
           </div>
@@ -87,7 +87,7 @@ class ListPage extends Component {
             </TableHeader>
             <TableBody>
               {this.state.items.map(item => (
-                <TableRow key={item.timestamp} onClick={() => history.push(`/details/${item.itemId}`)}>
+                <TableRow key={item.timestamp} onClick={() => Router.push(`/detail?root=${item.root}`)}>
                   {this.props.settings.listPage.body.map((entry, index) => (
                     <TableColumn
                       key={`${item.itemId}-${index}`}

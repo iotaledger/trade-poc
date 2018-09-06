@@ -16,27 +16,60 @@ const fetchChannels = async (rootList) => {
       let channelData = []
       try {
         channelData = await Mam.fetch(
-            'F9UUOKYOUBVGVERC9P9PBKTPRYASVWBYMUEUPFDHIOEZFQGGRZCYPLU99QAJRMTSVSPXIWMTTTDBUTNYF', 'restricted', config.sideKey
+          root, 'restricted', config.sideKey
         );
         //data => allChannelData.push(JSON.parse(iota.utils.fromTrytes(data)))
       } catch (e) {
         console.log('something wrong ', e)
       }
-        return channelData
+        return {...channelData, root}
     })
   ).then(res => {
-    return res[0].messages.map(msg => JSON.parse(iota.utils.fromTrytes(msg)))
+    return res[0].messages.map(msg => ({...JSON.parse(iota.utils.fromTrytes(msg)), root: res[0].root}))
   })
 }
 
-const createNewChannel = async (payload) => {
+const fetchChannel = async (root) => {
+    let allChannelData = []
+    let channelData = []
+    try {
+      channelData = await Mam.fetch(
+          root, 'restricted', config.sideKey
+      );
+      //data => allChannelData.push(JSON.parse(iota.utils.fromTrytes(data)))
+    } catch (e) {
+      console.log('something wrong ', e)
+    }
+  return channelData.messages.map(msg => JSON.parse(iota.utils.fromTrytes(msg)))
+}
+
+const publish = async (data, state) => {
+  try {
+    // Create MAM Payload - STRING OF TRYTES
+    const trytes = iota.utils.toTrytes(JSON.stringify(data));
+    const message = Mam.create(state, trytes);
+
+    // Save new mamState
+    mamState = message.state;
+
+    // Attach the payload.
+    const ret = await Mam.attach(message.payload, message.address);
+    return { root: message.root, state: message.state };
+  } catch (error) {
+    console.log('MAM publish error', error);
+    throw error;
+  }
+};
+
+const createNewChannel = async (payload, state) => {
   // Set channel mode for default state
   mamState = Mam.changeMode(mamState, 'restricted', config.sideKey);
-  const mamData = await publish(payload);
+  const mamData = await publish(payload, mamState);
   return mamData;
 }
 
 export {
   fetchChannels,
+  fetchChannel,
   createNewChannel
 }

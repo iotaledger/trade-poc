@@ -22,6 +22,7 @@
       "canAppendToStream": true,
       "canCreateStream": true,
       "canUploadDocuments": true,
+      "initEvent": "Rack Announced",
       "nextEvents": {
         "rackannounced": "Delivery to distributor"
       }

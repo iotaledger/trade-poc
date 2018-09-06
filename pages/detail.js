@@ -1,21 +1,26 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'; // ES6
-import { connect } from 'react-redux';
+//import { connect } from 'react-redux';
 import { Button } from 'react-md';
 import { isEmpty, find, last, uniqBy, pick, upperFirst } from 'lodash';
-import { toast } from 'react-toastify';
+//import { toast } from 'react-toastify';
 // import { storeItem } from '../store/item/actions';
 import Notification from '../components/Notification';
 import Loader from '../components/Loader';
 import Header from '../components/Header';
 import Tabs from '../components/Tabs';
 import Details from '../components/Details';
-import FilesUpload from '../components/Documents/FilesUpload';
+//import FilesUpload from '../components/Documents/FilesUpload';
 import { validateIntegrity } from '../components/Documents/DocumentIntegrityValidator';
-import { fetchItem, appendItemChannel } from '../utils/mam';
+//import { fetchItem, appendItemChannel } from '../utils/mam';
 // import { reassignOwnership } from '../utils/firebase';
 import '../static/assets/scss/detailsPage.scss';
+import { fetchChannel } from '../utils/mam'
+import projectJson from '../config/project.json'
+
+const fetchItem = () => {}
+const appendItemChannel = () => {}
 
 const StatusButtons = ({ statuses, onClick }) => {
   if (typeof statuses === 'string') {
@@ -38,29 +43,34 @@ const StatusButtons = ({ statuses, onClick }) => {
 };
 
 class DetailsPage extends Component {
-  state = {
-    showLoader: false,
-    fetchComplete: false,
-    metadata: [],
-    fileUploadEnabled: true,
-    statusUpdated: false,
-    statuses: [],
-    item: null,
-    activeTabIndex: 0,
-  };
 
-  async componentDidMount() {
-    const {
-      user,
-      item,
-      items
-    } = this.props;
-    const history = { push: () => {} }
-    const match = { params: { itemId: '12345' } };
-    const itemId = '12345'
-    if (isEmpty(user)) {
-      history.push('/login');
-    }
+  static async getInitialProps(context) {
+    const root = context.query.root
+    return { root, settings: projectJson.settings, user: {canCreateStream: true, name: 'fake name'}, project: {} }
+  }
+  constructor(props) {
+    super(props)
+    this.state = {
+      showLoader: false,
+      fetchComplete: false,
+      metadata: [],
+      fileUploadEnabled: true,
+      statusUpdated: false,
+      statuses: [],
+      item: null,
+      activeTabIndex: 0,
+    };
+  }
+
+  async componentDidMount() {    
+    const channelData = await fetchChannel(this.props.root)
+    this.setState({
+      showLoader: false,
+      fetchComplete: true,
+      item: last(channelData),
+      statuses: this.getUniqueStatuses(channelData),
+    });
+      /*
     if (!itemId || isEmpty(items)) {
       history.push('/');
     } else if (isEmpty(item) || item[0].itemId !== itemId) {
@@ -73,7 +83,7 @@ class DetailsPage extends Component {
         item: last(item),
         statuses: this.getUniqueStatuses(item),
       });
-    }
+    } */
   }
 
   notifySuccess = message => toast.success(message);
@@ -164,13 +174,16 @@ class DetailsPage extends Component {
     } = this.state;
     const {
       user,
-      project: { trackingUnit, documentStorage, locationTracking, temperatureChart, detailsPage },
     } = this.props;
+    
+    const { 
+      trackingUnit, documentStorage, locationTracking, temperatureChart, detailsPage
+    } = this.props.settings;
 
     if (!item) return <Loader showLoader={showLoader} />;
 
-    const nextEvents = user.nextEvents[item.status.toLowerCase().replace(/[- ]/g, '')];
-
+    //const nextEvents = user.nextEvents[item.status.toLowerCase().replace(/[- ]/g, '')];
+    const nextEvents = "fake event"
     return (
       <div>
         <Header>
@@ -207,13 +220,13 @@ class DetailsPage extends Component {
             <Details item={item} fields={detailsPage} />
           </div>
         </div>
-        {documentStorage && fileUploadEnabled && user.canUploadDocuments ? (
+        {/*documentStorage && fileUploadEnabled && user.canUploadDocuments ? (
           <FilesUpload
             uploadComplete={this.onUploadComplete}
             pathTofile={`${trackingUnit.replace(/\s/g, '')}/${item.itemId}`}
             existingDocuments={item.documents}
           />
-        ) : null}
+        ) : null*/}
         <Notification />
       </div>
     );
