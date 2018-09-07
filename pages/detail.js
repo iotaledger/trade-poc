@@ -11,6 +11,7 @@ import Loader from '../components/Loader';
 import Header from '../components/Header';
 import Tabs from '../components/Tabs';
 import Details from '../components/Details';
+import Head from '../components/Head';
 //import FilesUpload from '../components/Documents/FilesUpload';
 import { validateIntegrity } from '../components/Documents/DocumentIntegrityValidator';
 //import { fetchItem, appendItemChannel } from '../utils/mam';
@@ -186,6 +187,7 @@ class DetailsPage extends Component {
     const nextEvents = "fake event"
     return (
       <div>
+        <Head />
         <Header>
           <p>
             Welcome to {trackingUnit} tracking,<br />
@@ -228,6 +230,72 @@ class DetailsPage extends Component {
           />
         ) : null*/}
         <Notification />
+        <style jsx global>{`
+          @mixin button {
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            white-space: nowrap;
+            display: inline-block;
+            color: #ffffff;
+            background: linear-gradient(90deg,#18817c,#22b1ab);
+          }
+
+          .loader-wrapper {
+            height: 30px;
+            width: 100%;
+            margin: 30px auto;
+          }
+
+          .details-wrapper {
+            max-width: 1092px;
+            width: 100%;
+            display: flex;
+            margin: 0 auto;
+
+            .md-block-centered  {
+              width: 100%;
+            }
+
+            .route-cta-wrapper {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              margin: 50px 20px;
+
+              @media (max-width: 768px) {
+                margin: 20px;
+              }
+
+              .ca-title {
+                font-size: 40px;
+                font-weight: 700;
+                color: rgb(63,63,63);
+              }
+
+              .details-page-button {
+                @include button();
+                width: auto;
+                font-size: 18px;
+                font-weight: 700;
+                padding: 26px;
+                line-height: 2px;
+                border-radius: 45px;
+
+                @media (max-width: 768px) {
+                  white-space: normal;
+                  line-height: unset;
+                  height: auto;
+                  padding: 5px 26px;
+                }
+              }
+            }
+          }
+
+        `}</style>
       </div>
     );
   }

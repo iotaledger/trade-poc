@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types'; // ES6
 import { sha256 } from 'js-sha256';
-import { TextField, SelectField, FontIcon } from 'react-md';
+import { TextField, SelectField, Button, FontIcon } from 'react-md';
 import { toast } from 'react-toastify';
 import { isEmpty, upperFirst } from 'lodash';
 import Logo from '../components/Logo';
@@ -118,14 +118,11 @@ class LoginPage extends Component {
             />
 
             <Loader showLoader={showLoader} />
-            <button  onClick={e => this.login(e.target.value)} className={`form-button ${showLoader ? 'hidden' : ''}`}>
-              Login
-            </button>
+            <Button raised onClick={this.login} className={`form-button ${showLoader ? 'hidden' : ''}`}>Login</Button>
             <Notification />
           </form>
         </div>
-        <style jsx>{`
-
+        <style jsx global>{`
           @mixin button {
             letter-spacing: 1.5px;
             text-transform: uppercase;
@@ -205,10 +202,9 @@ class LoginPage extends Component {
                 font-size: 22px;
                 padding: 35px 50px;
                 line-height: 2px;
-                border-radius: 45px; 
+                border-radius: 45px;
               }
               input {
-                background-color: red;
                 margin-top: 40px;
                 font-size: 18px;
                 font-weight: 700;

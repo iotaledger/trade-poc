@@ -6,7 +6,7 @@ import StatusList from '../Status';
 import Documents from '../Documents';
 import Temperature from '../Temperature';
 import Location from '../Location';
-import '../../static/assets/scss/tabs.scss';
+//import '../../static/assets/scss/tabs.scss';
 
 class ItemTabs extends PureComponent {
   state = {

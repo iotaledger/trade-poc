@@ -122,7 +122,7 @@ class ListPage extends Component {
           color: #ffffff;
           background: linear-gradient(90deg,#18817c,#22b1ab);
         }
-        
+
         .cta-wrapper {
           display: flex;
           flex-direction: row;
@@ -130,7 +130,7 @@ class ListPage extends Component {
           height: 92px;
           background-color: #ffffff;
           box-shadow: 0px 5px 13px -2px rgba(155, 155, 155,0.5);
-        
+
           .listPage-button {
             @include button();
             width: 350px;
@@ -141,29 +141,29 @@ class ListPage extends Component {
             border-radius: 45px;
           }
         }
-        
+
         .md-data-table {
           max-width: 1092px;
           margin: 0 auto;
-        
+
           thead tr.md-table-row, tbody tr.md-table-row {
             border-bottom: 1px solid rgb(201, 201, 201);
           }
-        
+
           tbody tr.md-table-row {
             cursor: pointer;
           }
-        
+
           .md-table-column {
             font-size: 18px;
             font-weight: 700;
             width: 33.3%;
             height: 81px;
-        
+
             &.md-text {
               color: rgb(63, 63, 63);
             }
-        
+
             &.md-text--secondary {
               color: rgb(151, 151, 151);
             }

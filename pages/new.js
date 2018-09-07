@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
 import Header from '../components/Header';
 import Notification from '../components/Notification';
+import Head from '../components/Head';
 // import { addItem } from '../store/items/actions';
 // import { storeItem } from '../store/item/actions';
 // import { getFirebaseSnapshot, reassignOwnership } from '../utils/firebase';
@@ -130,7 +131,8 @@ class CreateItemPage extends Component {
 
       const unit = upperFirst(trackingUnit);
     return (
-      <div>
+    <div>
+      <Head />
     <Header>
       <div>
         <div>
@@ -178,6 +180,112 @@ class CreateItemPage extends Component {
         </CardActions>
       </div>
     </div>
+    <style jsx global>{`
+      @mixin button {
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+        white-space: nowrap;
+        display: inline-block;
+        color: #ffffff;
+        background: linear-gradient(90deg,#18817c,#22b1ab);
+      }
+
+
+      .create-item-wrapper {
+        max-width: 630px;
+        width: 40%;
+        margin: 30px auto 0;
+
+        .md-grid {
+
+          & > div {
+            width: 100%;
+          }
+          .input-wrapper {
+            display: flex;
+            align-items: center;
+          }
+          #video-area {
+            border: 1px solid gray;
+            width: 100%;
+          }
+          input {
+            font-size: 18px;
+            font-weight: 700;
+            padding-left: 10px;
+          }
+
+          .md-divider {
+            background-color: rgb(151, 151, 151);
+          }
+
+          .md-floating-label {
+            color: rgb(63, 63, 63);
+            font-size: 18px;
+            font-weight: 400;
+            padding-left: 10px;
+          }
+
+          .md-layover {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            border-bottom: 1px solid rgb(151, 151, 151);
+            margin-bottom: 20px;
+
+            .md-select-field--btn {
+              color: rgb(63, 63, 63);
+              font-size: 18px;
+              font-weight: 700;
+              padding-left: 10px;
+            }
+
+            .md-icon-separator {
+              padding-right: 0;
+            }
+          }
+
+          .md-tile-content {
+            .md-text {
+              color: rgb(63, 63, 63);
+              font-size: 18px;
+              font-weight: 700;
+            }
+          }
+
+          .md-list--menu-below {
+            top: 80%;
+          }
+        }
+
+        .iota-theme-button {
+          @include button();
+          width: 100%;
+          margin-top: 20px;
+          font-size: 22px;
+          padding: 35px 50px;
+          line-height: 2px;
+          border-radius: 45px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .create-item-wrapper {
+          width: 70%;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .create-item-wrapper {
+          width: 85%;
+        }
+      }
+
+    `}</style>
   </div>
     );
   }
