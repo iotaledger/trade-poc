@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types'; // ES6
 import { sha256 } from 'js-sha256';
-import { TextField, SelectField, Button, FontIcon } from 'react-md';
+import { TextField, SelectField, FontIcon } from 'react-md';
 import { toast } from 'react-toastify';
 import { isEmpty, upperFirst } from 'lodash';
 import Logo from '../components/Logo';
@@ -118,9 +118,9 @@ class LoginPage extends Component {
             />
 
             <Loader showLoader={showLoader} />
-            <Button raised onClick={this.login} className={`form-button ${showLoader ? 'hidden' : ''}`}>
+            <button  onClick={e => this.login(e.target.value)} className={`form-button ${showLoader ? 'hidden' : ''}`}>
               Login
-            </Button>
+            </button>
             <Notification />
           </form>
         </div>
@@ -138,7 +138,6 @@ class LoginPage extends Component {
             color: #ffffff;
             background: linear-gradient(90deg,#18817c,#22b1ab);
           }
-
 
           .wrapper {
             display: flex;
@@ -206,10 +205,10 @@ class LoginPage extends Component {
                 font-size: 22px;
                 padding: 35px 50px;
                 line-height: 2px;
-                border-radius: 45px;
+                border-radius: 45px; 
               }
-
               input {
+                background-color: red;
                 margin-top: 40px;
                 font-size: 18px;
                 font-weight: 700;

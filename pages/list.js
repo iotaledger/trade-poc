@@ -8,6 +8,8 @@ import Loader from '../components/Loader';
 import Header from '../components/Header';
 import Notification from '../components/Notification';
 import Autosuggest from '../components/Autosuggest';
+import Head from '../components/Head';
+
 //import '../static/assets/scss/listPage.scss';
 import { fetchChannels } from '../utils/mam'
 import projectJson from '../config/project.json'
@@ -51,6 +53,7 @@ class ListPage extends Component {
     if (!project || !this.props.settings.listPage) return <div />;
     return (
       <div className="app">
+        <Head />
         <Header>
           <p>
             Welcome to {this.props.settings.projectName},<br />
@@ -59,9 +62,9 @@ class ListPage extends Component {
         </Header>
         {user.canCreateStream ? (
           <div className="cta-wrapper">
-            <Button className="listPage-button" raised onClick={() => Router.push('/new')}>
+            <button className="listPage-button" raised onClick={() => Router.push('/new')}>
               Create new {this.props.settings.trackingUnit}
-            </Button>
+            </button>
           </div>
         ) : null}
         <Loader showLoader={showLoader} />
@@ -106,6 +109,67 @@ class ListPage extends Component {
           </DataTable>
         </div>
         <Notification />
+        <style jsx global>{`
+        @mixin button {
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          text-align: center;
+          position: relative;
+          cursor: pointer;
+          overflow: hidden;
+          white-space: nowrap;
+          display: inline-block;
+          color: #ffffff;
+          background: linear-gradient(90deg,#18817c,#22b1ab);
+        }
+        
+        .cta-wrapper {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          height: 92px;
+          background-color: #ffffff;
+          box-shadow: 0px 5px 13px -2px rgba(155, 155, 155,0.5);
+        
+          .listPage-button {
+            @include button();
+            width: 350px;
+            margin: auto;
+            font-size: 18px;
+            padding: 26px;
+            line-height: 2px;
+            border-radius: 45px;
+          }
+        }
+        
+        .md-data-table {
+          max-width: 1092px;
+          margin: 0 auto;
+        
+          thead tr.md-table-row, tbody tr.md-table-row {
+            border-bottom: 1px solid rgb(201, 201, 201);
+          }
+        
+          tbody tr.md-table-row {
+            cursor: pointer;
+          }
+        
+          .md-table-column {
+            font-size: 18px;
+            font-weight: 700;
+            width: 33.3%;
+            height: 81px;
+        
+            &.md-text {
+              color: rgb(63, 63, 63);
+            }
+        
+            &.md-text--secondary {
+              color: rgb(151, 151, 151);
+            }
+          }
+        }
+        `}</style>
       </div>
     );
   }
