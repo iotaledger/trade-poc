@@ -7,8 +7,6 @@ const { parse } = require('url')
 
 module.exports = {
     loginStrategy : function(username, password, done) {
-      console.log('here', username, password)
-
         users.findOne({ _id: username, password: password }, function(err, user) {
           if (err) { return done(err); }
           if (!user) {

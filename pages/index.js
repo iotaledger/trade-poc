@@ -29,9 +29,10 @@ class LoginPage extends Component {
   componentDidMount() {
     // this.props.loadProjectSettings();
     // this.props.loadEventMappings();
+    /*
     if(localStorage.getItem('username')) {
       Router.push('/list')
-    }
+    } */
   }
 
   onTextChange({ username, password }, e) {
@@ -61,8 +62,8 @@ class LoginPage extends Component {
       //  this.props.history.push('/');
         this.setState({ showLoader: false });
         if(response.data.username) {
-          localStorage.setItem('username', username);
-          localStorage.setItem('role', response.data.role);
+          sessionStorage.setItem('username', username);
+          sessionStorage.setItem('role', response.data.role);
           // redic to List
           Router.push('/list')
         } else {
