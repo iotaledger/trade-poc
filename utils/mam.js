@@ -25,7 +25,7 @@ const fetchChannels = async (rootList) => {
         return {...channelData, root}
     })
   ).then(res => {
-    const channels = res.map(channel => channel.messages.map(msg => ({...JSON.parse(iota.utils.fromTrytes(msg)), root: res[0].root})))
+    const channels = res.map(channel => channel.messages.map(msg => ({...JSON.parse(iota.utils.fromTrytes(msg)), root: channel.root})))
     return channels.map(channelArr => channelArr[0])
   })
 }
