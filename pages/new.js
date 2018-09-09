@@ -17,6 +17,7 @@ import { createNewChannel } from '../utils/mam';
 //import { BrowserQRCodeReader } from '@zxing/library';
 import projectJson from '../config/project.json'
 import axios from 'axios';
+import Router from 'next/router'
 
 // const codeReader = new BrowserQRCodeReader();
 let codeReader = null;
@@ -93,7 +94,7 @@ class CreateItemPage extends Component {
     if (!formError) {
       // Format the item ID to remove dashes and parens
         const itemId = this.state.id.replace(/[^0-9a-zA-Z_-]/g, '');
-        const userID = 'fakeUserID'
+        const userID = sessionStorage.username
         const status = this.props.events.owner.initEvent
 
         this.setState({ showLoader: true });
@@ -114,6 +115,7 @@ class CreateItemPage extends Component {
       .then(response => {
         this.setState({ showLoader: false });
         console.log(response.data._id)
+        Router.push('/list')
       })
       .catch(error => {
         this.setState({ showLoader: false });

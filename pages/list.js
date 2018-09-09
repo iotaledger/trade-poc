@@ -37,7 +37,7 @@ class ListPage extends Component {
       const channelRoots = response.data.map(root => root._id)
       const allChannelData = await fetchChannels(channelRoots)
       this.setState({ items: allChannelData })
-    })
+    }).catch(console.log)
   }
 
   notifyError = message => toast.error(message);
