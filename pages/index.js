@@ -66,6 +66,7 @@ class LoginPage extends Component {
         }
       })
       .catch(error => {
+        console.log(error)
         this.setState({ showLoader: false });
         toast.error(
           error.response && error.response.data && error.response.data.error
@@ -88,9 +89,9 @@ class LoginPage extends Component {
       <div className="wrapper">
         <Head />
         <div className="wrapper-graphic">
-          <img src="static/images/desktop_bg.png" alt="background" className="wrapper-graphic-background desktop" />
-          <img src="static/images/tablet_bg.png" alt="background" className="wrapper-graphic-background tablet" />
-          <img src="static/images/mobile_bg.png" alt="background" className="wrapper-graphic-background mobile" />
+          <img src="/static/images/desktop_bg.png" alt="background" className="wrapper-graphic-background desktop" />
+          <img src="/static/images/tablet_bg.png" alt="background" className="wrapper-graphic-background tablet" />
+          <img src="/static/images/mobile_bg.png" alt="background" className="wrapper-graphic-background mobile" />
           <div className="wrapper-welcome">
             <Logo />
             <p>Welcome back!</p>

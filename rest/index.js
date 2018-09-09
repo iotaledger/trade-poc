@@ -2,8 +2,33 @@
 const Datastore = require('nedb')
 const users = new Datastore({ filename: './db/users.db', autoload: true });
 const channels = new Datastore({ filename: './db/channels.db', autoload: true });
+const { parse } = require('url')
+
 
 module.exports = {
+    loginStrategy : function(username, password, done) {
+      console.log('here', username, password)
+
+        users.findOne({ _id: username, password: password }, function(err, user) {
+          if (err) { return done(err); }
+          if (!user) {
+            return done(null, false, { message: 'Incorrect username.' });
+          }
+          return done(null, user);
+        });
+    },
+    handleRoute: function(req, res, handle) {
+      const parsedUrl = parse(req.url, true)
+      const { pathname, query } = parsedUrl
+      const restrictedPages = ['/list', '/new', '/detail']
+      if(req.isAuthenticated()) {
+          handle(req, res)
+      } else if(restrictedPages.includes(pathname)) {
+          res.redirect(`/`);
+      } else {
+          handle(req, res)
+      }
+    },
     createUser: function(req, res) {
       const user = { _id: req.body.username, password: req.body.password, name: req.body.name, role: req.body.role };
       users.insert(user, function (err, newUser) {
