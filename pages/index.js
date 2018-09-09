@@ -29,10 +29,6 @@ class LoginPage extends Component {
   componentDidMount() {
     // this.props.loadProjectSettings();
     // this.props.loadEventMappings();
-    /*
-    if(localStorage.getItem('username')) {
-      Router.push('/list')
-    } */
   }
 
   onTextChange({ username, password }, e) {
