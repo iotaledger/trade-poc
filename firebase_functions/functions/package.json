@@ -8,10 +8,7 @@
     "babel-preset-env": "^1.6.1",
     "cors": "^2.8.4",
     "firebase-admin": "^4.1.2",
-    "firebase-functions": "^1.0.1",
-    "iota.lib.js": "^0.4.7",
-    "lodash-es": "^4.17.10",
-    "mam.client.js": "iotaledger/mam.client.js"
+    "firebase-functions": "^1.0.1"
   },
   "private": true
 }

@@ -1,19 +1,17 @@
 import Mam from 'mam.client.js';
-import IOTA from 'iota.lib.js';
 import { isEmpty, uniqBy, pick, find, last } from 'lodash';
+import { asciiToTrytes, trytesToAscii } from '@iota/converter'
 import { createItem, updateItem } from './firebase';
 import config from '../config.json';
 
-const iota = new IOTA({ provider: config.provider });
-
 // Initialise MAM State
-let mamState = Mam.init(iota);
+let mamState = Mam.init(config.provider);
 
 // Publish to tangle
 const publish = async data => {
   try {
     // Create MAM Payload - STRING OF TRYTES
-    const trytes = iota.utils.toTrytes(JSON.stringify(data));
+    const trytes = asciiToTrytes(JSON.stringify(data));
     const message = Mam.create(mamState, trytes);
 
     // Save new mamState
@@ -67,7 +65,7 @@ const appendToChannel = async (payload, savedMamData) => {
 export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalback) => {
   const itemEvents = [];
   await Mam.fetch(root, 'restricted', secretKey, data => {
-    const itemEvent = JSON.parse(iota.utils.fromTrytes(data));
+    const itemEvent = JSON.parse(trytesToAscii(data));
     storeItemCallback(itemEvent);
     itemEvents.push(itemEvent);
     setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
