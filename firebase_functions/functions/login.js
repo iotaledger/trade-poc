@@ -21,18 +21,6 @@ module.exports = function(req, res) {
           delete val.password;
           val.userId = username;
           return res.send(val);
-          // Retrieve MAM data
-          // admin
-          //   .database()
-          //   .ref('mam')
-          //   .once('value')
-          //   .then(snapshot => {
-          //     response = Object.assign({}, response, { mam: snapshot.val(), role: username });
-          //     return res.send(response);
-          //   })
-          //   .catch(error => {
-          //     return res.status(500).send({ error: 'MAM data not found' });
-          //   });
         } else {
           return res.status(403).send({ error: 'Wrong password' });
         }
