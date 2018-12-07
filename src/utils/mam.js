@@ -1,11 +1,15 @@
 import Mam from 'mam.client.js';
-import { isEmpty, uniqBy, pick, find, last } from 'lodash';
 import { asciiToTrytes, trytesToAscii } from '@iota/converter'
+import { createHttpClient } from '@iota/http-client'
+import { createContext, Reader, Mode } from 'mam.client.js/lib/mam'
+import { isEmpty, uniqBy, pick, find, last } from 'lodash';
 import { createItem, updateItem } from './firebase';
-import config from '../config.json';
+import { provider } from '../config.json';
+
+const client = createHttpClient({ provider })
 
 // Initialise MAM State
-let mamState = Mam.init(config.provider);
+let mamState = Mam.init(provider);
 
 // Publish to tangle
 const publish = async data => {
@@ -62,15 +66,28 @@ const appendToChannel = async (payload, savedMamData) => {
   }
 };
 
-export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalback) => {
+export const fetchItem = async (initialRoot, secretKey, storeItemCallback, setStateCalback) => {
   const itemEvents = [];
-  await Mam.fetch(root, 'restricted', secretKey, data => {
-    const itemEvent = JSON.parse(trytesToAscii(data));
-    storeItemCallback(itemEvent);
-    itemEvents.push(itemEvent);
-    setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
-  }).catch(error => console.log('Cannot fetch stream', error));
-
+  try {
+    let hasMessage;
+    let ctx = await createContext();
+    let root = initialRoot;
+    do {
+      let reader = new Reader(ctx, client, Mode.Old, root, secretKey);
+      const message = await reader.next();
+      hasMessage = message && message.value && message.value[0];
+      if (hasMessage) {
+        root = message.value[0].message.nextRoot;
+        const itemEvent = JSON.parse(trytesToAscii(message.value[0].message.payload));
+        storeItemCallback(itemEvent);
+        itemEvents.push(itemEvent);
+        setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
+      }
+    } while(hasMessage);
+  } catch (e) {
+    console.error("fetchItem:", "\n", e);
+    return e;
+  }
   return itemEvents[itemEvents.length - 1];
 };
 
