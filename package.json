@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@firebase/app-types": "^0.3.1",
-    "@iota/converter": "^1.0.0-beta.5",
+    "@iota/converter": "^1.0.0-beta.6",
     "@zxing/library": "^0.7.0",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
