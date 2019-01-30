@@ -1,86 +1,97 @@
-.header {
-  height: 160px;
-  display: flex;
-  flex-direction: column;
-  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(rgb(123, 194, 195)), to(rgb(128, 133, 191)));
-  background-image: -webkit-linear-gradient(left, rgb(123, 194, 195), rgb(128, 133, 191));
-  background-image: -moz-linear-gradient(left, rgb(123, 194, 195), rgb(128, 133, 191));
-  background-image: -o-linear-gradient(left, rgb(123, 194, 195), rgb(128, 133, 191));
+$header-gradient-start: #3e3e3e;
+$header-gradient-end: #2e2e2e;
 
-  .header__logo {
-    cursor: pointer;
+header {
+  width: 100%;
+  background-image: linear-gradient(to top, $header-gradient-start, $header-gradient-end);
+
+  &.background-transparent {
+    background-image: none;
   }
 
-  svg {
-    width: 18%;
-    margin: 50px 0 0 50px;
-    position: absolute;
+  img {
+    font-size: 10px;
   }
 
-  div, p {
-    font-size: 30px;
-    font-weight: 700;
-    line-height: 50px;
-    text-align: center;
-    color: #ffffff;
-    padding: 30px;
-    margin: auto 0;
+  .logo {
+    @include media-breakpoint-down(xs) {
+      height: 45px;
+      margin: 20px 10px 20px 5px;
+    }
+
+    height: 45px;
+    margin: 25px;
+  }
+
+  .heading {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    align-self: center;
 
-    a {
-      cursor: pointer;
+    .heading-text {
+      font-weight: 300;
+      line-height: 38px;
+      color: $white;
 
-      img {
-        height: 60px;
-        padding: 0px 80px 10px 0px;
+      @include font-size(28px);
+      @include media-breakpoint-down(xs) {
+        @include font-size(16px);
       }
     }
   }
-}
 
-@media (max-width: 850px) and (min-width: 601px) {
-  .header {
-    svg {
-      width: 18%;
-      margin: 65px 0 0 15px;
-    }
+  .cta {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    align-self: center;
+    color: $white;
+    padding-right: 0;
 
-    div, p {
-      font-size: 24px;
-      line-height: 35px;
+    .header-cta-wrapper {
+      background-color: #181818;
+      padding: 16px 30px;
 
-      a {
-        img {
-          height: 46px;
-          padding: 0px 30px 10px 0px;
+      @include media-breakpoint-down(sm) {
+        background-color: unset;
+      }
+
+      h4 {
+        margin-bottom: 0;
+      }
+
+      span {
+        @include font-size(14px);
+        @include media-breakpoint-down(xs) {
+          @include font-size(10px);
         }
       }
-    }
-  }
-}
 
-@media (max-width: 600px) {
-  .header {
-    height: 100px;
-    flex-direction: row;
-    justify-content: space-between;
+      .button-wrapper {
+        align-self: center;
 
-    svg {
-      width: 18%;
-      margin: 40px 0 0 15px;
-    }
+        button.primary {
+          @include button($primary);
+          width: 160px;
+          border: 1px solid $primary;
+          color: $white;
+        }
 
-    div, p {
-      font-size: 18px;
-      line-height: 30px;
-      padding: 20px;
+        button.secondary {
+          @include button(rgba(196, 196, 196, 0.4));
+          width: 160px;
+          border: 1px solid $primary;
+          color: rgba(255, 255, 255, 0.4);
+        }
 
-      a {
-        img {
-          height: 46px;
-          padding: 0px 30px 10px 0px;
+        button.primary, button.secondary {
+          @include media-breakpoint-down(xs) {
+            line-height: 37px;
+            height: 40px;
+            font-size: 15px;
+            width: 120px;
+          }
         }
       }
     }

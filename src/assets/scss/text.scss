@@ -1,0 +1,96 @@
+h1 {
+  @include font-size(32px);
+  @include media-breakpoint-down(xs) {
+    @include font-size(24px);
+  }
+
+  color: $black;
+  font-family: $font-family-sans-serif;
+  font-weight: 300;
+  line-height: 2;
+}
+
+h2 {
+  @include font-size(32px);
+  @include media-breakpoint-down(xs) {
+    @include font-size(28px);
+    margin: 10px 0 0;
+    line-height: 1.5;
+  }
+
+  color: $primary;
+  font-family: $font-family-sans-serif;
+  font-weight: bold;
+  line-height: 2.5;
+}
+
+h4 {
+  @include font-size(22px);
+  @include media-breakpoint-down(xs) {
+    @include font-size(14px);
+  }
+
+  color: $white;
+  font-family: $font-family-sans-serif;
+  font-weight: bold;
+  line-height: 1.75;
+}
+
+h5 {
+  @include font-size(20px);
+  @include media-breakpoint-down(xs) {
+    @include font-size(16px);
+  }
+
+  color: $primary;
+  font-family: $font-family-sans-serif;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+p {
+  @include font-size(16px);
+  @include media-breakpoint-down(xs) {
+    line-height: 1.5;
+  }
+
+
+  color: var(--body-copy);
+  font-family: $font-family-sans-serif;
+  font-weight: 400;
+  line-height: 2;
+}
+
+.text-responsive-align {
+  @include media-breakpoint-down(xs) {
+    text-align: left !important;
+  }
+
+  margin-bottom: 20px;
+  line-height: 1.5;
+  text-align: right !important;
+}
+
+.text-responsive-align-alt {
+  @include media-breakpoint-down(xs) {
+    text-align: left !important;
+  }
+
+  margin-bottom: 20px;
+  line-height: 1.5;
+  text-align: left !important;
+}
+
+.justify-content-responsive {
+  @include media-breakpoint-down(xs) {
+    justify-content: left !important;
+    text-align: left;
+  }
+
+  justify-content: center !important;
+  text-align: center;
+}
+
+.bold {
+  font-weight: 700;
+}

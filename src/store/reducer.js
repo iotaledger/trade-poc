@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { LOGOUT } from './actionTypes';
+import { LOGOUT, RESET } from './actionTypes';
 import user from './user/reducer';
 import item from './item/reducer';
 import items from './items/reducer';
@@ -14,6 +14,10 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
   if (action.type === LOGOUT) {
+    state = undefined;
+  }
+
+  if (action.type === RESET) {
     state = undefined;
   }
 

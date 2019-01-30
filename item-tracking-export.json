@@ -1,0 +1,125 @@
+{
+  "items" : {
+    "9" : {
+      "departure" : "Rotterdam",
+      "destination" : "Singapore",
+      "containerId" : "9",
+      "mam" : {
+        "next" : "AZTSAGNOHTIBJDXBQIBCMJIPJIKAJWEBMMDWWKQ9MOEOTDISGLODBGEDCPOCLNF9OPJM9RHGLBQDLQTLO",
+        "root" : "UGOWZMWREHLQDVGB9ZCYNFW99BMLTIKUPI9NNVDMCYAHEGOSXWAJNWBCQBDGAZOSMSWLIYMHVMZ9RJQWG",
+        "secretKey" : "TESTTESTTESTTEST",
+        "seed" : "MJXDIFFYGTMYPR9LJISLVFBQWCIXMS9HMYPIAZWMPRACZEFU9JJJJRZQQZZVLNIPBNWAKUNMOTRLJTHVS",
+        "start" : 17
+      },
+      "shipper" : "Mr. John Shipper",
+      "status" : "Vessel departure",
+      "timestamp" : 1525871576041
+    }
+  },
+  "roleEventMapping" : {
+    "customs" : {
+      "canAppendToStream" : true,
+      "canCreateStream" : false,
+      "canUploadDocuments" : true,
+      "nextEvents" : {
+        "gatein" : "Container cleared for export"
+      },
+      "previousEvent" : [ "Gate-in" ]
+    },
+    "forwarder" : {
+      "canAppendToStream" : true,
+      "canCreateStream" : false,
+      "canUploadDocuments" : true,
+      "nextEvents" : {
+        "containerannounced" : "Gate-in"
+      },
+      "previousEvent" : [ "Container announced" ]
+    },
+    "port" : {
+      "canAppendToStream" : true,
+      "canCreateStream" : false,
+      "canUploadDocuments" : true,
+      "nextEvents" : {
+        "containerclearedforexport" : "Container loaded on vessel",
+        "containerloadedonvessel" : "Vessel departure"
+      },
+      "previousEvent" : [ "Container cleared for export", "Container loaded on vessel", "Vessel departure" ]
+    },
+    "shipper" : {
+      "canAppendToStream" : false,
+      "canCreateStream" : true,
+      "canUploadDocuments" : true,
+      "nextEvents" : {
+        "containerannounced" : "Container announced"
+      },
+      "previousEvent" : [ "Container announced" ]
+    }
+  },
+  "settings" : {
+    "detailsPage" : {
+      "body" : [ "shipper", "containerId", "status", "load", "type", "timestamp" ],
+      "headers" : [ "Shipper", "Container ID", "Status", "Load", "Type", "Last updated" ],
+      "title" : [ "departure", "destination" ]
+    },
+    "documentStorage" : true,
+    "fields" : [ "containerId", "shipper", "status", "timestamp", "type", "load", "departure", "destination", "temperature", "position", "documents", "lastPositionIndex" ],
+    "firebaseFields" : [ "containerId", "shipper", "status", "timestamp", "departure", "destination" ],
+    "listPage" : {
+      "body" : [ "containerId", [ "departure", "destination" ], "status" ],
+      "headers" : [ "Container ID", "Route", "Status" ]
+    },
+    "locationTracking" : true,
+    "projectName" : "container tracking",
+    "qrReader" : true,
+    "roles" : [
+      {
+        "id": "shipper",
+        "name": "Mr. John Shipper",
+        "description": "The shipper is often also the exporter/producer of goods. He loads the container with goods and initiate a number of the needed shipping documents for export; handover the container and shipping documents to forwarders. Container and shipping documents might be handled by different sets of forwarders."
+      },
+      {
+        "id": "forwarder",
+        "name": "Mr. Luigi Logisticano",
+        "description": "Freight forwarders are agents who coordinate with the other participants in the shipping process on behalf of the importer/exporter. They will coordinate pick-up of container, manage part of the shipping documents including transfer to port authorities, customs, shipping liners etc., update container routes."
+      },
+      {
+        "id": "customs",
+        "name": "Ms. Teresa McCustoms",
+        "description": "In any international trade, custom authorities of at least two countries - country of export and country of import - are involved. The customs authorities provide clearance for the goods to leave the country of export and enter the country of import."
+      },
+      {
+        "id": "port",
+        "name": "Mr. Chuck Portsmith",
+        "description": "Port authorities of at least two countries are involved in the shipping process. The port authorities receive  the container and documents from the forwarders. They will handle logistics within the port area including moving container to Customs for inspection and loading it onto the vessel."
+      }
+    ],
+    "temperatureChart" : true,
+    "trackingUnit" : "container"
+  },
+  "users" : {
+    "customs" : {
+      "id" : "customs",
+      "name" : "Ms. Teresa McCustoms",
+      "password" : "45e285133b891bc3bc022fdd5eda0726b15b609396e5b8e734078ab9f5ccdd6b",
+      "role" : "customs"
+    },
+    "forwarder" : {
+      "id" : "forwarder",
+      "name" : "Mr. Luigi Logisticano",
+      "password" : "b4b3e80b5c6c2e35e8a6c9a2437568ddf4eb4f739bfad8427141261a87cb1868",
+      "role" : "forwarder"
+    },
+    "port" : {
+      "id" : "port",
+      "name" : "Mr. Chuck Portsmith",
+      "password" : "f8d397a33fcb9725db96501e653bf3cfa4455c5639482b9936c22b221634d659",
+      "role" : "port"
+    },
+    "shipper" : {
+      "id" : "shipper",
+      "name" : "Mr. John Shipper",
+      "password" : "8be2e28a473f0bf8203d10896b2f14b5d499369e3f5aa1882c098628b58f41ac",
+      "role" : "shipper"
+    }
+  }
+}

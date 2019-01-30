@@ -1,4 +1,20 @@
-.temperatureChart {
-  padding-top: 30px;
+.temperature-chart {
   margin: 0 50px;
+}
+
+.add-new {
+  margin: 100px 0 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
+
+  .input-temperature {
+    width: 200px;
+    margin: 0 30px;
+  }
+
+  .temperature-cta {
+    height: auto;
+  }
 }

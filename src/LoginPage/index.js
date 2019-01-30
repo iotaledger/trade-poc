@@ -1,45 +1,71 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import ReactGA from 'react-ga';
 import { sha256 } from 'js-sha256';
 import { connect } from 'react-redux';
-import { TextField, SelectField, Button, FontIcon } from 'react-md';
 import { toast } from 'react-toastify';
-import { isEmpty, upperFirst } from 'lodash';
+import { withCookies } from 'react-cookie';
+import upperFirst from 'lodash/upperFirst';
+import isEmpty from 'lodash/isEmpty';
+import { Col } from 'reactstrap';
+import Tooltip from '../SharedComponents/Tooltip';
+import Header from '../SharedComponents/Header';
+import Footer from '../SharedComponents/MiniFooter';
+import Loader from '../SharedComponents/Loader';
+import updateStep from '../utils/cookie';
 import { storeCredentials, storeEvents } from '../store/user/actions';
 import { storeProjectSettings, storeEventMappings } from '../store/project/actions';
-import Logo from '../SharedComponents/Logo';
-import Loader from '../SharedComponents/Loader';
-import Notification from '../SharedComponents/Notification';
+import shipper from '../assets/images/role-avatars/shipper.svg';
+import forwarder from '../assets/images/role-avatars/forwarder.svg';
+import customs from '../assets/images/role-avatars/customs.svg';
+import port from '../assets/images/role-avatars/port.svg';
 import config from '../config.json';
-import '../assets/scss/loginPage.scss';
+
+const images = { shipper, forwarder, customs, port }
 
 class LoginPage extends Component {
   state = {
     showLoader: false,
+    selectedRole: null
   };
 
-  componentDidMount() {
-    this.props.loadProjectSettings();
-    this.props.loadEventMappings();
+  async componentDidMount() {
+    const { cookies, loadEventMappings, loadProjectSettings } = this.props;
+    await loadProjectSettings();
+    ReactGA.pageview('/login');
+    loadEventMappings();
+    const tourStep = cookies.get('tourStep');
+    if (!tourStep) {
+      cookies.set('tourStep', 0, { path: '/' });
+    }
   }
 
-  login = event => {
+  loginAs = (event, role) => {
+    const { cookies, history, storeCredentials, storeEvents } = this.props;
     event.preventDefault();
-    this.setState({ showLoader: true });
-    if (!this.username.value) return;
+    this.setState({ showLoader: true, selectedRole: role });
+    const password = sha256(role.toLowerCase());
 
-    const username = this.props.project.roleUserMapping[this.username.value.toLowerCase()];
-    const password = sha256(username.toLowerCase());
+    role === 'shipper' && updateStep(cookies, 1);
+    role === 'forwarder' && updateStep(cookies, 12);
+    role === 'customs' && updateStep(cookies, 16);
+    role === 'port' && updateStep(cookies, 22);
 
     axios
-      .post(`${config.rootURL}/login`, { username, password })
+      .post(`${config.rootURL}/login`, { username: role, password })
       .then(response => {
-        this.props.storeCredentials(response.data);
-        this.props.storeEvents(response.data.role);
-        this.props.history.push('/');
+        storeCredentials(response.data);
+        storeEvents(response.data.role);
+
+        ReactGA.event({
+          category: 'Login',
+          action: `Logged in as ${role}`
+        });
+
+        history.push('/list');
       })
       .catch(error => {
-        this.setState({ showLoader: false });
+        this.setState({ showLoader: false, selectedRole: null });
         toast.error(
           error.response && error.response.data && error.response.data.error
             ? error.response.data.error
@@ -49,55 +75,55 @@ class LoginPage extends Component {
   };
 
   render() {
-    const { showLoader } = this.state;
-    const {
-      project: { roleUserMapping, projectName },
-    } = this.props;
-    if (isEmpty(roleUserMapping)) {
-      return <div />;
-    }
-    const ROLES = Object.keys(roleUserMapping).map(role => upperFirst(role));
+    const { showLoader, selectedRole } = this.state;
+    const { project } = this.props;
+
+    if (isEmpty(project)) return <div />;
 
     return (
-      <div className="wrapper">
-        <div className="wrapper-graphic">
-          <img src="desktop_bg.png" alt="background" className="wrapper-graphic-background desktop" />
-          <img src="tablet_bg.png" alt="background" className="wrapper-graphic-background tablet" />
-          <img src="mobile_bg.png" alt="background" className="wrapper-graphic-background mobile" />
-          <div className="wrapper-welcome">
-            <Logo />
-            <p>Welcome back!</p>
-            <p>Login to access {projectName}</p>
-          </div>
+      <div className="login-page">
+        <Header ctaEnabled>
+          <Col md={3} xl={4} className="heading hidden-md-down">
+            <span className="heading-text">
+              Log in to your user role
+            </span>
+          </Col>
+        </Header>
+        <div className="cta-wrapper">
+          <a className="button" href="https://www.youtube.com/watch?v=o5jX8VAyzUs" target="_blank" rel="noopener noreferrer">
+            Need help? Watch the video
+          </a>
         </div>
-        <div className="wrapper-login">
-          <form className="wrapper-login-form" onSubmit={this.login}>
-            <h3 className="title">Login</h3>
-            <SelectField
-              ref={username => (this.username = username)}
-              id="username"
-              required
-              simplifiedMenu
-              className="md-cell"
-              placeholder="Select role"
-              menuItems={ROLES}
-              position={SelectField.Positions.BELOW}
-              dropdownIcon={<FontIcon>expand_more</FontIcon>}
-            />
-            <TextField
-              ref={password => (this.password = password)}
-              id="password"
-              label="Enter password"
-              type="password"
-              required
-            />
-            <Loader showLoader={showLoader} />
-            <Button raised onClick={this.login} className={`form-button ${showLoader ? 'hidden' : ''}`}>
-              Login
-            </Button>
-            <Notification />
-          </form>
+        <div className="roles-wrapper">
+          {
+            project.roles.map(role => (
+              <div className="role-wrapper" key={role.id}>
+                <div className="role-icon">
+                  <img alt={role.name} src={images[role.id]} />
+                </div>
+                <div className="role-info">
+                  <div className="role-name">
+                    {upperFirst(role.id)}
+                  </div>
+                  <div className="role-description">
+                    {role.description}
+                  </div>
+                  <div className="role-cta">
+                    <button
+                      className={`button ${role.id}-cta ${showLoader ? 'hidden' : ''}`}
+                      onClick={event => this.loginAs(event, role.id)}
+                    >
+                      Log in
+                    </button>
+                    <Loader showLoader={showLoader && selectedRole === role.id} />
+                  </div>
+                </div>
+              </div>
+            ))
+          }
         </div>
+        <Footer />
+        <Tooltip />
       </div>
     );
   }
@@ -114,7 +140,4 @@ const mapDispatchToProps = dispatch => ({
   storeEvents: role => dispatch(storeEvents(role)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withCookies(LoginPage));

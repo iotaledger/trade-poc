@@ -1,0 +1,29 @@
+.explorer-content {
+  max-width: 1092px;
+  width: 100%;
+}
+
+.panel {
+  position: relative;
+}
+
+.md-switch-container {
+  max-width: 140px;
+}
+
+.loaderWrapper {
+  margin-top: 20px;
+}
+
+@media (max-width: 1092px) {
+  .explorer-content {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  .explorer-content {
+    margin-top: 0;
+    padding: 0 10px;
+  }
+}

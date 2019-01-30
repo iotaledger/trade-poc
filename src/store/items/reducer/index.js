@@ -1,11 +1,8 @@
 import { handle } from 'redux-pack';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { ADD_ITEM, STORE_ITEMS } from '../../actionTypes';
 
-const initialState = {
-  data: [],
-  error: null,
-};
+const initialState = {};
 
 export default (state = initialState, action) => {
   const { type, payload } = action;
@@ -16,13 +13,11 @@ export default (state = initialState, action) => {
       return handle(state, action, {
         success: prevState => {
           return {
-            data: [...payload.data],
-            error: null,
+            ...payload.data,
           };
         },
         failure: prevState => {
           return {
-            data: prevState.data,
             error: payload.error,
           };
         },
@@ -31,14 +26,15 @@ export default (state = initialState, action) => {
       if (isEmpty(payload)) return state;
       return handle(state, action, {
         success: prevState => {
+          const containerId = payload.containerId;
           return {
-            data: [...prevState.data, payload],
-            error: null,
+            ...prevState,
+            [containerId]: payload,
           };
         },
         failure: prevState => {
           return {
-            data: prevState.data,
+            ...prevState,
             error: 'Loading items failed',
           };
         },

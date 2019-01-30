@@ -1,0 +1,78 @@
+.react-joyride__tooltip {
+  h4 {
+    color: $secondary;
+    text-align: left;
+    font-size: 28px !important;
+    font-weight: 300;
+    padding: 0 10px;
+  }
+
+  .tooltip-content {
+    text-align: left;
+    color: $secondary;
+  }
+
+  button[data-action~="primary"] {
+    @include button($primary);
+    width: 95px;
+    height: 40px;
+    outline: none;
+    font-size: 19px !important;
+    border-radius: 20px !important;
+  }
+}
+
+.tooltip-action {
+  text-align: left;
+  color: $primary;
+  font-weight: 600;
+  @include font-size(16px);
+}
+
+button.react-joyride__beacon {
+  outline: none !important;
+}
+
+.__floater {
+  @include media-breakpoint-down(sm) {
+    visibility: hidden !important;
+  }
+}
+
+.__floater.__floater__open {
+  transition: none !important;
+}
+
+.mobile-tooltip {
+  display: none;
+
+  @include media-breakpoint-down(sm) {
+    z-index: 2000;
+    display: block;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    cursor: pointer;
+
+    background-color: #f6f6f6;
+    box-shadow: 0px -5px 13px -2px rgba(155, 155, 155, 0.5);
+  }
+
+  .tooltip-content {
+    padding: 10px 0 12px 17px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tooltip-step {
+    color: $secondary;
+    @include font-size(18px);
+  }
+
+  .tooltip-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 15px;
+  }
+}

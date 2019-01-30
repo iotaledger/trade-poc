@@ -5,12 +5,11 @@
 /build
 
 .git
+/.firebase
 
 # misc
 .DS_Store
 
-/src/config*.json
-
-/firebase_functions/appengine
+/src/config.json
 
 *.log

@@ -1,6 +1,7 @@
 {
   "hosting": {
     "public": "build",
+    "cleanUrls": true,
     "headers": [
       {
         "source": "**/*",
@@ -8,6 +9,24 @@
           {
             "key": "Access-Control-Allow-Origin",
             "value": "*"
+          }
+        ]
+      },
+      {
+        "source" : "**/*.@(jpg|jpeg|gif|png|svg)",
+        "headers" : [
+          {
+            "key" : "Cache-Control",
+            "value" : "max-age=2592000"
+          }
+        ]
+      },
+      {
+        "source" : "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+        "headers" : [
+          {
+            "key" : "Cache-Control",
+            "value" : "max-age=2592000"
           }
         ]
       }
@@ -23,6 +42,33 @@
       "src/**",
       "firebase_functions/**",
       ".git/**"
+    ],
+    "redirects": [
+      {
+        "source": "/tour",
+        "destination": "/#/tour",
+        "type": 301
+      },
+      {
+        "source": "/login",
+        "destination": "/#/login",
+        "type": 301
+      },
+      {
+        "source": "/list",
+        "destination": "/#/list",
+        "type": 301
+      },
+      {
+        "source": "/new",
+        "destination": "/#/new",
+        "type": 301
+      },
+      {
+        "source": "/details/:containerId",
+        "destination": "/#/details/:containerId",
+        "type": 301
+      }
     ]
   }
 }

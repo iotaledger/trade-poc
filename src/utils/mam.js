@@ -2,7 +2,10 @@ import Mam from 'mam.client.js';
 import { asciiToTrytes, trytesToAscii } from '@iota/converter'
 import { createHttpClient } from '@iota/http-client'
 import { createContext, Reader, Mode } from 'mam.client.js/lib/mam'
-import { isEmpty, uniqBy, pick, find, last } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import uniqBy from 'lodash/uniqBy';
+import pick from 'lodash/pick';
+import last from 'lodash/last';
 import { createItem, updateItem } from './firebase';
 import { provider } from '../config.json';
 
@@ -22,7 +25,7 @@ const publish = async data => {
     updateMamState(message.state);
 
     // Attach the payload.
-    await Mam.attach(message.payload, message.address);
+    await Mam.attach(message.payload, message.address, 3, 9);
 
     return { root: message.root, state: message.state };
   } catch (error) {
@@ -94,13 +97,13 @@ export const fetchItem = async (initialRoot, secretKey, storeItemCallback, setSt
 const getUniqueStatuses = itemEvents =>
   uniqBy(itemEvents.map(event => pick(event, ['status', 'timestamp'])), 'status');
 
-export const createItemChannel = (project, itemId, request, userId) => {
+export const createItemChannel = (project, containerId, request) => {
   const promise = new Promise(async (resolve, reject) => {
     try {
-      const secretKey = generateSeed(20);
+      const secretKey = generateSeed(81);
       const eventBody = {};
       project.firebaseFields.forEach(field => (eventBody[field] = request[field]));
-      eventBody.itemId = itemId;
+      eventBody.containerId = containerId;
       eventBody.timestamp = Date.now();
 
       const messageBody = {
@@ -116,7 +119,7 @@ export const createItemChannel = (project, itemId, request, userId) => {
 
       if (channel && !isEmpty(channel)) {
         // Create a new item entry using that item ID
-        await createItem(eventBody, channel, secretKey, userId);
+        await createItem(eventBody, channel, secretKey);
       }
 
       return resolve(eventBody);
@@ -133,14 +136,13 @@ export const appendItemChannel = async (metadata, props, documentExists, status)
   const meta = metadata.length;
   const {
     project,
-    user,
     item,
     items,
     match: {
-      params: { itemId },
+      params: { containerId },
     },
   } = props;
-  const { mam } = find(items, { itemId });
+  const { mam } = items[containerId];
   const { documents } = last(item);
 
   const promise = new Promise(async (resolve, reject) => {
@@ -174,9 +176,46 @@ export const appendItemChannel = async (metadata, props, documentExists, status)
           eventBody.status = newStatus;
           eventBody.timestamp = timestamp;
 
-          await updateItem(eventBody, mam, newItemData, user);
+          await updateItem(eventBody, mam, newItemData);
 
-          return resolve(itemId);
+          return resolve(containerId);
+        }
+      }
+      return reject();
+    } catch (error) {
+      return reject();
+    }
+  });
+
+  return promise;
+};
+
+export const appendTemperatureLocation = async (payload, props) => {
+  const {
+    project,
+    item,
+    items,
+    match: {
+      params: { containerId },
+    },
+  } = props;
+  const container = items[containerId];
+  if (!container) return containerId;
+
+  const promise = new Promise(async (resolve, reject) => {
+    try {
+      if (payload) {
+        const newItemData = await appendToChannel(payload, container.mam);
+
+        if (newItemData && !isEmpty(newItemData)) {
+          const eventBody = {};
+          project.firebaseFields.forEach(field => (eventBody[field] = last(item)[field]));
+          eventBody.status = payload.status;
+          eventBody.timestamp = payload.timestamp;
+
+          await updateItem(eventBody, container.mam, newItemData);
+
+          return resolve(containerId);
         }
       }
       return reject();

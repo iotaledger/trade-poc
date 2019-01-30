@@ -1,5 +1,5 @@
 import { handle } from 'redux-pack';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { LOAD_PROJECT_SETTINGS, LOAD_EVENT_MAPPINGS } from '../../actionTypes';
 
 const initialState = {};

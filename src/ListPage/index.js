@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Button, DataTable, TableHeader, TableBody, TableRow, TableColumn } from 'react-md';
-import { isEmpty } from 'lodash';
+import { Col } from 'reactstrap';
+import { withCookies } from 'react-cookie';
+import classNames from 'classnames';
+import { DataTable, TableHeader, TableBody, TableRow, TableColumn } from 'react-md';
+import isEmpty from 'lodash/isEmpty';
+import updateStep from '../utils/cookie';
 import { storeItems } from '../store/items/actions';
+import Tooltip from '../SharedComponents/Tooltip';
 import Loader from '../SharedComponents/Loader';
 import Header from '../SharedComponents/Header';
+import Footer from '../SharedComponents/MiniFooter';
 import Notification from '../SharedComponents/Notification';
 import Autosuggest from './Autosuggest';
-import '../assets/scss/listPage.scss';
 
 class ListPage extends Component {
   state = {
@@ -20,7 +26,8 @@ class ListPage extends Component {
     if (isEmpty(user) || isEmpty(project)) {
       history.push('/login');
     } else {
-      if (isEmpty(items.data) && user.previousEvent) {
+      ReactGA.pageview('/list');
+      if (isEmpty(items) && user.previousEvent) {
         this.setState({ showLoader: true });
         this.props.storeItems(user);
       }
@@ -28,62 +35,72 @@ class ListPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      items: { data, error },
-    } = nextProps;
-    if (error) {
-      this.notifyError(error);
+    const { items } = nextProps;
+    if (items.error) {
+      this.notifyError(items.error);
     }
     if (
-      isEmpty(this.props.items.data) &&
+      isEmpty(this.props.items) &&
       nextProps.user.previousEvent &&
       !this.props.user.previousEvent
     ) {
       this.setState({ showLoader: true });
       this.props.storeItems(nextProps.user);
     }
-    if (!isEmpty(data) || !isEmpty(this.props.items.data) || this.props.user.previousEvent) {
+    if (!isEmpty(this.props.items) || this.props.user.previousEvent) {
       this.setState({ showLoader: false });
     }
   }
 
+  createNewContainer = () => {
+    const { cookies, history } = this.props;
+    updateStep(cookies, 2);
+    history.push('/new');
+  }
+
   notifyError = message => toast.error(message);
 
+  selectContainer = containerId => {
+    const { cookies, history, user: { role } } = this.props;
+
+    role === 'forwarder' && updateStep(cookies, 13);
+    role === 'customs' && updateStep(cookies, 17);
+    role === 'port' && updateStep(cookies, 23);
+
+    history.push(`/details/${containerId}`)
+  }
+
   render() {
-    const {
-      project,
-      user,
-      history,
-      items: { data },
-    } = this.props;
+    const { cookies, project, user, history, items } = this.props;
     const { showLoader } = this.state;
 
-    if (!project || !project.listPage) return <div />;
+    if (isEmpty(project) || !project.listPage) return <div />;
 
     return (
-      <div className="app">
-        <Header>
-          <p>
-            Welcome to {project.projectName},<br />
-            {user.name}
-          </p>
+      <div className="list-page">
+        <Header ctaEnabled>
+          <Col md={3} xl={4} className="heading hidden-md-down">
+            <span className="heading-text">
+              Welcome to container tracking
+            </span>
+          </Col>
         </Header>
         {user.canCreateStream ? (
           <div className="cta-wrapper">
-            <Button className="listPage-button" raised onClick={() => history.push('/new')}>
+            <button className="button create-new-cta" onClick={this.createNewContainer}>
               Create new {project.trackingUnit}
-            </Button>
+            </button>
           </div>
         ) : null}
         <Loader showLoader={showLoader} />
         <div className={`md-block-centered ${showLoader ? 'hidden' : ''}`}>
           <Autosuggest
-            items={data}
+            items={Object.values(items)}
             project={project}
-            onSelect={item => history.push(`/details/${item.itemId}`)}
+            onSelect={item => history.push(`/details/${item.containerId}`)}
             trackingUnit={project.trackingUnit}
           />
-          <DataTable plain>
+          <DataTable plain className="list-all">
             <TableHeader>
               <TableRow>
                 {project.listPage.headers.map((header, index) => (
@@ -97,11 +114,17 @@ class ListPage extends Component {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map(item => (
-                <TableRow key={item.itemId} onClick={() => history.push(`/details/${item.itemId}`)}>
+              {Object.values(items).map(item => (
+                <TableRow
+                  key={item.containerId || item.itemId}
+                  onClick={() => this.selectContainer(item.containerId)}
+                  className={classNames({
+                    'users-container': item.containerId === cookies.get('containerId'),
+                  })}
+                >
                   {project.listPage.body.map((entry, index) => (
                     <TableColumn
-                      key={`${item.itemId}-${index}`}
+                      key={`${item.containerId}-${index}`}
                       className={
                         index === 1 ? 'md-text-center' : index === 2 ? 'md-text-right' : ''
                       }
@@ -117,6 +140,8 @@ class ListPage extends Component {
           </DataTable>
         </div>
         <Notification />
+        <Footer />
+        <Tooltip fetchComplete={!showLoader} />
       </div>
     );
   }
@@ -135,4 +160,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ListPage);
+)(withCookies(ListPage));

@@ -1,12 +1,41 @@
-@mixin button {
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+@mixin button($background-color:linear-gradient(271.79deg, #53ACA8 4.33%, #3C807D 99.65%)) {
+  width: 200px;
+  height: 55px;
+  background: $background-color;
+  border-radius: 42px;
+  border: none;
+  font-weight: 600;
+  line-height: 55px;
+  font-size: 19px;
   text-align: center;
-  position: relative;
+  color: $white;
+  text-decoration: none;
   cursor: pointer;
   overflow: hidden;
   white-space: nowrap;
-  display: inline-block;
-  color: #ffffff;
-  background: linear-gradient(90deg,#18817c,#22b1ab);
+  outline: none;
+
+  &:hover {
+    text-decoration: none;
+    color:rgba(255, 255, 255, 0.7);
+  }
+}
+
+@mixin cta-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 92px;
+  background-color: #ffffff;
+  box-shadow: 0px 5px 13px -2px rgba(155, 155, 155,0.5);
+
+  .button {
+    @include button();
+    width: 350px;
+    margin: auto;
+    font-size: 18px;
+    padding: 26px;
+    line-height: 2px;
+    border-radius: 45px;
+  }
 }

@@ -1,0 +1,53 @@
+.disclaimer {
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #eeeeee;
+  width: 100vw;
+  padding: 8px 20px;
+  height: 70px;
+  z-index: 99999;
+
+  .disclaimer-text {
+    font-weight: 600;
+    font-size: 18px;
+    color: $secondary;
+    white-space: normal;
+    margin-right: 20px;
+
+    @include media-breakpoint-down(xs) {
+      font-size: 90% !important;
+    }
+  }
+
+  .disclaimer-link, .disclaimer-link:hover, .disclaimer-link:visited {
+    font-weight: 900;
+    font-size: 18px;
+    color: $primary;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    @include media-breakpoint-down(xs) {
+      font-size: 90% !important;
+    }
+  }
+
+  .button {
+    @include button();
+    background: #663a9d;
+
+    @include media-breakpoint-down(xs) {
+      line-height: 37px;
+      height: 40px;
+      font-size: 15px;
+      width: 140px;
+    }
+  }
+}

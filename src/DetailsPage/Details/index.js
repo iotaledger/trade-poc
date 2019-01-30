@@ -1,6 +1,5 @@
 import React from 'react';
 import * as moment from 'moment';
-import '../../assets/scss/details.scss';
 
 const Details = ({ item, fields }) => {
   const updated = timestamp => moment.duration(Date.now() - timestamp).humanize();

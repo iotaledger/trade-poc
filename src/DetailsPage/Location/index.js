@@ -1,10 +1,22 @@
 import React, { Component } from 'react';
 import { fromJS } from 'immutable';
+import { withRouter } from 'react-router';
 import sizeMe from 'react-sizeme';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import MapGL, { Marker } from 'react-map-gl';
 import RoutePin from './route-pin';
 import { lineLayer, defaultMapStyle } from './map-style';
+
+const simulatedRoute = [
+  {lat: 51.94421197058105, lng: 4.130001068115234},
+  {lat: 51.95733135422154, lng: 4.128284454345703},
+  {lat: 51.965899201787714, lng: 4.116783142089844},
+  {lat: 51.973460817611695, lng: 4.0924072265625},
+  {lat: 51.99471111282549, lng: 4.044857025146484},
+  {lat: 52.09638241034154, lng: 3.768310546875},
+  {lat: 52.06262321411284, lng: 3.2958984375},
+  {lat: 51.72702815704774, lng: 2.79052734375},
+];
 
 const MAPBOX_TOKEN =
   'pk.eyJ1Ijoib2xtdWwiLCJhIjoiY2pja2Y4eHFxNHU3ajJxbzVhMXhyYmU3ZyJ9.Q6xw86TWQTovCeRcm3qomw';
@@ -67,13 +79,13 @@ class Location extends Component {
 
   // draw lines
   updateLine = data => {
-    if (!this.mapStyle.hasIn(['sources', data.itemId])) {
+    if (!this.mapStyle.hasIn(['sources', data.containerId])) {
       this.mapStyle = this.mapStyle
-        .setIn(['sources', data.itemId], fromJS({ type: 'geojson' }))
-        .set('layers', this.mapStyle.get('layers').push(lineLayer(data.itemId)));
+        .setIn(['sources', data.containerId], fromJS({ type: 'geojson' }))
+        .set('layers', this.mapStyle.get('layers').push(lineLayer(data.containerId)));
 
       this.mapStyle = this.mapStyle.setIn(
-        ['sources', data.itemId, 'data'],
+        ['sources', data.containerId, 'data'],
         fromJS({
           type: 'Feature',
           geometry: {
@@ -84,20 +96,33 @@ class Location extends Component {
       );
     } else {
       this.mapStyle = this.mapStyle.updateIn(
-        ['sources', data.itemId, 'data', 'geometry', 'coordinates'],
+        ['sources', data.containerId, 'data', 'geometry', 'coordinates'],
         list => fromJS(this.toGeoJson())
       );
     }
   };
 
-  renderMarker = (lat, lng, itemId, index) => (
-    <Marker key={itemId + '-' + index} longitude={lng} latitude={lat}>
-      <RoutePin size={Math.round(this.state.viewport.zoom)} />
-    </Marker>
-  );
+  renderMarker = (containerId, position, index) => {
+    this.updateLine({ containerId, position });
+    return (
+      <Marker key={containerId + '-' + index} longitude={position.lng} latitude={position.lat}>
+        <RoutePin size={Math.round(this.state.viewport.zoom)} />
+      </Marker>
+    )
+  };
 
   render() {
+    const { match: { params: { containerId } } } = this.props;
     const { data, viewport, settings } = this.state;
+
+    let mapData = []
+    if (!isEmpty(data)) {
+      mapData = data.filter(({ position }) => position && !isEmpty(position));
+    }
+
+    if (!mapData.length) {
+      mapData = simulatedRoute.map(position => ({ containerId, position }));
+    }
 
     return (
       <MapGL
@@ -108,14 +133,14 @@ class Location extends Component {
         onViewportChange={viewport => this.setState({ viewport })}
         mapboxApiAccessToken={MAPBOX_TOKEN}
       >
-        {!isEmpty(data)
-          ? data.map(({ itemId, position: { lat, lng } }, index) =>
-              this.renderMarker(lat, lng, itemId, index)
-            )
-          : null}
+        {
+          mapData.map(({ containerId, position }, index) =>
+            this.renderMarker(containerId, position, index)
+          )
+        }
       </MapGL>
     );
   }
 }
 
-export default sizeMe({ monitorHeight: true })(Location);
+export default sizeMe({ monitorHeight: true })(withRouter(Location));

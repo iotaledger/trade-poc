@@ -7,7 +7,6 @@ import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import Notification from '../../SharedComponents/Notification';
 import { getFileStorageReference } from '../../utils/firebase';
-import '../../assets/scss/fileUpload.scss';
 
 registerPlugin(FilePondImagePreview);
 
@@ -70,22 +69,23 @@ class FileUpload extends Component {
         error => {
           error('Upload error');
         },
-        () => {
+        async () => {
           // Success
           const { metadata } = task.snapshot;
 
           // Call the load method when done and pass the returned server file id
           // The file is then marked as complete
           load(metadata.name);
+          const downloadURL = await task.snapshot.ref.getDownloadURL();
 
           // Collect metadata
           const fileMetadata = {
+            downloadURL,
             sha256Hash,
             name: metadata.name,
             size: metadata.size,
             contentType: metadata.contentType,
             fullPath: metadata.fullPath,
-            downloadURL: metadata.downloadURLs[0],
             md5Hash: metadata.md5Hash,
             timestamp: metadata.generation,
             created: metadata.timeCreated,

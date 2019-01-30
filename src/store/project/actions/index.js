@@ -1,4 +1,4 @@
-import { LOAD_PROJECT_SETTINGS, LOAD_EVENT_MAPPINGS } from '../../actionTypes';
+import { LOAD_PROJECT_SETTINGS, LOAD_EVENT_MAPPINGS, RESET } from '../../actionTypes';
 import { getProjectSettings, getEventMappings } from '../../../utils/firebase';
 
 export const storeProjectSettings = () => {
@@ -16,3 +16,7 @@ export const storeEventMappings = () => {
     promise,
   };
 };
+
+export const reset = () => ({
+  type: RESET,
+});

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import Autosuggester from 'react-autosuggest';
-import { remove } from 'lodash';
+import remove from 'lodash/remove';
 import { DataTable, TableBody, TableRow, TableColumn } from 'react-md';
-import '../../assets/scss/autosuggest.scss';
 
 class Autosuggest extends Component {
   constructor() {
@@ -48,19 +48,25 @@ class Autosuggest extends Component {
 
   onSuggestionSelected = (event, { suggestion }) => {
     this.props.onSelect(suggestion);
+    ReactGA.event({
+      category: 'Search',
+      action: 'Selected search suggestion',
+      label: `Container ID ${suggestion.containerId}`,
+      value: suggestion.containerId
+    });
   };
 
   getSectionSuggestions = section => [section];
 
-  getSuggestionValue = suggestion => suggestion.itemId;
+  getSuggestionValue = suggestion => suggestion.containerId;
 
   renderSuggestion = suggestion => (
     <DataTable plain>
       <TableBody>
-        <TableRow key={suggestion.itemId}>
+        <TableRow key={suggestion.containerId}>
           {this.props.project.listPage.body.map((entry, index) => (
             <TableColumn
-              key={`${suggestion.itemId}-${index}`}
+              key={`${suggestion.containerId}-${index}`}
               className={index === 1 ? 'md-text-center' : index === 2 ? 'md-text-right' : ''}
             >
               {typeof entry === 'string'

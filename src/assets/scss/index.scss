@@ -1,16 +1,84 @@
 @import 'globals';
 
-@include react-md-everything;
+@import './header';
+@import './footer';
+@import './loader';
+@import './notification';
+@import './tooltip';
+@import './disclaimer';
+
+@import './loginPage';
+
+@import './listPage';
+@import './autosuggest';
+
+@import './createItemPage';
+
+@import './detailsPage';
+@import './details';
+@import './documents';
+@import './explorer';
+@import './fileUpload';
+@import './status';
+@import './tabs';
+@import './temperature';
+
+@import './intro';
+@import './navigation';
+@import './text';
+
+html {
+  background: none !important;
+  font-size: unset !important;
+  min-width: 100%;
+}
 
 body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden !important;
+
+  &.cookie-bar-top-bar {
+    margin-top: 70px;
+  }
 }
 
-h1, h2, h3, h4, h5, h6, div, span, p, label, input, select, button {
-  font-family: "Nunito Sans";
+h1, h2, h3, h4, h5, h6, div, span, p, label, input, select, section, footer, header, nav, ul, li, button {
+  font-family: $font-family-sans-serif;
 }
 
 .hidden {
-  display: none;
+  display: none !important;
+}
+
+button, a {
+  outline: none !important;
+}
+
+.button {
+  @include button();
+}
+
+.hidden-xs-down {
+  @include media-breakpoint-down(xs) {
+    display: none !important;
+  }
+}
+
+.hidden-sm-down {
+  @include media-breakpoint-down(sm) {
+    display: none !important;
+  }
+}
+
+.hidden-md-down {
+  @include media-breakpoint-down(md) {
+    display: none !important;
+  }
+}
+
+.hidden-sm-up {
+  @include media-breakpoint-up(sm) {
+    display: none !important;
+  }
 }

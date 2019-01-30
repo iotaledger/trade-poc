@@ -1,0 +1,143 @@
+.anchor {
+  cursor: pointer;
+  outline: none;
+  display: block;
+}
+
+$footer-gradient-start: #3e3e3e;
+$footer-gradient-end: #2e2e2e;
+
+footer:not(.footer-mini) {
+  @include media-breakpoint-down(xs) {
+    padding: 25px 45px 25px 45px;
+  }
+
+
+  padding: 50px 90px 50px 90px;
+  background-image: linear-gradient(to top, $footer-gradient-start, $footer-gradient-end);
+
+  .footer-heading {
+    @include font-size(24px);
+    @include media-breakpoint-down(xs) {
+      @include font-size(20px);
+    }
+
+
+    color: var(--tealish);
+    font-weight: bold;
+    line-height: 1.75;
+  }
+
+  .row {
+    @include media-breakpoint-down(xs) {
+      padding: 15px 0px 15px 0px;
+    }
+
+
+    padding: 30px 0px 30px 0px;
+
+    .col {
+      @include media-breakpoint-down(xs) {
+        padding: 0px 5px 10px 5px;
+      }
+
+
+      padding: 0px 10px 20px 10px;
+    }
+  }
+
+  #{$a-tags} {
+    @include font-size(16px);
+    @include media-breakpoint-down(xs) {
+      @include font-size(12px);
+    }
+
+
+    color: #c4c4c4;
+    font-weight: 300;
+    line-height: 2.25;
+    white-space: nowrap;
+  }
+
+  .footer-text-info {
+    @include font-size(15px);
+    @include media-breakpoint-down(xs) {
+      @include font-size(10px);
+    }
+
+
+    color: var(--brown-grey);
+    font-weight: 300;
+    line-height: 1.76;
+  }
+}
+
+.footer-mini {
+  width: 100%;
+  height: 75px;
+  margin-top: 40px;
+  padding: 20px 40px;
+  background-image: linear-gradient(to top, $footer-gradient-start, $footer-gradient-end);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+  color: var(--white);
+  @include font-size(16px);
+
+  .hidden-lg-down {
+    @include media-breakpoint-down(lg) {
+      display: none !important;
+    }
+  }
+
+  .hidden-xl-up {
+    @include media-breakpoint-up(xl) {
+      display: none !important;
+    }
+  }
+
+  .justify-content-end {
+    align-items: flex-end;
+
+    @include media-breakpoint-down(sm) {
+      align-items: flex-start;
+      flex: 0;
+    }
+  }
+
+  .justify-content-responsive {
+    @include media-breakpoint-down(lg) {
+      justify-content: left !important;
+      text-align: left;
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    line-height: 2;
+    height: 135px;
+  }
+
+  @include media-breakpoint-down(xs) {
+    @include font-size(14px);
+    padding: 20px;
+  }
+
+  .copyright {
+    color: var(--brown-grey);
+  }
+
+  #{$a-tags} {
+    color: inherit;
+    font-size: inherit;
+
+    @include media-breakpoint-down(xs) {
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,245 @@
+.intro-page, .tour-page {
+  header {
+    position: absolute;
+  }
+}
+
+.heading-image {
+  @include media-breakpoint-down(xs) {
+    min-height: 550px;
+    background-image: url('../images/intro/1x_Header_Main.png');
+    background-position: 70%;
+    background-size: auto;
+  }
+
+
+  min-height: calc(350 * ((100vw - 800px) / 800) + 350px);
+  background-color: var(--black);
+  background-image: url('../images/intro/2x_Header_Main.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+
+  &.end {
+    background-image: url('../images/intro/2x_Header_End.png');
+
+    @include media-breakpoint-down(xs) {
+      background-image: url('../images/intro/1x_Header_End.png');
+    }
+  }
+
+  .overlay {
+    @include media-breakpoint-only(md) {
+      margin: 70px 20px 30px 20px;
+    }
+
+    @include media-breakpoint-down(sm) {
+      margin: 80px 20px 30px 20px;
+    }
+
+    @include media-breakpoint-down(xs) {
+      align-items: flex-start !important;
+      max-width: 90%;
+      margin: 70px 30px 30px 25px;
+    }
+
+    @media (min-width: $header-width-constraint) {
+      max-width: 700px;
+    }
+
+    align-items: center !important;
+    max-width: 70vw;
+    margin: 40px 20px;
+
+    .head-1 {
+      @include media-breakpoint-down(xs) {
+        @include font-size(30px);
+      }
+
+
+      @media (min-width: $header-width-constraint) {
+        @include font-size(51px);
+      }
+
+      color: $white;
+      font-size: 5vw;
+      font-weight: 300;
+    }
+
+    .head-2 {
+      @include media-breakpoint-down(xs) {
+        @include font-size(30px);
+        text-align: left;
+      }
+
+      @media (min-width: $header-width-constraint) {
+        @include font-size(51px);
+      }
+
+      color: $white;
+      font-size: 5vw;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .sep {
+      @include media-breakpoint-down(xs) {
+        min-width: 50px;
+        margin-top: 15px;
+      }
+
+
+      display: inline-block;
+      width: 12vw;
+      margin: 2vw 0vw 0vw 0vw;
+      border-top: 2px solid var(--tealish);
+    }
+
+    .sub-1 {
+      @include media-breakpoint-down(xs) {
+        @include font-size(16px);
+
+        text-align: left;
+      }
+
+      @media (min-width: $header-width-constraint) {
+        @include font-size(19.5px);
+      }
+
+      color: $white;
+      font-size: 2vw;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    .intro-button {
+      margin-top: 50px;
+
+      @include media-breakpoint-down(md) {
+        margin-top: 30px;
+      }
+    }
+  }
+}
+
+.button.intro-button {
+  @include button();
+  background: #663a9d;
+}
+
+.content {
+  flex: 1;
+
+  a:not(.button) {
+    color: $primary;
+    font-weight: 600;
+    text-decoration: none;
+    @include font-size(16px);
+    @include media-breakpoint-down(xs) {
+      text-decoration: underline;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .row {
+    @include media-breakpoint-down(xs) {
+      padding: 15px 15px 0px 15px;
+    }
+
+    max-width: 1280px;
+    margin: auto;
+    padding: 0px 20px 40px 20px;
+
+    .col,
+    .col-6,
+    .col-12 {
+      @include media-breakpoint-down(xs) {
+        padding: 15px 15px 0px 15px;
+      }
+
+      padding: 30px 30px 0px 30px;
+    }
+  }
+
+  .extra-padding {
+    padding-bottom: 40px;
+  }
+
+  .alternate {
+    background-color: #f6f6f6;
+  }
+
+  .img-fluid {
+    @include media-breakpoint-down(xs) {
+      margin-bottom: 20px;
+    }
+  }
+
+  .use-cases-1 {
+    @include media-breakpoint-down(xs) {
+      background-image: url('../images/intro/1x_Graphic_01.png');
+    }
+
+
+    background-image: url('../images/intro/2x_Graphic_01.png');
+    background-size: cover;
+  }
+
+  .use-cases-2 {
+    @include media-breakpoint-down(xs) {
+      background-image: url('../images/intro/1x_Graphic_02.png');
+    }
+
+
+    background-image: url('../images/intro/2x_Graphic_02.png');
+    background-size: cover;
+  }
+
+  .use-cases-3 {
+    @include media-breakpoint-down(xs) {
+      background-image: url('../images/intro/1x_Graphic_03.png');
+    }
+
+
+    background-image: url('../images/intro/2x_Graphic_03.png');
+    background-size: cover;
+  }
+
+  .use-cases-4 {
+    @include media-breakpoint-down(xs) {
+      background-image: url('../images/intro/1x_Graphic_04.png');
+    }
+
+
+    background-image: url('../images/intro/2x_Graphic_04.png');
+    background-size: cover;
+  }
+
+  .inter {
+    @include media-breakpoint-down(xs) {
+      padding-bottom: 15px;
+    }
+
+
+    padding-bottom: 30px;
+
+    .row-header {
+      max-width: 1280px;
+      margin: auto;
+
+      .col,
+      .col-6,
+      .col-12 {
+        @include media-breakpoint-down(xs) {
+          padding: 10px 10px 0px 10px;
+        }
+
+
+        padding: 20px 20px 0px 20px;
+      }
+    }
+  }
+}

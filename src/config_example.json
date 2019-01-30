@@ -1,0 +1,11 @@
+{
+  "provider": "https://nodes.devnet.iota.org",
+  "trackingID": "UA-XXXXX",
+  "apiKey": "XXXXXXXXXXXXX",
+  "authDomain": "project.firebaseapp.com",
+  "databaseURL": "https://project.firebaseio.com",
+  "projectId": "project",
+  "storageBucket": "project.appspot.com",
+  "messagingSenderId": "00000000000",
+  "rootURL": "https://us-central1-project.cloudfunctions.net"
+}

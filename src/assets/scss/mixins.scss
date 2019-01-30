@@ -1,0 +1,6 @@
+@mixin font-size($size) {
+  font-size: $size;
+
+  // sass-lint:disable no-duplicate-properties
+  font-size: #{$size / 16px}rem;
+}

@@ -8,11 +8,17 @@
     margin: 0 20px;
   }
 
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+    align-items: center;
+  }
+
+
   .status {
     min-width: 198px;
     max-width: 212px;
     width: auto;
-    height: 150px;
+    height: 180px;
     background-color: rgb(232, 241, 241);
     display: flex;
     flex-direction: column;
@@ -21,6 +27,11 @@
     position: relative;
     margin: 12px 6px;
     padding: 0 20px;
+
+    @include media-breakpoint-down(sm) {
+      width: 300px;
+      max-width: unset;
+    }
 
     &:not(:first-child):before {
       content: "";
@@ -48,6 +59,7 @@
       font-size: 18px;
       font-weight: 400;
       color: rgb(63, 63, 63);
+      padding: 0 10px;
     }
 
     div {

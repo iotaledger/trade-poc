@@ -1,5 +1,7 @@
 export const AUTH = 'AUTH';
 export const LOGOUT = 'LOGOUT';
+export const RESET = 'RESET';
+export const RESET_ITEM = 'RESET_ITEM';
 export const STORE_ITEM = 'STORE_ITEM';
 export const STORE_ITEMS = 'STORE_ITEMS';
 export const ADD_ITEM = 'ADD_ITEM';
