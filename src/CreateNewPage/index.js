@@ -86,8 +86,7 @@ class CreateItemPage extends Component {
           ReactGA.event({
             category: 'QR Code reader',
             action: 'Read QR code',
-            label: `Container ID ${result.text}`,
-            value: result.text
+            label: `Container ID ${result.text}`
           });
         })
         .catch(err => console.error(err));
@@ -143,8 +142,7 @@ class CreateItemPage extends Component {
         ReactGA.event({
           category: 'Create container',
           action: 'Create container',
-          label: `Container ID ${containerId}`,
-          value: containerId
+          label: `Container ID ${containerId}`
         });
 
         history.push(`/details/${containerId}`);

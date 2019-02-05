@@ -106,8 +106,7 @@ class DetailsPage extends Component {
       ReactGA.event({
         category: 'Status update',
         action: `Updated status to "${status}"`,
-        label: `Container ID ${containerId}`,
-        value: containerId
+        label: `Container ID ${containerId}`
       });
     }
 
@@ -177,8 +176,7 @@ class DetailsPage extends Component {
     ReactGA.event({
       category: 'Tab change',
       action: `Selected tab "${tabs[newActiveTabIndex]}"`,
-      label: `Container ID ${containerId}`,
-      value: containerId
+      label: `Container ID ${containerId}`
     });
   };
 
@@ -192,8 +190,7 @@ class DetailsPage extends Component {
       ReactGA.event({
         category: 'Document upload',
         action: 'Uploaded document(s)',
-        label: `Container ID ${containerId}`,
-        value: containerId
+        label: `Container ID ${containerId}`
       });
     });
   };
@@ -202,8 +199,7 @@ class DetailsPage extends Component {
     ReactGA.event({
       category: 'Temperature added',
       action: 'Temperature added',
-      label: `Container ID ${containerId}`,
-      value: containerId
+      label: `Container ID ${containerId}`
     });
 
     this.retrieveItem(containerId);

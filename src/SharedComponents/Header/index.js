@@ -69,8 +69,7 @@ class Header extends Component {
       ReactGA.event({
         category: 'Tour',
         action: 'Tour completed',
-        label: `Container ID ${cookies.get('containerId')}`,
-        value: cookies.get('containerId')
+        label: `Container ID ${cookies.get('containerId')}`
       });
 
       cookies.remove('tourStep');
@@ -93,7 +92,7 @@ class Header extends Component {
       category: 'Reset',
       action: 'Reset tour',
       label: containerIdString,
-      value: cookies.get('tourStep')
+      value: Number(cookies.get('tourStep'))
     });
 
     cookies.remove('tourStep');

@@ -51,8 +51,7 @@ class Autosuggest extends Component {
     ReactGA.event({
       category: 'Search',
       action: 'Selected search suggestion',
-      label: `Container ID ${suggestion.containerId}`,
-      value: suggestion.containerId
+      label: `Container ID ${suggestion.containerId}`
     });
   };
 
