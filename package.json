@@ -1,10 +1,10 @@
 {
   "name": "container-tracking-simulation",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "dependencies": {
-    "@iota/converter": "^1.0.0-beta.6",
-    "@iota/http-client": "^1.0.0-beta.6",
+    "@iota/converter": "^1.0.0-beta.8",
+    "@iota/http-client": "^1.0.0-beta.8",
     "@zxing/library": "^0.9.3",
     "axios": "^0.18.0",
     "bootstrap": "^4.2.1",
@@ -16,7 +16,7 @@
     "immutable": "^4.0.0-rc.12",
     "js-sha256": "^0.9.0",
     "lodash": "^4.17.11",
-    "mam.client.js": "iotaledger/mam.client.js",
+    "mam.client.js": "iotaledger/mam.client.js#fix_fetch",
     "mapbox-gl": "^0.52.0-beta.2",
     "moment": "^2.23.0",
     "node-sass": "^4.11.0",

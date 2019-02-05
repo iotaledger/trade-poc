@@ -1034,7 +1034,7 @@
     "@iota/converter" "^1.0.0-beta.8"
     "@iota/kerl" "^1.0.0-beta.8"
 
-"@iota/converter@^1.0.0-beta.5", "@iota/converter@^1.0.0-beta.6", "@iota/converter@^1.0.0-beta.8":
+"@iota/converter@^1.0.0-beta.5", "@iota/converter@^1.0.0-beta.8":
   version "1.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/@iota/converter/-/converter-1.0.0-beta.8.tgz#498d8978db307de6a428547a4b5151727106b88f"
   integrity sha512-XRkHSpo2ryVLKhYKszQ99UdoBieH4P/4i8oryCTDcWh7YGYXlobFe24XvZcTm8l80e3QtzfMk6AWZQ8rTC2ejg==
@@ -1063,7 +1063,7 @@
   resolved "https://registry.yarnpkg.com/@iota/curl/-/curl-1.0.0-beta.8.tgz#e2ddbd1c70197b021ba1bb00dd126e05ea432d86"
   integrity sha512-Vn4NzF64GSFcQObWB3FawGo5SMbX3A+mUJlyva0+ikVpjtXw+6265XnXYCHYzePggB2frhZVq50pYbhrtokYfQ==
 
-"@iota/http-client@^1.0.0-beta.6", "@iota/http-client@^1.0.0-beta.8":
+"@iota/http-client@^1.0.0-beta.8":
   version "1.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/@iota/http-client/-/http-client-1.0.0-beta.8.tgz#e8ec91955dad9845d165a671c0e973d52e274be8"
   integrity sha512-SWWB/FXWzYjdIW5h/LA0TknlVgJ6Guy3iiPWP2hn29l3Qwf4fUMcBUtSRuFjTotS7GDbLSfHW6+bi7TvDQ9wWQ==
@@ -7388,9 +7388,9 @@ makeerror@1.0.x:
   dependencies:
     tmpl "1.0.x"
 
-mam.client.js@iotaledger/mam.client.js:
-  version "0.0.5"
-  resolved "https://codeload.github.com/iotaledger/mam.client.js/tar.gz/99bbe57d65d31b04c69c77f9bc8a5ffcfde9a174"
+mam.client.js@iotaledger/mam.client.js#fix_fetch:
+  version "0.1.0"
+  resolved "https://codeload.github.com/iotaledger/mam.client.js/tar.gz/30701c67d1e4e03c1c9046249e82495447e2c363"
   dependencies:
     "@iota/converter" "^1.0.0-beta.5"
     "@iota/core" "^1.0.0-beta.5"

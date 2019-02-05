@@ -1,15 +1,11 @@
 import Mam from 'mam.client.js';
 import { asciiToTrytes, trytesToAscii } from '@iota/converter'
-import { createHttpClient } from '@iota/http-client'
-import { createContext, Reader, Mode } from 'mam.client.js/lib/mam'
 import isEmpty from 'lodash/isEmpty';
 import uniqBy from 'lodash/uniqBy';
 import pick from 'lodash/pick';
 import last from 'lodash/last';
 import { createItem, updateItem } from './firebase';
 import { provider } from '../config.json';
-
-const client = createHttpClient({ provider })
 
 // Initialise MAM State
 let mamState = Mam.init(provider);
@@ -25,7 +21,7 @@ const publish = async data => {
     updateMamState(message.state);
 
     // Attach the payload.
-    await Mam.attach(message.payload, message.address, 3, 9);
+    await Mam.attach(message.payload, message.address);
 
     return { root: message.root, state: message.state };
   } catch (error) {
@@ -69,29 +65,22 @@ const appendToChannel = async (payload, savedMamData) => {
   }
 };
 
-export const fetchItem = async (initialRoot, secretKey, storeItemCallback, setStateCalback) => {
-  const itemEvents = [];
+export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalback) => {
   try {
-    let hasMessage;
-    let ctx = await createContext();
-    let root = initialRoot;
-    do {
-      let reader = new Reader(ctx, client, Mode.Old, root, secretKey);
-      const message = await reader.next();
-      hasMessage = message && message.value && message.value[0];
-      if (hasMessage) {
-        root = message.value[0].message.nextRoot;
-        const itemEvent = JSON.parse(trytesToAscii(message.value[0].message.payload));
-        storeItemCallback(itemEvent);
-        itemEvents.push(itemEvent);
-        setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
-      }
-    } while(hasMessage);
+    const itemEvents = [];
+    const convertData = data => {
+      const itemEvent = JSON.parse(trytesToAscii(data));
+      storeItemCallback(itemEvent);
+      itemEvents.push(itemEvent);
+      setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
+    }
+
+    await Mam.fetch(root, 'restricted', secretKey, convertData)
+    return itemEvents[itemEvents.length - 1];
   } catch (e) {
     console.error("fetchItem:", "\n", e);
     return e;
   }
-  return itemEvents[itemEvents.length - 1];
 };
 
 const getUniqueStatuses = itemEvents =>
