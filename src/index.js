@@ -7,7 +7,6 @@ import Router from './Router';
 import * as serviceWorker from './serviceWorker';
 import { initializeFirebaseApp } from './utils/firebase';
 import './assets/scss/index.scss';
-import { trackingID } from './config.json';
 
 WebFontLoader.load({
   google: {
@@ -17,7 +16,7 @@ WebFontLoader.load({
 
 initializeFirebaseApp();
 
-ReactGA.initialize(trackingID); // (trackingID, { debug: true })
+ReactGA.initialize('UA-133441365-1'); // (trackingID, { debug: true })
 ReactGA.set({ anonymizeIp: true });
 
 ReactDOM.render(<Router />, document.getElementById('root'));

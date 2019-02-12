@@ -1,6 +1,4 @@
 {
-  "provider": "https://nodes.devnet.iota.org",
-  "trackingID": "UA-XXXXX",
   "apiKey": "XXXXXXXXXXXXX",
   "authDomain": "project.firebaseapp.com",
   "databaseURL": "https://project.firebaseio.com",
