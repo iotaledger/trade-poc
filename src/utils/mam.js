@@ -4,11 +4,15 @@ import isEmpty from 'lodash/isEmpty';
 import uniqBy from 'lodash/uniqBy';
 import pick from 'lodash/pick';
 import last from 'lodash/last';
+import memoize from 'lodash/memoize';
 import { createItem, updateItem } from './firebase';
-import { provider } from '../config.json';
 
 // Initialise MAM State
-let mamState = Mam.init(provider);
+let mamState;
+
+export const initializeMamState = memoize(provider => {
+  mamState = Mam.init(provider);
+});
 
 // Publish to tangle
 const publish = async data => {
