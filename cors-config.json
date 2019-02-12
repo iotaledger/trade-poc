@@ -2,6 +2,7 @@
     {
       "origin": [
         "http://localhost:3000",
+        "https://localhost:3000",
         "https://item-tracking.firebaseapp.com",
         "https://tradedemo.iota.org",
         "http://tradedemo.iota.org",
