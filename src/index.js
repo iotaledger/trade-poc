@@ -3,11 +3,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import WebFontLoader from 'webfontloader';
 import ReactGA from 'react-ga';
+import { Provider } from 'react-redux';
 import Router from './Router';
 import * as serviceWorker from './serviceWorker';
+import configureStore from './store/configure';
 import { initializeFirebaseApp } from './utils/firebase';
 import './assets/scss/index.scss';
-import { trackingID } from './config.json';
 
 WebFontLoader.load({
   google: {
@@ -16,11 +17,18 @@ WebFontLoader.load({
 });
 
 initializeFirebaseApp();
+const store = configureStore();
 
-ReactGA.initialize(trackingID); // (trackingID, { debug: true })
+ReactGA.initialize('UA-133441365-1'); // (trackingID, { debug: true })
 ReactGA.set({ anonymizeIp: true });
 
-ReactDOM.render(<Router />, document.getElementById('root'));
+const renderApp = () => (
+  <Provider store={store}>
+    <Router />
+  </Provider>
+);
+
+ReactDOM.render(renderApp(), document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

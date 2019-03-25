@@ -42,5 +42,5 @@ gsutil cors get gs://item-tracking.appspot.com
 Use the `gsutil cors` command to configure CORS on a bucket:
 
 ```
-gsutil cors set firebase_storage.json gs://item-tracking.appspot.com
+gsutil cors set cors-config.json gs://item-tracking.appspot.com
 ```
