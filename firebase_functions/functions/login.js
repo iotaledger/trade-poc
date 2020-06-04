@@ -3,11 +3,7 @@ const cors = require('cors')({ origin: true });
 
 module.exports = function(req, res) {
   return cors(req, res, () => {
-    const { username, password } = req.body;
-    if (!username || !password) {
-      return res.send({ error: 'Bad Input' });
-    }
-
+    const { username } = req.body;
     let response = {};
 
     // Retrieve user data
@@ -17,13 +13,8 @@ module.exports = function(req, res) {
       .once('value')
       .then(snapshot => {
         const val = snapshot.val();
-        if (val.password === password) {
-          delete val.password;
-          val.userId = username;
-          return res.send(val);
-        } else {
-          return res.status(403).send({ error: 'Wrong password' });
-        }
+        val.userId = username;
+        return res.send(val);
       })
       .catch(error => {
         return res.status(500).send({ error: 'User not found' });

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import ReactGA from 'react-ga';
-import { sha256 } from 'js-sha256';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import { withCookies } from 'react-cookie';
@@ -44,7 +43,6 @@ class LoginPage extends Component {
     const { cookies, history, storeCredentials, storeEvents } = this.props;
     event.preventDefault();
     this.setState({ showLoader: true, selectedRole: role });
-    const password = sha256(role.toLowerCase());
 
     role === 'shipper' && updateStep(cookies, 1);
     role === 'forwarder' && updateStep(cookies, 12);
@@ -52,7 +50,7 @@ class LoginPage extends Component {
     role === 'port' && updateStep(cookies, 22);
 
     axios
-      .post(`${config.rootURL}/login`, { username: role, password })
+      .post(`${config.rootURL}/login`, { username: role })
       .then(response => {
         storeCredentials(response.data);
         storeEvents(response.data.role);

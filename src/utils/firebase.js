@@ -1,3 +1,4 @@
+import axios from 'axios';
 import firebase from 'firebase';
 import config from '../config.json';
 
@@ -76,10 +77,7 @@ export const getFirebaseSnapshot = (containerId, onError) => {
 };
 
 export const createItem = (eventBody, channel, secretKey) => {
-  // Create item reference
-  const itemsRef = getItemReference(eventBody.containerId);
-
-  itemsRef.set({
+  const item = {
     ...eventBody,
     mam: {
       root: channel.root,
@@ -88,14 +86,13 @@ export const createItem = (eventBody, channel, secretKey) => {
       start: channel.state.channel.start,
       secretKey,
     },
-  });
+  };
+
+  return axios.post(`${config.rootURL}/itemCreate?containerId=${eventBody.containerId}`, item);
 };
 
 export const updateItem = (eventBody, mam, newItemData) => {
-  // Create reference
-  const itemsRef = getItemReference(eventBody.containerId);
-
-  itemsRef.update({
+  const item = {
     ...eventBody,
     mam: {
       root: mam.root,
@@ -104,7 +101,9 @@ export const updateItem = (eventBody, mam, newItemData) => {
       next: newItemData.state.channel.next_root,
       start: newItemData.state.channel.start,
     },
-  });
+  };
+
+  return axios.post(`${config.rootURL}/itemUpdate?containerId=${eventBody.containerId}`, item);
 };
 
 export const getEventMappings = onError => {

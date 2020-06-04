@@ -101,25 +101,21 @@
     "customs" : {
       "id" : "customs",
       "name" : "Ms. Teresa McCustoms",
-      "password" : "45e285133b891bc3bc022fdd5eda0726b15b609396e5b8e734078ab9f5ccdd6b",
       "role" : "customs"
     },
     "forwarder" : {
       "id" : "forwarder",
       "name" : "Mr. Luigi Logisticano",
-      "password" : "b4b3e80b5c6c2e35e8a6c9a2437568ddf4eb4f739bfad8427141261a87cb1868",
       "role" : "forwarder"
     },
     "port" : {
       "id" : "port",
       "name" : "Mr. Chuck Portsmith",
-      "password" : "f8d397a33fcb9725db96501e653bf3cfa4455c5639482b9936c22b221634d659",
       "role" : "port"
     },
     "shipper" : {
       "id" : "shipper",
       "name" : "Mr. John Shipper",
-      "password" : "8be2e28a473f0bf8203d10896b2f14b5d499369e3f5aa1882c098628b58f41ac",
       "role" : "shipper"
     }
   }
