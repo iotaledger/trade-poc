@@ -32,7 +32,7 @@ Ensure documents integrity and authenticity by calculating document checksum on 
 
 The Demo software is based on an open-sourced IOTA library written in JavaScript.
 Documentation and usage guide are provided.
-https://github.com/iotaledger/mam.client.js
+https://github.com/iotaledger/mam.js
 It is running on a IOTA testnet.
 
 This library exposes functions for creating a new MAM channel, submitting a new event to the existing channel and retrieving data from the channel.

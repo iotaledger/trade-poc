@@ -1,4 +1,6 @@
 import Mam from 'mam.client.js';
+import { composeAPI } from '@iota/core';
+import { mamFetchAll } from '@iota/mam.js';
 import { asciiToTrytes, trytesToAscii } from '@iota/converter'
 import isEmpty from 'lodash/isEmpty';
 import uniqBy from 'lodash/uniqBy';
@@ -9,9 +11,11 @@ import { createItem, updateItem } from './firebase';
 
 // Initialise MAM State
 let mamState;
+let api;
 
 export const initializeMamState = memoize(provider => {
   mamState = Mam.init(provider);
+  api = composeAPI({ provider });
 });
 
 // Publish to tangle
@@ -79,7 +83,12 @@ export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalb
       setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
     }
 
-    await Mam.fetch(root, 'restricted', secretKey, convertData)
+    const fetched = await mamFetchAll(api, root, 'restricted', secretKey, 5);
+    if (fetched && fetched.length > 0) {
+      for (let i = 0; i < fetched.length; i++) {
+        convertData(fetched[i].message);
+      }
+    }
     return itemEvents[itemEvents.length - 1];
   } catch (e) {
     console.error("fetchItem:", "\n", e);
