@@ -52,7 +52,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "export GENERATE_SOURCEMAP=false && react-scripts build",
+    "build": "export GENERATE_SOURCEMAP=false && react-scripts --expose-gc --max_old_space_size=8192 --max-old-space-size=8192 build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -60,7 +60,7 @@
     "extends": "react-app"
   },
   "engines": {
-    "node": ">=8.0"
+    "node": "10"
   },
   "browserslist": [
     "> 2%",
