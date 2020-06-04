@@ -1,8 +1,10 @@
 {
   "rules": {
     ".read": "true",
-    ".write": "true",
+    ".write": "false",
     "items": {
+      ".read": "true",
+      ".write": "auth != null",
       ".indexOn": ["containerId", "status", "owner"]
     }
   }

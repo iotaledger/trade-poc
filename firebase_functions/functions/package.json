@@ -3,12 +3,19 @@
   "description": "Cloud Functions for Firebase",
   "dependencies": {
     "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^8.2.3",
-    "babel-preset-env": "^1.6.1",
-    "cors": "^2.8.4",
-    "firebase-admin": "^4.1.2",
-    "firebase-functions": "^1.0.1"
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.1.0",
+    "babel-preset-env": "^1.7.0",
+    "cors": "^2.8.5",
+    "firebase-admin": "^8.12.1",
+    "firebase-functions": "^3.6.2"
   },
-  "private": true
+  "engines": {
+    "node": ">=8"
+  },
+  "resolutions": {
+    "acorn": "^7.1.1",
+    "braces": "^2.3.1",
+    "minimist": "^1.2.5"
+  }
 }
