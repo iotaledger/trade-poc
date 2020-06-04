@@ -28,7 +28,7 @@ To test this locally, run
 `firebase functions:shell`
 
 Then call a function with parameters
-`login.post('/login').form( {username: 'user123', password: 'password123' })`
+`login.post('/login').form( {username: 'user123' })`
 
 ## CORS
 
