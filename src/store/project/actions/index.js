@@ -2,7 +2,7 @@ import { LOAD_PROJECT_SETTINGS, LOAD_EVENT_MAPPINGS, RESET } from '../../actionT
 import { getProjectSettings, getEventMappings } from '../../../utils/firebase';
 
 export const storeProjectSettings = () => {
-  const promise = getProjectSettings(console.log);
+  const promise = getProjectSettings();
   return {
     type: LOAD_PROJECT_SETTINGS,
     promise,
@@ -10,7 +10,7 @@ export const storeProjectSettings = () => {
 };
 
 export const storeEventMappings = () => {
-  const promise = getEventMappings(console.log);
+  const promise = getEventMappings();
   return {
     type: LOAD_EVENT_MAPPINGS,
     promise,

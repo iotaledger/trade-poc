@@ -11,7 +11,7 @@ export const logout = () => ({
 });
 
 export const storeEvents = role => {
-  const promise = getEvents(role, console.log);
+  const promise = getEvents(role);
   return {
     type: LOAD_EVENTS,
     promise,

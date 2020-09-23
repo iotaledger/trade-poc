@@ -10,9 +10,9 @@ module.exports = function (req, res) {
       admin
         .database()
         .ref(`items/${req.query.containerId}`)
-        .update(req.body)
-        .then(() => {
-          res.status(200).send("ok");
+        .once('value')
+        .then(snapshot => {
+          res.status(200).send(snapshot.val());
         })
         .catch(() => {
           return res.status(400).send({ error: 'containerId not found' });

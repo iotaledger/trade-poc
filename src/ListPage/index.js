@@ -114,27 +114,34 @@ class ListPage extends Component {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Object.values(items).map(item => (
-                <TableRow
-                  key={item.containerId || item.itemId}
-                  onClick={() => this.selectContainer(item.containerId)}
-                  className={classNames({
-                    'users-container': item.containerId === cookies.get('containerId'),
-                  })}
-                >
-                  {project.listPage.body.map((entry, index) => (
-                    <TableColumn
-                      key={`${item.containerId}-${index}`}
-                      className={
-                        index === 1 ? 'md-text-center' : index === 2 ? 'md-text-right' : ''
-                      }
-                    >
-                      {typeof entry === 'string'
-                        ? item[entry]
-                        : entry.map(field => item[field]).join(' → ')}
-                    </TableColumn>
-                  ))}
-                </TableRow>
+              {Object.values(items).map((item, idx) => (
+                <React.Fragment key={`${item.containerId || item.itemId}-${idx}`}>
+                  {
+                    item && (item.containerId || item.itemId) 
+                    ? (
+                      <TableRow
+                        key={`${item.containerId || item.itemId}-${idx}`}
+                        onClick={() => this.selectContainer(item.containerId)}
+                        className={classNames({
+                          'users-container': item.containerId === cookies.get('containerId'),
+                        })}
+                      >
+                        {project.listPage.body.map((entry, index) => (
+                          <TableColumn
+                            key={`${item.containerId}-${index}`}
+                            className={
+                              index === 1 ? 'md-text-center' : index === 2 ? 'md-text-right' : ''
+                            }
+                          >
+                            {typeof entry === 'string'
+                              ? item[entry]
+                              : entry.map(field => item[field]).join(' → ')}
+                          </TableColumn>
+                        ))}
+                      </TableRow>
+                    ) : null
+                  }
+                </React.Fragment>
               ))}
             </TableBody>
           </DataTable>

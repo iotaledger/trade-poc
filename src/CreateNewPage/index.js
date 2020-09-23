@@ -17,7 +17,7 @@ import Notification from '../SharedComponents/Notification';
 import Tooltip from '../SharedComponents/Tooltip';
 import { addItem } from '../store/items/actions';
 import { storeItem } from '../store/item/actions';
-import { getFirebaseSnapshot } from '../utils/firebase';
+import { getItem } from '../utils/firebase';
 import { createItemChannel } from '../utils/mam';
 import { BrowserQRCodeReader } from '@zxing/library';
 
@@ -104,11 +104,6 @@ class CreateItemPage extends Component {
     this.setState({ id: textID });
   };
 
-  onError = error => {
-    this.setState({ showLoader: false });
-    this.notifyError(error || 'Something went wrong');
-  };
-
   createItem = async event => {
     event.preventDefault();
     const formError = this.validate();
@@ -128,8 +123,8 @@ class CreateItemPage extends Component {
       // Format the item ID to remove dashes and parens
       const containerId = this.state.id.replace(/[^0-9a-zA-Z_-]/g, '');
 
-      const firebaseSnapshot = await getFirebaseSnapshot(containerId, this.onError);
-      if (firebaseSnapshot === null) {
+      const firebaseSnapshot = await getItem(containerId);
+      if (!firebaseSnapshot) {
         updateStep(cookies, 4);
         cookies.set('containerId', containerId, { path: '/' });
 

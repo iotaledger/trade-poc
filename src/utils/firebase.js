@@ -1,79 +1,35 @@
 import axios from 'axios';
-import firebase from 'firebase';
+import * as firebase from "firebase/app";
+import "firebase/storage";
 import config from '../config.json';
 
 export const initializeFirebaseApp = () => firebase.initializeApp(config);
-export const getItemsReference = () => firebase.database().ref('items');
-const getItemReference = containerId => firebase.database().ref(`items/${containerId}`);
-const getSettingsReference = () => firebase.database().ref('settings');
-const getEventMappingReference = () => firebase.database().ref('roleEventMapping');
-const getRoleEventMappingReference = role => firebase.database().ref(`roleEventMapping/${role}`);
 
 export const getFileStorageReference = (pathTofile, fileName) =>
   firebase.storage().ref(`${pathTofile}/${fileName}`);
 
-export const getProjectSettings = onError => {
-  const promise = new Promise((resolve, reject) => {
-    try {
-      const settingsRef = getSettingsReference();
-
-      settingsRef
-        .once('value')
-        .then(snapshot => {
-          resolve(snapshot.val());
-        })
-        .catch(error => {
-          reject(onError(error));
-        });
-    } catch (error) {
-      reject(onError(error));
-    }
-  });
-
-  return promise;
+export const getProjectSettings = () => {
+  return axios.get(`${config.rootURL}/settingsGet`).then(r => r.data);
 };
 
-export const getEvents = (role, onError) => {
-  const promise = new Promise((resolve, reject) => {
-    try {
-      const roleEventsRef = getRoleEventMappingReference(role);
-
-      roleEventsRef
-        .once('value')
-        .then(snapshot => {
-          resolve(snapshot.val());
-        })
-        .catch(error => {
-          reject(onError(error));
-        });
-    } catch (error) {
-      reject(onError(error));
-    }
-  });
-
-  return promise;
+export const getEvents = (role) => {
+  return axios.get(`${config.rootURL}/eventGet?role=${role}`).then(r => r.data);
 };
 
-export const getFirebaseSnapshot = (containerId, onError) => {
-  const promise = new Promise((resolve, reject) => {
-    try {
-      // Create reference
-      const itemsRef = getItemReference(containerId);
-
-      itemsRef
-        .once('value')
-        .then(snapshot => {
-          resolve(snapshot.val());
-        })
-        .catch(error => {
-          reject(onError(error));
-        });
-    } catch (error) {
-      reject(onError(error));
-    }
+export const getEventMappings = () => {
+  return new Promise((resolve) => {
+    axios.get(`${config.rootURL}/eventsGet`).then(r => resolve(r.data));
   });
+};
 
-  return promise;
+export const getItem = async (containerId) => {
+  return await axios.get(`${config.rootURL}/itemGet?containerId=${containerId}`).then(r => r.data);
+};
+
+export const getItems = async (status) => {
+  const statusQuery = status ? `?status=${status}` : '';
+  const result = await axios.get(`${config.rootURL}/itemsGet${statusQuery}`).then(r => r.data);
+  return result;
 };
 
 export const createItem = (eventBody, channel, secretKey) => {
@@ -106,23 +62,3 @@ export const updateItem = (eventBody, mam, newItemData) => {
   return axios.post(`${config.rootURL}/itemUpdate?containerId=${eventBody.containerId}`, item);
 };
 
-export const getEventMappings = onError => {
-  const promise = new Promise((resolve, reject) => {
-    try {
-      const eventsRef = getEventMappingReference();
-
-      eventsRef
-        .once('value')
-        .then(snapshot => {
-          resolve(snapshot.val());
-        })
-        .catch(error => {
-          reject(onError(error));
-        });
-    } catch (error) {
-      reject(onError(error));
-    }
-  });
-
-  return promise;
-};
