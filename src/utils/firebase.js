@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/storage";
 import config from '../config.json';
 
