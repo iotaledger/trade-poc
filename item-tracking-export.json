@@ -70,7 +70,7 @@
     },
     "locationTracking" : true,
     "projectName" : "container tracking",
-    "provider" : "https://nodes.devnet.iota.org",
+    "provider" : "https://api.hornet-0.testnet.chrysalis2.com",
     "qrReader" : true,
     "roles" : [
       {
