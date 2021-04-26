@@ -7,7 +7,6 @@ import { Provider } from 'react-redux';
 import Router from './Router';
 import * as serviceWorker from './serviceWorker';
 import configureStore from './store/configure';
-import { initializeFirebaseApp } from './utils/firebase';
 import './assets/scss/index.scss';
 
 WebFontLoader.load({
@@ -16,7 +15,6 @@ WebFontLoader.load({
   },
 });
 
-initializeFirebaseApp();
 const store = configureStore();
 
 ReactGA.initialize('UA-133441365-1'); // (trackingID, { debug: true })

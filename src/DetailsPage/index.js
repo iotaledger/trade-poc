@@ -151,7 +151,7 @@ class DetailsPage extends Component {
       try {
         await fetchItem(
           item.mam.root,
-          item.mam.secretKey,
+          item.mam.sideKey,
           this.storeItemCallback,
           this.setStateCalback
         );

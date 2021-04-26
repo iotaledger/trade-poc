@@ -1,12 +1,12 @@
 import axios from 'axios';
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/storage";
 import config from '../config.json';
 
-export const initializeFirebaseApp = () => firebase.initializeApp(config);
+firebase.initializeApp(config);
 
 export const getFileStorageReference = (pathTofile, fileName) =>
-  firebase.storage().ref(`${pathTofile}/${fileName}`);
+firebase.storage().ref(`${pathTofile}/${fileName}`);
 
 export const getProjectSettings = () => {
   return axios.get(`${config.rootURL}/settingsGet`).then(r => r.data);
@@ -32,31 +32,19 @@ export const getItems = async (status) => {
   return result;
 };
 
-export const createItem = (eventBody, channel, secretKey) => {
+export const createItem = (eventBody, mam) => {
   const item = {
     ...eventBody,
-    mam: {
-      root: channel.root,
-      seed: channel.state.seed,
-      next: channel.state.channel.next_root,
-      start: channel.state.channel.start,
-      secretKey,
-    },
+    mam
   };
 
   return axios.post(`${config.rootURL}/itemCreate?containerId=${eventBody.containerId}`, item);
 };
 
-export const updateItem = (eventBody, mam, newItemData) => {
+export const updateItem = (eventBody, mam) => {
   const item = {
     ...eventBody,
-    mam: {
-      root: mam.root,
-      secretKey: mam.secretKey,
-      seed: newItemData.state.seed,
-      next: newItemData.state.channel.next_root,
-      start: newItemData.state.channel.start,
-    },
+    mam
   };
 
   return axios.post(`${config.rootURL}/itemUpdate?containerId=${eventBody.containerId}`, item);
