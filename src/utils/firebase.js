@@ -37,9 +37,9 @@ export const createItem = (eventBody, channel, secretKey) => {
     ...eventBody,
     mam: {
       root: channel.root,
-      seed: channel.state.seed,
-      next: channel.state.channel.next_root,
-      start: channel.state.channel.start,
+      seed: channel.seed,
+      next: channel.next_root,
+      start: channel.start,
       secretKey,
     },
   };

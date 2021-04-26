@@ -1,6 +1,6 @@
 import Mam from 'mam.client.js';
 import { composeAPI } from '@iota/core';
-import { mamFetchAll } from '@iota/mam.js';
+import { mamFetchAll, createChannel, createMessage, mamAttach, TrytesHelper } from '@iota/mam-chrysalis.js';
 import { asciiToTrytes, trytesToAscii } from '@iota/converter'
 import isEmpty from 'lodash/isEmpty';
 import uniqBy from 'lodash/uniqBy';
@@ -9,27 +9,42 @@ import last from 'lodash/last';
 import memoize from 'lodash/memoize';
 import { createItem, updateItem } from './firebase';
 
+
 // Initialise MAM State
-let mamState;
+let mamChannelState;
 let api;
 
+
 export const initializeMamState = memoize(provider => {
-  mamState = Mam.init(provider);
-  api = composeAPI({ provider });
+  // mamState = Mam.init(provider);
+  console.info("Initializing MamState")
+  api = composeAPI({ provider: "https://nodes.devnet.iota.org:443" });
+  const secretKey = generateSeed(81);
+  console.info('Secret Key: ', secretKey);
+  mamChannelState = createChannel(generateSeed(81), 2, 'restricted', secretKey);
+  console.info('MamChannel: ', mamChannelState);
 });
+
 
 // Publish to tangle
 const publish = async data => {
+  console.log('publish called')
+  let message;
   try {
-    // Create MAM Payload - STRING OF TRYTES
-    const trytes = asciiToTrytes(JSON.stringify(data));
-    const message = Mam.create(mamState, trytes);
-
+    const trytes = TrytesHelper.fromAscii(JSON.stringify(data))
+    message = createMessage(mamChannelState, trytes)
     // Save new mamState
+    // ? Message of type IMamMessage does not have state
+    console.log('Published message:', message)
     updateMamState(message.state);
-
+  } catch (error) {
+    console.log('MAM create message error', error);
+    return null;
+  }
+  try {
     // Attach the payload.
-    await Mam.attach(message.payload, message.address);
+    // await Mam.attach(message.payload, message.address);
+    await mamAttach(api, message)
 
     return { root: message.root, state: message.state };
   } catch (error) {
@@ -38,17 +53,22 @@ const publish = async data => {
   }
 };
 
-const updateMamState = newMamState => (mamState = newMamState);
+const updateMamState = newMamState => (mamChannelState = newMamState);
 
 const createNewChannel = async (payload, secretKey) => {
+  console.log('createNewChannel called')
   // Set channel mode for default state
-  const defaultMamState = Mam.changeMode(mamState, 'restricted', secretKey);
+  // const defaultMamState = Mam.changeMode(mamState, 'restricted', secretKey);
+  const defaultMamState = createChannel(generateSeed(81), 2, 'restricted', secretKey);
   updateMamState(defaultMamState);
   const mamData = await publish(payload);
+  console.log('createNewChannel mamData', mamData)
   return mamData;
 };
 
 const appendToChannel = async (payload, savedMamData) => {
+  console.log('appendToChannel called')
+  console.log('appendChannel savedMamData', savedMamData)
   const mamState = {
     subscribed: [],
     channel: {
@@ -82,8 +102,11 @@ export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalb
       itemEvents.push(itemEvent);
       setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
     }
-
+    console.log('API', api);
+    console.log('root', root);
+    console.log('secretkey', secretKey);
     const fetched = await mamFetchAll(api, root, 'restricted', secretKey, 5);
+    console.log('Fetched ', fetched)
     if (fetched && fetched.length > 0) {
       for (let i = 0; i < fetched.length; i++) {
         convertData(fetched[i].message);
@@ -100,6 +123,7 @@ const getUniqueStatuses = itemEvents =>
   uniqBy(itemEvents.map(event => pick(event, ['status', 'timestamp'])), 'status');
 
 export const createItemChannel = (project, containerId, request) => {
+  console.info('CreateItemChannel called');
   const promise = new Promise(async (resolve, reject) => {
     try {
       const secretKey = generateSeed(81);
@@ -107,7 +131,7 @@ export const createItemChannel = (project, containerId, request) => {
       project.firebaseFields.forEach(field => (eventBody[field] = request[field]));
       eventBody.containerId = containerId;
       eventBody.timestamp = Date.now();
-
+      console.log('createItemChannel - Eventbody', eventBody)
       const messageBody = {
         ...request,
         ...eventBody,
@@ -118,7 +142,8 @@ export const createItemChannel = (project, containerId, request) => {
       };
 
       const channel = await createNewChannel(messageBody, secretKey);
-
+      // const channel = createChannel(generateSeed(81), 2, 'restricted', secretKey)
+      console.log('Channel', channel)
       if (channel && !isEmpty(channel)) {
         // Create a new item entry using that item ID
         await createItem(eventBody, channel, secretKey);
@@ -135,6 +160,7 @@ export const createItemChannel = (project, containerId, request) => {
 };
 
 export const appendItemChannel = async (metadata, props, documentExists, status) => {
+  console.info('AppendItemChannel called')
   const meta = metadata.length;
   const {
     project,
@@ -144,6 +170,7 @@ export const appendItemChannel = async (metadata, props, documentExists, status)
       params: { containerId },
     },
   } = props;
+
   const { mam } = items[containerId];
   const { documents } = last(item);
 
