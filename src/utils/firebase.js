@@ -6,7 +6,7 @@ import config from '../config.json';
 firebase.initializeApp(config);
 
 export const getFileStorageReference = (pathTofile, fileName) =>
-firebase.storage().ref(`${pathTofile}/${fileName}`);
+  firebase.storage().ref(`${pathTofile}/${fileName}`);
 
 export const getProjectSettings = () => {
   return axios.get(`${config.rootURL}/settingsGet`).then(r => r.data);

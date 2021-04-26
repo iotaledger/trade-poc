@@ -1,10 +1,9 @@
-import React, { Component, lazy, Suspense } from 'react';
+import React, { Component, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { DataTable, TableBody } from 'react-md';
 import FilesUpload from './FilesUpload';
+import Document from './Document';
 import Loader from '../../SharedComponents/Loader';
-
-const Document = lazy(() => import('./Document'));
 
 class Documents extends Component {
   render() {
