@@ -8,6 +8,10 @@ import Router from './Router';
 import * as serviceWorker from './serviceWorker';
 import configureStore from './store/configure';
 import './assets/scss/index.scss';
+import UserProvider from './contexts/user.provider'
+import ItemProvider from './contexts/item.provider';
+import ItemsProvider from './contexts/items.provider';
+import ProjectProvider from './contexts/project.provider';
 
 WebFontLoader.load({
   google: {
@@ -22,7 +26,15 @@ ReactGA.set({ anonymizeIp: true });
 
 const renderApp = () => (
   <Provider store={store}>
-    <Router />
+    <UserProvider>
+      <ProjectProvider>
+        <ItemsProvider>
+          <ItemProvider>
+            <Router />
+          </ItemProvider>
+        </ItemsProvider>
+      </ProjectProvider>
+    </UserProvider>
   </Provider>
 );
 

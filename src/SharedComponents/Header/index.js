@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react';
 import ReactGA from 'react-ga';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withCookies } from 'react-cookie';
 import { Link } from 'react-router-dom';
@@ -9,52 +8,57 @@ import isEmpty from 'lodash/isEmpty';
 import upperFirst from 'lodash/upperFirst';
 import Disclaimer from '../Disclaimer';
 import updateStep from '../../utils/cookie';
-import { logout } from '../../store/user/actions';
-import { reset } from '../../store/project/actions';
 import logoWhiteHorizontal from '../../assets/images/iota-horizontal-white.svg';
+import { UserContext } from '../../contexts/user.provider';
+import { ProjectContext } from '../../contexts/project.provider';
 
-const CallToAction = ({ logout, reset, user }) => (
-  <Col xs={6} lg={5} xl={4} className="cta">
-    <div className="header-cta-wrapper">
-      <Row>
-        <Col xs={5} className="hidden-sm-down">
-          <h4>
-            User Role
+const CallToAction = ({ user, logout, reset }) => {
+
+  return (
+    <Col xs={6} lg={5} xl={4} className="cta">
+      <div className="header-cta-wrapper">
+        <Row>
+          <Col xs={5} className="hidden-sm-down">
+            <h4>
+              User Role
           </h4>
-          {
-            !isEmpty(user) ? (
-              <span>
-                {upperFirst(user.role)}
-              </span>
-            ) : (
-              <span>
-                Logged out
-              </span>
-            )
-          }
-        </Col>
-        <Col xs={7} className="button-wrapper">
-          {
-            !isEmpty(user) ? (
-              <button className="button primary logout-cta" onClick={logout}>
-                Log out
-              </button>
-            ) : (
-              <button className="button secondary reset-cta" onClick={reset}>
-                Reset demo
-              </button>
-            )
-          }
-        </Col>
-      </Row>
-    </div>
-  </Col>
-);
+            {
+              !isEmpty(user) ? (
+                <span>
+                  {upperFirst(user.role)}
+                </span>
+              ) : (
+                <span>
+                  Logged out
+                </span>
+              )
+            }
+          </Col>
+          <Col xs={7} className="button-wrapper">
+            {
+              !isEmpty(user) ? (
+                <button className="button primary logout-cta" onClick={logout}>
+                  Log out
+                </button>
+              ) : (
+                <button className="button secondary reset-cta" onClick={reset}>
+                  Reset demo
+                </button>
+              )
+            }
+          </Col>
+        </Row>
+      </div>
+    </Col>
+  );
+}
 
-class Header extends Component {
-  logout = () => {
-    const { cookies, history, logout, user } = this.props;
+const Header = ({cookies, history, children, className, ctaEnabled = false}) => {
 
+  const { user, logout } = useContext(UserContext);
+  const { reset } = useContext(ProjectContext)
+
+  const logoutUser = () => {
     logout();
     updateStep(cookies, 11);
     updateStep(cookies, 15);
@@ -81,8 +85,7 @@ class Header extends Component {
     }
   };
 
-  reset = () => {
-    const { cookies, reset } = this.props;
+  const resetApplication = () => {
 
     let containerIdString = ''
     if (cookies.get('containerId')) {
@@ -101,36 +104,24 @@ class Header extends Component {
     window.location.reload();
   };
 
-  render() {
-    const { children, className, ctaEnabled = false, user } = this.props;
-    return (
-      <React.Fragment>
-        <Disclaimer />
-        <header className={className}>
-          <Row>
-            <Col xs={12} className="d-flex justify-content-between align-items-start">
-              <Col xs={4}>
-                <Link to="/">
-                  <img className="logo" src={logoWhiteHorizontal} alt="IOTA" />
-                </Link>
-              </Col>
-              { children }
-              { ctaEnabled ? <CallToAction logout={this.logout} reset={this.reset} user={user} /> : null }
+  return (
+    <React.Fragment>
+      <Disclaimer />
+      <header className={className}>
+        <Row>
+          <Col xs={12} className="d-flex justify-content-between align-items-start">
+            <Col xs={4}>
+              <Link to="/">
+                <img className="logo" src={logoWhiteHorizontal} alt="IOTA" />
+              </Link>
             </Col>
-          </Row>
-        </header>
-      </React.Fragment>
-    );
-  }
-}
+            {children}
+            {ctaEnabled ? <CallToAction logout={logoutUser} reset={resetApplication} user={user} /> : null}
+          </Col>
+        </Row>
+      </header>
+    </React.Fragment>
+  );
+};
 
-const mapStateToProps = state => ({
-  user: state.user,
-});
-
-const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(logout()),
-  reset: () => dispatch(reset()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withCookies(Header)));
+export default withRouter(withCookies(Header));

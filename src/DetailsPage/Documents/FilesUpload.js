@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { sha256 } from 'js-sha256';
 import { toast } from 'react-toastify';
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -10,14 +10,19 @@ import { getFileStorageReference } from '../../utils/firebase';
 
 registerPlugin(FilePondImagePreview);
 
-class FileUpload extends Component {
-  state = {
-    metadata: [],
-  };
+const FileUpload = ({ existingDocuments, pathTofile, uploadComplete }) => {
 
-  notifyWarning = message => toast.warn(message);
+  const [metadata, setMetadata] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const pond = useRef();
 
-  calculateHash = async file => {
+  useEffect(() => {
+    console.log("Is Uploading:", isUploading)
+  }, [isUploading]);
+
+  const notifyWarning = message => toast.warn(message);
+
+  const calculateHash = async file => {
     return new Promise((resolve, reject) => {
       try {
         const reader = new FileReader();
@@ -34,13 +39,12 @@ class FileUpload extends Component {
   };
 
   // Params: see https://pqina.nl/filepond/docs/patterns/api/server/#advanced
-  handleProcess = (fieldName, file, metadata, load, error, progress, abort) => {
-    const { existingDocuments, pathTofile, uploadComplete } = this.props;
+  const handleProcess = (fieldName, file, metadata, load, error, progress, abort) => {
 
     let fileExists = false;
     existingDocuments.forEach(existingDocument => {
       if (existingDocument.name === file.name) {
-        this.notifyWarning(`Document named ${file.name} already exists`);
+        notifyWarning(`Document named ${file.name} already exists`);
         abort(`Document named ${file.name} already exists`);
         fileExists = true;
         return;
@@ -51,14 +55,14 @@ class FileUpload extends Component {
       abort(`Document named ${file.name} already exists`);
     }
 
-    this.calculateHash(file).then(sha256Hash => {
+    calculateHash(file).then(sha256Hash => {
       const storageRef = getFileStorageReference(pathTofile, file.name);
       const task = storageRef.put(file);
 
       if (!sha256Hash) {
         error('Upload error');
       }
-
+      setIsUploading(true);
       task.on(
         'state_changed',
         snapshot => {
@@ -93,30 +97,35 @@ class FileUpload extends Component {
           };
 
           // Determine total number of files. Return once all files are processed
-          this.setState({ metadata: [...this.state.metadata, fileMetadata] }, () => {
-            const totalFiles = this.pond.getFiles().length;
-            if (this.state.metadata.length === totalFiles) {
-              uploadComplete(this.state.metadata);
-            }
+          setMetadata(prevMetaData => {
+            return ([...prevMetaData, fileMetadata])
           });
         }
       );
     });
   };
 
-  render() {
-    return (
-      <div>
-        <FilePond
-          ref={ref => (this.pond = ref)}
-          allowMultiple
-          maxFiles={5}
-          server={{ process: this.handleProcess }}
-        />
-        <Notification />
-      </div>
-    );
-  }
+  useEffect(() => {
+    if(!isUploading) return;
+    const totalFiles = pond.current.getFiles().length;
+    console.log(metadata.length, totalFiles)
+    if (metadata.length === totalFiles) {
+      uploadComplete(metadata);
+      setIsUploading(false);
+    }
+  }, [isUploading, metadata]);
+
+  return (
+    <div>
+      <FilePond
+        ref={ref => pond.current = ref}
+        allowMultiple
+        maxFiles={5}
+        server={{ process: handleProcess }}
+      />
+      <Notification />
+    </div>
+  );
 }
 
 export default FileUpload;

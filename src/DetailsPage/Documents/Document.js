@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TableRow, TableColumn, FontIcon } from 'react-md';
 import { validateIntegrity } from './DocumentIntegrityValidator';
 
-class Document extends Component {
-  state = {
-    document: null,
-  };
+const Document = (props) => {
 
-  componentDidMount() {
-    this.validate(this.props.document);
-  }
+  const [document, setDocument] = useState(null);
 
-  componentWillReceiveProps(nextProps) {
-    this.validate(nextProps.document);
-  }
+  useEffect(() => {
+    validate(props.document);
+  }, [props.document])
 
-  validate = async document => {
+  const validate = async document => {
     const result = await validateIntegrity(document);
-    this.setState({ document: {...document, ...result} });
+    setDocument(prevDocument => {
+      return {
+        ...prevDocument,
+        ...result
+      }
+    });
   }
 
-  getDocumentIcon = doc => {
+  const getDocumentIcon = doc => {
     switch (doc.contentType) {
       case 'application/pdf':
         return 'pdf';
@@ -37,33 +37,36 @@ class Document extends Component {
     }
   };
 
-  render() {
-    const { document } = this.state;
 
-    if (!document) return <React.Fragment />
-
-    return (
-      <TableRow key={document.name}>
-        <TableColumn>
-          <a
-            className={`icon ${this.getDocumentIcon(document)}`}
-            href={document.downloadURL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {document.name}
-          </a>
-        </TableColumn>
-        <TableColumn className="md-text-right">
-          {document.hashMatch && document.sizeMatch ? (
-            <FontIcon secondary>done</FontIcon>
-          ) : (
-            <FontIcon error>block</FontIcon>
-          )}
-        </TableColumn>
-      </TableRow>
-    );
-  }
+  return (
+    <>
+      {
+        !document ?
+          <React.Fragment />
+          :
+          <TableRow key={document.name}>
+            <TableColumn>
+              <a
+                className={`icon ${getDocumentIcon(document)}`}
+                href={document.downloadURL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {document.name}
+              </a>
+            </TableColumn>
+            <TableColumn className="md-text-right">
+              {document.hashMatch && document.sizeMatch ? (
+                <FontIcon secondary>done</FontIcon>
+              ) : (
+                <FontIcon error>block</FontIcon>
+              )}
+            </TableColumn>
+          </TableRow>
+      }
+    </>
+  );
 }
+
 
 export default Document;

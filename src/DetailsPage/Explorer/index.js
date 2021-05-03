@@ -1,20 +1,17 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useContext } from 'react';
+import { ItemContext } from '../../contexts/item.provider';
 import List from './List';
 
-class Explorer extends Component {
-  render() {
-    const { item } = this.props;
+const Explorer = () => {
+
+    const { item } = useContext(ItemContext);
+
     return (
       <div className="explorer-content">
         {item.length > 0 ? <List messages={item} /> : null}
       </div>
     );
-  }
+  
 }
 
-const mapStateToProps = state => ({
-  item: state.item,
-});
-
-export default connect(mapStateToProps)(Explorer);
+export default Explorer;

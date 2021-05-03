@@ -1,80 +1,78 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withCookies } from 'react-cookie';
 import { ExpansionList, ExpansionPanel, Switch } from 'react-md';
 import MessageContent from './MessageContent';
 import updateStep from '../../utils/cookie';
 
-class List extends Component {
-  state = {
-    expanded: false,
-    expandedPanels: [],
-  };
+const List = ({ messages, cookies }) => {
 
-  onExpandToggle = (toggleOpen, key) => {
-    const { expandedPanels } = this.state;
+  const [expanded, setExpanded] = useState(false);
+  const [expandedPanels, setExpandedPanels] = useState([]);
+
+  useEffect(() => {
+    setSwitchState();
+  }, [expandedPanels]);
+
+  const onExpandToggle = (toggleOpen, key) => {
     if (toggleOpen) {
-      this.setState({ expandedPanels: [...expandedPanels, key] }, () => this.setSwitchState());
+      setExpandedPanels(prevExpandedPanels => {
+        return ([...prevExpandedPanels, key])
+      });
     } else {
       const index = expandedPanels.indexOf(key);
       if (index > -1) {
         expandedPanels.splice(index, 1);
-        this.setState({ expandedPanels: [...expandedPanels] }, () => this.setSwitchState());
+        setExpandedPanels([...expandedPanels]);
       }
     }
   };
 
-  setSwitchState = () => {
-    const { expandedPanels } = this.state;
-    const { messages } = this.props;
+  const setSwitchState = () => {
     if (expandedPanels.length === messages.length) {
-      this.setState({ expanded: true });
+      setExpanded(true);
     } else if (expandedPanels.length === 0) {
-      this.setState({ expanded: false });
+      setExpanded(false);
     }
   };
 
-  toggleExpandedState = expanded => {
-    updateStep(this.props.cookies, 6);
+  const toggleExpandedState = expanded => {
+    updateStep(cookies, 6);
     if (!expanded) {
-      this.setState({ expanded, expandedPanels: [] });
+      setExpanded(expanded);
+      setExpandedPanels([]);
     } else {
-      this.setState({
-        expanded,
-        expandedPanels: Array.from(new Array(this.props.messages.length), (x, i) => i),
-      });
+      setExpanded(expanded);
+      setExpandedPanels(Array.from(new Array(messages.length), (x, i) => i));
     }
   };
 
-  render() {
-    const { messages } = this.props;
-    const { expanded } = this.state;
-    return (
-      <div className="panel">
-        <Switch
-          id="expand-all"
-          type="switch"
-          label="Expand all"
-          name="expand-all"
-          className="expand-all"
-          checked={expanded}
-          onChange={this.toggleExpandedState}
-        />
-        <ExpansionList className="md-cell md-cell--12">
-          {messages.map((message, index) => (
-            <ExpansionPanel
-              key={index}
-              label={`Event ${index}`}
-              footer={null}
-              expanded={this.state.expandedPanels.includes(index)}
-              onExpandToggle={toggleOpen => this.onExpandToggle(toggleOpen, index)}
-            >
-              <MessageContent message={message} />
-            </ExpansionPanel>
-          ))}
-        </ExpansionList>
-      </div>
-    );
-  }
+  return (
+    <div className="panel">
+      <Switch
+        id="expand-all"
+        type="switch"
+        label="Expand all"
+        name="expand-all"
+        className="expand-all"
+        checked={expanded}
+        onChange={toggleExpandedState}
+      />
+      <ExpansionList className="md-cell md-cell--12">
+        {messages.map((message, index) => (
+          <ExpansionPanel
+            key={index}
+            label={`Event ${index}`}
+            footer={null}
+            expanded={expandedPanels.includes(index)}
+            onExpandToggle={toggleOpen => onExpandToggle(toggleOpen, index)}
+          >
+            <MessageContent message={message} />
+          </ExpansionPanel>
+        ))}
+      </ExpansionList>
+    </div>
+  );
 }
+
 
 export default withCookies(List);

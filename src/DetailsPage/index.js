@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import ReactGA from 'react-ga';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withCookies } from 'react-cookie';
 import { Button } from 'react-md';
@@ -12,8 +11,6 @@ import last from 'lodash/last';
 import uniqBy from 'lodash/uniqBy';
 import pick from 'lodash/pick';
 import { toast } from 'react-toastify';
-import { storeItems } from '../store/items/actions';
-import { storeItem, resetStoredItem } from '../store/item/actions';
 import updateStep from '../utils/cookie';
 import Notification from '../SharedComponents/Notification';
 import Tooltip from '../SharedComponents/Tooltip';
@@ -23,6 +20,10 @@ import Footer from '../SharedComponents/MiniFooter';
 import Tabs from './Tabs';
 import Details from './Details';
 import { fetchItem, appendItemChannel } from '../utils/mam';
+import { UserContext } from '../contexts/user.provider';
+import { ItemContext } from '../contexts/item.provider';
+import { ItemsContext } from '../contexts/items.provider';
+import { ProjectContext } from '../contexts/project.provider';
 
 const StatusButtons = ({ statuses, onClick, showLoader }) => {
   if (typeof statuses === 'string') {
@@ -44,64 +45,63 @@ const StatusButtons = ({ statuses, onClick, showLoader }) => {
   );
 };
 
-class DetailsPage extends Component {
-  state = {
-    showLoader: false,
-    loaderHint: null,
-    fetchComplete: false,
-    metadata: [],
-    fileUploadEnabled: true,
-    statusUpdated: false,
-    statuses: [],
-    item: null,
-    activeTabIndex: 0,
-  };
+const DetailsPage = ({ history, match, cookies }) => {
 
-  async componentDidMount() {
-    const {
-      user,
-      item,
-      items,
-      history,
-      match: {
-        params: { containerId },
-      },
-    } = this.props;
+  const [showLoader, setShowLoader] = useState(false);
+  const [loaderHint, setLoaderHint] = useState(null);
+  const [fetchComplete, setFetchComplete] = useState(false);
+  const [metadata, setMetadata] = useState([]);
+  const [fileUploadEnabled, setFileUploadEnabled] = useState(true);
+  const [statusUpdated, setStatusUpdated] = useState(false);
+  const [statuses, setStatuses] = useState([]);
+  const [currentItem, setCurrentItem] = useState(null);
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
+
+  const { user } = useContext(UserContext);
+  const { item, storeItem, resetStoredItem } = useContext(ItemContext);
+  const { items, storeItems } = useContext(ItemsContext);
+  const { project } = useContext(ProjectContext);
+  
+
+  useEffect(() => {
+    const { params: { containerId } } = match;
     if (isEmpty(user)) {
       history.push('/login');
     }
     if (!containerId || isEmpty(items)) {
       history.push('/list');
     } else if (isEmpty(item) || item[0].containerId !== containerId) {
-      this.retrieveItem(containerId);
+      retrieveItem(containerId);
     } else {
-      this.setState({
-        showLoader: false,
-        fetchComplete: true,
-        item: last(item),
-        statuses: this.getUniqueStatuses(item),
-      });
+      setShowLoader(false);
+      setFetchComplete(true);
+      setCurrentItem(last(item));
+      setStatuses(getUniqueStatuses(item));
     }
     ReactGA.pageview('/details');
-  }
+  }, []);
 
-  notifySuccess = message => toast.success(message);
-  notifyWarning = message => toast.warn(message);
-  notifyError = message => toast.error(message);
+  //debug
+  useEffect(() => {
+    console.log("Current item", currentItem)
+  }, [currentItem]);
 
-  getUniqueStatuses = itemEvents =>
+  const notifySuccess = message => toast.success(message);
+  const notifyWarning = message => toast.warn(message);
+  const notifyError = message => toast.error(message);
+
+  const getUniqueStatuses = itemEvents =>
     uniqBy(itemEvents.map(event => pick(event, ['status', 'timestamp'])), 'status');
 
-  documentExists = documentName => {
-    this.setState({ showLoader: false });
-    this.notifyError(`Document named ${documentName} already exists`);
+  const documentExists = documentName => {
+    setShowLoader(false);
+    notifyError(`Document named ${documentName} already exists`);
   };
 
-  appendToItem = async status => {
-    const { cookies, project, match: { params: { containerId } } } = this.props;
-    const { metadata } = this.state;
+  const appendToItem = async status => {
+    const { params: { containerId } } = match;
     const meta = metadata.length;
-
+    console.log("Status", status)
     if (status) {
       ReactGA.event({
         category: 'Status update',
@@ -110,8 +110,11 @@ class DetailsPage extends Component {
       });
     }
 
-    this.setState({ showLoader: true, fetchComplete: false, loaderHint: 'Updating Tangle' });
-    const response = await appendItemChannel(metadata, this.props, this.documentExists, status);
+    setShowLoader(true);
+    setFetchComplete(false);
+    setLoaderHint('Updating Tangle');
+    const infos = { item, items, project, match }
+    const response = await appendItemChannel(metadata, infos, documentExists, status);
     if (response) {
       updateStep(cookies, 9);
       status === 'Gate-in' && updateStep(cookies, 14);
@@ -119,47 +122,50 @@ class DetailsPage extends Component {
       status === 'Container loaded on vessel' && updateStep(cookies, 24);
       status === 'Vessel departure' && updateStep(cookies, 25);
 
-      this.notifySuccess(`${upperFirst(project.trackingUnit)} ${meta ? '' : 'status '}updated`);
-      this.setState({
-        showLoader: false,
-        metadata: [],
-        fileUploadEnabled: true,
-        loaderHint: null
-      });
-      this.retrieveItem(response);
+      notifySuccess(`${upperFirst(project.trackingUnit)} ${meta ? '' : 'status '}updated`);
+      setShowLoader(false);
+      setMetadata([]);
+      setFileUploadEnabled(true);
+      setLoaderHint(null);
+      retrieveItem(response);
     } else {
-      this.setState({ showLoader: false, loaderHint: null });
-      this.notifyError('Something went wrong');
+      setShowLoader(false);
+      setLoaderHint(null);
+      notifyError('Something went wrong');
     }
   };
 
-  storeItemCallback = item => {
-    this.props.storeItem(item);
+  const storeItemCallback = item => {
+    storeItem(item);
   };
 
-  setStateCalback = (item, statuses) => {
-    this.setState({ item, statuses });
+  const setStateCalback = (item, statuses) => {
+    setCurrentItem(item);
+    setStatuses(statuses);
   };
 
-  retrieveItem = containerId => {
-    const { items, user, project: { trackingUnit } } = this.props;
+  const retrieveItem = containerId => {
+    const { trackingUnit } = project;
     const item = items[containerId];
-    this.setState({ showLoader: true, loaderHint: 'Fetching data' });
-    this.props.resetStoredItem();
-    this.props.storeItems(user, containerId);
+    setShowLoader(true);
+    setLoaderHint('Fetching data');
+    resetStoredItem();
+    storeItems(user, containerId);
     const promise = new Promise(async (resolve, reject) => {
       try {
         await fetchItem(
           item.mam.root,
           item.mam.sideKey,
-          this.storeItemCallback,
-          this.setStateCalback
+          storeItemCallback,
+          setStateCalback
         );
-
-        this.setState({ showLoader: false, fetchComplete: true, loaderHint: null });
+        setShowLoader(false);
+        setFetchComplete(true);
+        setLoaderHint(null);
         return resolve();
       } catch (error) {
-        this.setState({ showLoader: false, loaderHint: null });
+        setShowLoader(false);
+        setLoaderHint(null);
         return reject(this.notifyError(`Error loading ${trackingUnit} data`));
       }
     });
@@ -167,9 +173,9 @@ class DetailsPage extends Component {
     return promise;
   };
 
-  onTabChange = newActiveTabIndex => {
-    const { match: { params: { containerId } } } = this.props;
-    this.setState({ activeTabIndex: newActiveTabIndex });
+  const onTabChange = newActiveTabIndex => {
+    const { params: { containerId } } = match;
+    setActiveTabIndex(newActiveTabIndex);
 
     const tabs = ['Status', 'Tangle', 'Documents', 'Temperature', 'Location'];
 
@@ -180,132 +186,100 @@ class DetailsPage extends Component {
     });
   };
 
-  onUploadComplete = metadata => {
-    const { match: { params: { containerId } } } = this.props;
+  const onUploadComplete = metadata => {
+    const { params: { containerId } } = match;
 
-    this.setState({ metadata, fileUploadEnabled: false, activeTabIndex: 2 }, () => {
-      this.notifySuccess('File upload complete!');
-      this.appendToItem();
-
-      ReactGA.event({
-        category: 'Document upload',
-        action: 'Uploaded document(s)',
-        label: `Container ID ${containerId}`
-      });
+    setMetadata(metadata);
+    setFileUploadEnabled(false);
+    setActiveTabIndex(2);
+    notifySuccess('File upload complete!');
+    appendToItem();
+    ReactGA.event({
+      category: 'Document upload',
+      action: 'Uploaded document(s)',
+      label: `Container ID ${containerId}`
     });
+
   };
 
-  onAddTemperature = containerId => {
+  const onAddTemperature = containerId => {
     ReactGA.event({
       category: 'Temperature added',
       action: 'Temperature added',
       label: `Container ID ${containerId}`
     });
 
-    this.retrieveItem(containerId);
+    retrieveItem(containerId);
   };
 
-  render() {
-    const {
-      fileUploadEnabled,
-      showLoader,
-      loaderHint,
-      statusUpdated,
-      statuses,
-      item,
-      fetchComplete,
-      activeTabIndex,
-    } = this.state;
-    const {
-      cookies,
-      user,
-      match: { params: { containerId } },
-      project: { documentStorage, locationTracking, temperatureChart, detailsPage },
-    } = this.props;
+  const [nextEvents, setNextEvents] = useState(null);
 
-    if (!item) return <Loader showLoader={showLoader} />;
+  useEffect(() => {
+    if (!currentItem || !currentItem.status) return;
+    const nextEvents = user.nextEvents[currentItem.status.toLowerCase().replace(/[- ]/g, '')];
+    setNextEvents(nextEvents);
+  }, [user, currentItem]);
 
-    const nextEvents = user.nextEvents[item.status.toLowerCase().replace(/[- ]/g, '')];
-
-    const containerHeading = (
-      <React.Fragment>
-        {
-          typeof detailsPage.title === 'string'
-            ? item[detailsPage.title]
-            : detailsPage.title.map(field => item[field]).join(' → ')
-        }
-      </React.Fragment>
-    )
-
-    return (
-      <div className="details-page">
-        <Header ctaEnabled>
-          <Col md={3} xl={4} className="heading hidden-md-down">
-            <span className="heading-text">
-              #{containerId},&nbsp;{ containerHeading }
-            </span>
-          </Col>
-        </Header>
-        <div className={`loader-wrapper ${showLoader ? '' : 'hidden'}`}>
-          <Loader showLoader={showLoader} text={loaderHint} />
-        </div>
-        <div className="details-wrapper">
-          <div className="md-block-centered">
-            <div className="route-cta-wrapper">
-              <Link
-                to="/list"
-                className="button secondary back-cta"
-                onClick={() => updateStep(cookies, 10)}
-              >
-                Back
-              </Link>
-              <h3 className="ca-title">
-                #{containerId}
-                <br />
-                { containerHeading }
-              </h3>
-              {user.canAppendToStream && !statusUpdated && nextEvents ? (
-                <StatusButtons statuses={nextEvents} onClick={this.appendToItem} showLoader={showLoader} />
-              ) : null}
+  return (
+    <>
+      {
+        !currentItem ?
+          <Loader showLoader={showLoader} />
+          :
+          <div className="details-page">
+            <Header ctaEnabled>
+              <Col md={3} xl={4} className="heading hidden-md-down">
+                <span className="heading-text">
+                  #{match.params.containerId},&nbsp;{`${currentItem.departure}  →  ${currentItem.destination}`}
+                </span>
+              </Col>
+            </Header>
+            <div className={`loader-wrapper ${showLoader ? '' : 'hidden'}`}>
+              <Loader showLoader={showLoader} text={loaderHint} />
             </div>
-            <Tabs
-              activeTabIndex={activeTabIndex}
-              item={item}
-              statuses={statuses}
-              itemEvents={this.props.item}
-              locationTracking={locationTracking}
-              documentStorage={documentStorage}
-              temperatureChart={temperatureChart}
-              fileUploadEnabled={fileUploadEnabled}
-              onTabChange={this.onTabChange}
-              onUploadComplete={this.onUploadComplete}
-              onAddTemperatureCallback={this.onAddTemperature}
-            />
-            <Details item={item} fields={detailsPage} />
+            <div className="details-wrapper">
+              <div className="md-block-centered">
+                <div className="route-cta-wrapper">
+                  <Link
+                    to="/list"
+                    className="button secondary back-cta"
+                    onClick={() => updateStep(cookies, 10)}
+                  >
+                    Back
+              </Link>
+                  <h3 className="ca-title">
+                    #{match.params.containerId}
+                    <br />
+                    {`${currentItem.departure}  →  ${currentItem.destination}`}
+                  </h3>
+                  {user.canAppendToStream && !statusUpdated && nextEvents ? (
+                    <StatusButtons statuses={nextEvents} onClick={appendToItem} showLoader={showLoader} />
+                  ) : null}
+                </div>
+                <Tabs
+                  activeTabIndex={activeTabIndex}
+                  item={currentItem}
+                  statuses={statuses}
+                  itemEvents={item}
+                  locationTracking={project.locationTracking}
+                  documentStorage={project.documentStorage}
+                  temperatureChart={project.temperatureChart}
+                  fileUploadEnabled={fileUploadEnabled}
+                  onTabChange={onTabChange}
+                  onUploadComplete={onUploadComplete}
+                  onAddTemperatureCallback={onAddTemperature}
+                />
+                <Details item={currentItem} fields={project.detailsPage} />
+              </div>
+            </div>
+            <Notification />
+            <Tooltip fetchComplete={fetchComplete} activeTabIndex={activeTabIndex} />
+            <Footer />
           </div>
-        </div>
-        <Notification />
-        <Tooltip fetchComplete={fetchComplete} activeTabIndex={activeTabIndex} />
-        <Footer />
-      </div>
-    );
-  }
+      }
+
+    </>
+  );
 }
 
-const mapStateToProps = state => ({
-  user: state.user,
-  item: state.item,
-  items: state.items,
-  project: state.project,
-});
-
-const mapDispatchToProps = dispatch => ({
-  storeItem: item => dispatch(storeItem(item)),
-  storeItems: (user, containerId) => dispatch(storeItems(user, containerId)),
-  resetStoredItem: () => dispatch(resetStoredItem()),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(withCookies(DetailsPage)));
+export default withRouter(withCookies(DetailsPage));
