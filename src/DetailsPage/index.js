@@ -83,8 +83,8 @@ const DetailsPage = ({ history, match, cookies }) => {
 
   //debug
   useEffect(() => {
-    console.log("Current item", currentItem)
-  }, [currentItem]);
+    console.log("Current status", statuses)
+  }, [statuses]);
 
   const notifySuccess = message => toast.success(message);
   const notifyWarning = message => toast.warn(message);
@@ -136,6 +136,7 @@ const DetailsPage = ({ history, match, cookies }) => {
   };
 
   const storeItemCallback = item => {
+    console.log("Store Item:", item)
     storeItem(item);
   };
 
@@ -166,7 +167,7 @@ const DetailsPage = ({ history, match, cookies }) => {
       } catch (error) {
         setShowLoader(false);
         setLoaderHint(null);
-        return reject(this.notifyError(`Error loading ${trackingUnit} data`));
+        return reject(notifyError(`Error loading ${trackingUnit} data`));
       }
     });
 
@@ -221,7 +222,7 @@ const DetailsPage = ({ history, match, cookies }) => {
   }, [user, currentItem]);
 
   return (
-    <>
+    <React.Fragment>
       {
         !currentItem ?
           <Loader showLoader={showLoader} />
@@ -278,7 +279,7 @@ const DetailsPage = ({ history, match, cookies }) => {
           </div>
       }
 
-    </>
+    </React.Fragment>
   );
 }
 

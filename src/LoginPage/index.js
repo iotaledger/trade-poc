@@ -25,7 +25,7 @@ const LoginPage = ({ cookies, history }) => {
 
   const [showLoader, setShowLoader] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
-  const { storeCredentials, storeEvents  } = useContext(UserContext);
+  const { storeCredentials, storeEvents } = useContext(UserContext);
   const { project, storeProjectSettings, storeEventMappings } = useContext(ProjectContext);
 
   useEffect(() => {
@@ -77,58 +77,58 @@ const LoginPage = ({ cookies, history }) => {
   };
 
 
-    return (
-      <>
+  return (
+    <React.Fragment>
       {
-        isEmpty(project) ? <div/> :
-        <div className="login-page">
-        <Header ctaEnabled>
-          <Col md={3} xl={4} className="heading hidden-md-down">
-            <span className="heading-text">
-              Log in to your user role
+        isEmpty(project) ? <div /> :
+          <div className="login-page">
+            <Header ctaEnabled>
+              <Col md={3} xl={4} className="heading hidden-md-down">
+                <span className="heading-text">
+                  Log in to your user role
             </span>
-          </Col>
-        </Header>
-        <div className="cta-wrapper">
-          <a className="button" href="https://www.youtube.com/watch?v=o5jX8VAyzUs" target="_blank" rel="noopener noreferrer">
-            Need help? Watch the video
+              </Col>
+            </Header>
+            <div className="cta-wrapper">
+              <a className="button" href="https://www.youtube.com/watch?v=o5jX8VAyzUs" target="_blank" rel="noopener noreferrer">
+                Need help? Watch the video
           </a>
-        </div>
-        <div className="roles-wrapper">
-          {
-            project.roles.map(role => (
-              <div className="role-wrapper" key={role.id}>
-                <div className="role-icon">
-                  <img alt={role.name} src={images[role.id]} />
-                </div>
-                <div className="role-info">
-                  <div className="role-name">
-                    {upperFirst(role.id)}
-                  </div>
-                  <div className="role-description">
-                    {role.description}
-                  </div>
-                  <div className="role-cta">
-                    <button
-                      className={`button ${role.id}-cta ${showLoader ? 'hidden' : ''}`}
-                      onClick={event => loginAs(event, role.id)}
-                    >
-                      Log in
+            </div>
+            <div className="roles-wrapper">
+              {
+                project.roles.map(role => (
+                  <div className="role-wrapper" key={role.id}>
+                    <div className="role-icon">
+                      <img alt={role.name} src={images[role.id]} />
+                    </div>
+                    <div className="role-info">
+                      <div className="role-name">
+                        {upperFirst(role.id)}
+                      </div>
+                      <div className="role-description">
+                        {role.description}
+                      </div>
+                      <div className="role-cta">
+                        <button
+                          className={`button ${role.id}-cta ${showLoader ? 'hidden' : ''}`}
+                          onClick={event => loginAs(event, role.id)}
+                        >
+                          Log in
                     </button>
-                    <Loader showLoader={showLoader && selectedRole === role.id} />
+                        <Loader showLoader={showLoader && selectedRole === role.id} />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-        <Footer />
-        <Tooltip />
-      </div>
+                ))
+              }
+            </div>
+            <Footer />
+            <Tooltip />
+          </div>
       }
-      </>
-      
-    );
+    </React.Fragment>
+
+  );
 }
 
 

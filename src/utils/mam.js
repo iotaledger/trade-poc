@@ -29,6 +29,7 @@ const createNewChannel = async (payload) => {
 const appendToChannel = async (payload, savedChannelState) => {
   try {
     let channelState = savedChannelState;
+    console.log("Payload:", payload)
     const mamMessage = createMessage(channelState, TrytesHelper.fromAscii(JSON.stringify(payload)));
     await mamAttach(node, mamMessage, "TRACKANDTRACE");
     return channelState;
@@ -167,7 +168,9 @@ export const appendTemperatureLocation = async (payload, props) => {
   } = props;
   const container = items[containerId];
   if (!container) return containerId;
-
+  console.log("Payload to append:", payload)
+  console.log('Container: ', container)
+  console.log('Props:', props)
   const promise = new Promise(async (resolve, reject) => {
     try {
       if (payload) {
@@ -178,7 +181,7 @@ export const appendTemperatureLocation = async (payload, props) => {
           project.firebaseFields.forEach(field => (eventBody[field] = last(item)[field]));
           eventBody.status = payload.status;
           eventBody.timestamp = payload.timestamp;
-
+          
           await updateItem(eventBody, newChannelState);
 
           return resolve(containerId);

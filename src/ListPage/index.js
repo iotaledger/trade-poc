@@ -61,7 +61,7 @@ const ListPage = ({ history, cookies }) => {
   }
 
   return (
-    <>
+    <React.Fragment>
       {
         (isEmpty(project) || !project.listPage)
           ? null
@@ -140,7 +140,7 @@ const ListPage = ({ history, cookies }) => {
             <Tooltip fetchComplete={!showLoader} />
           </div>
       }
-    </>
+    </React.Fragment>
   );
 
 }
