@@ -108,12 +108,11 @@ const FileUpload = ({ existingDocuments, pathTofile, uploadComplete }) => {
   useEffect(() => {
     if(!isUploading) return;
     const totalFiles = pond.current.getFiles().length;
-    console.log(metadata.length, totalFiles)
     if (metadata.length === totalFiles) {
       uploadComplete(metadata);
       setIsUploading(false);
     }
-  }, [isUploading, metadata]);
+  }, [metadata]);
 
   return (
     <div>

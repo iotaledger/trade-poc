@@ -90,18 +90,19 @@ const DetailsPage = ({ history, match, cookies }) => {
   const notifyWarning = message => toast.warn(message);
   const notifyError = message => toast.error(message);
 
-  const getUniqueStatuses = itemEvents =>
+  const getUniqueStatuses = itemEvents => 
     uniqBy(itemEvents.map(event => pick(event, ['status', 'timestamp'])), 'status');
-
+   
   const documentExists = documentName => {
     setShowLoader(false);
     notifyError(`Document named ${documentName} already exists`);
   };
 
-  const appendToItem = async status => {
+  const appendToItem = async (status, metadata) => {
+    console.log("Append to item: ", status)
     const { params: { containerId } } = match;
     const meta = metadata.length;
-    console.log("Status", status)
+    // console.log("Status", status)
     if (status) {
       ReactGA.event({
         category: 'Status update',
@@ -115,6 +116,7 @@ const DetailsPage = ({ history, match, cookies }) => {
     setLoaderHint('Updating Tangle');
     const infos = { item, items, project, match }
     const response = await appendItemChannel(metadata, infos, documentExists, status);
+    console.log("Response append to item: ", response)
     if (response) {
       updateStep(cookies, 9);
       status === 'Gate-in' && updateStep(cookies, 14);
@@ -141,6 +143,8 @@ const DetailsPage = ({ history, match, cookies }) => {
   };
 
   const setStateCalback = (item, statuses) => {
+    console.log("setStateCallback item", item)
+    console.log("setStateCallback statuses", statuses)
     setCurrentItem(item);
     setStatuses(statuses);
   };
@@ -148,6 +152,7 @@ const DetailsPage = ({ history, match, cookies }) => {
   const retrieveItem = containerId => {
     const { trackingUnit } = project;
     const item = items[containerId];
+    console.log("Retrieve Item: ", item)
     setShowLoader(true);
     setLoaderHint('Fetching data');
     resetStoredItem();
@@ -189,12 +194,12 @@ const DetailsPage = ({ history, match, cookies }) => {
 
   const onUploadComplete = metadata => {
     const { params: { containerId } } = match;
-
+    console.log("Upload complete metatdata:", metadata)
     setMetadata(metadata);
     setFileUploadEnabled(false);
     setActiveTabIndex(2);
     notifySuccess('File upload complete!');
-    appendToItem();
+    appendToItem(null, metadata);
     ReactGA.event({
       category: 'Document upload',
       action: 'Uploaded document(s)',
@@ -254,7 +259,7 @@ const DetailsPage = ({ history, match, cookies }) => {
                     {`${currentItem.departure}  →  ${currentItem.destination}`}
                   </h3>
                   {user.canAppendToStream && !statusUpdated && nextEvents ? (
-                    <StatusButtons statuses={nextEvents} onClick={appendToItem} showLoader={showLoader} />
+                    <StatusButtons statuses={nextEvents} onClick={(status) => appendToItem(status, metadata)} showLoader={showLoader} />
                   ) : null}
                 </div>
                 <Tabs

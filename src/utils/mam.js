@@ -44,6 +44,7 @@ export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalb
     const itemEvents = [];
     const convertData = data => {
       const itemEvent = JSON.parse(TrytesHelper.toAscii(data));
+      console.log("Fetched event: ", itemEvent)
       storeItemCallback(itemEvent);
       itemEvents.push(itemEvent);
       setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
@@ -62,7 +63,7 @@ export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalb
   }
 };
 
-const getUniqueStatuses = itemEvents =>
+const getUniqueStatuses = itemEvents => 
   uniqBy(itemEvents.map(event => pick(event, ['status', 'timestamp'])), 'status');
 
 export const createItemChannel = (project, containerId, request) => {

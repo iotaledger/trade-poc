@@ -4,7 +4,7 @@ import { validateIntegrity } from './DocumentIntegrityValidator';
 
 const Document = (props) => {
 
-  const [document, setDocument] = useState(null);
+  const [document, setDocument] = useState();
 
   useEffect(() => {
     validate(props.document);
@@ -12,12 +12,7 @@ const Document = (props) => {
 
   const validate = async document => {
     const result = await validateIntegrity(document);
-    setDocument(prevDocument => {
-      return {
-        ...prevDocument,
-        ...result
-      }
-    });
+    setDocument({...document, ...result});
   }
 
   const getDocumentIcon = doc => {
@@ -39,7 +34,7 @@ const Document = (props) => {
 
 
   return (
-    <>
+    <React.Fragment>
       {
         !document ?
           <React.Fragment />
@@ -64,7 +59,7 @@ const Document = (props) => {
             </TableColumn>
           </TableRow>
       }
-    </>
+    </React.Fragment>
   );
 }
 
