@@ -16,6 +16,7 @@ const FileUpload = ({ existingDocuments, pathTofile, uploadComplete }) => {
   const [isUploading, setIsUploading] = useState(false);
   const pond = useRef();
 
+  //debug
   useEffect(() => {
     console.log("Is Uploading:", isUploading)
   }, [isUploading]);
@@ -70,7 +71,7 @@ const FileUpload = ({ existingDocuments, pathTofile, uploadComplete }) => {
           // API: progress(endlessMode, processedSize, totalSize)
           progress(true, snapshot.bytesTransferred, snapshot.totalBytes);
         },
-        error => {
+        () => {
           error('Upload error');
         },
         async () => {
@@ -109,6 +110,7 @@ const FileUpload = ({ existingDocuments, pathTofile, uploadComplete }) => {
     if(!isUploading) return;
     const totalFiles = pond.current.getFiles().length;
     if (metadata.length === totalFiles) {
+      console.log("Upload complete metadata", metadata);
       uploadComplete(metadata);
       setIsUploading(false);
     }

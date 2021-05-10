@@ -98,15 +98,15 @@ const DetailsPage = ({ history, match, cookies }) => {
     notifyError(`Document named ${documentName} already exists`);
   };
 
-  const appendToItem = async (status, metadata) => {
-    console.log("Append to item: ", status)
+  const appendToItem = async (statusToAppend, metadataToAppend) => {
+    console.log("Append to item: ", statusToAppend)
     const { params: { containerId } } = match;
-    const meta = metadata.length;
+    const meta = metadataToAppend.length;
     // console.log("Status", status)
-    if (status) {
+    if (statusToAppend) {
       ReactGA.event({
         category: 'Status update',
-        action: `Updated status to "${status}"`,
+        action: `Updated status to "${statusToAppend}"`,
         label: `Container ID ${containerId}`
       });
     }
@@ -115,14 +115,14 @@ const DetailsPage = ({ history, match, cookies }) => {
     setFetchComplete(false);
     setLoaderHint('Updating Tangle');
     const infos = { item, items, project, match }
-    const response = await appendItemChannel(metadata, infos, documentExists, status);
+    const response = await appendItemChannel(metadataToAppend, infos, documentExists, statusToAppend);
     console.log("Response append to item: ", response)
     if (response) {
       updateStep(cookies, 9);
-      status === 'Gate-in' && updateStep(cookies, 14);
-      status === 'Container cleared for export' && updateStep(cookies, 18);
-      status === 'Container loaded on vessel' && updateStep(cookies, 24);
-      status === 'Vessel departure' && updateStep(cookies, 25);
+      statusToAppend === 'Gate-in' && updateStep(cookies, 14);
+      statusToAppend === 'Container cleared for export' && updateStep(cookies, 18);
+      statusToAppend === 'Container loaded on vessel' && updateStep(cookies, 24);
+      statusToAppend === 'Vessel departure' && updateStep(cookies, 25);
 
       notifySuccess(`${upperFirst(project.trackingUnit)} ${meta ? '' : 'status '}updated`);
       setShowLoader(false);
@@ -137,22 +137,22 @@ const DetailsPage = ({ history, match, cookies }) => {
     }
   };
 
-  const storeItemCallback = item => {
-    console.log("Store Item:", item)
-    storeItem(item);
+  const storeItemCallback = itemToStore => {
+    console.log("Store Item:", itemToStore)
+    storeItem(itemToStore);
   };
 
-  const setStateCalback = (item, statuses) => {
-    console.log("setStateCallback item", item)
-    console.log("setStateCallback statuses", statuses)
-    setCurrentItem(item);
-    setStatuses(statuses);
+  const setStateCalback = (itemForCallback, statusForCallback) => {
+    console.log("setStateCallback item", itemForCallback)
+    console.log("setStateCallback statuses", statusForCallback)
+    setCurrentItem(itemForCallback);
+    setStatuses(statusForCallback);
   };
 
   const retrieveItem = containerId => {
     const { trackingUnit } = project;
-    const item = items[containerId];
-    console.log("Retrieve Item: ", item)
+    const itemToRetrieve = items[containerId];
+    console.log("Retrieve Item: ", itemToRetrieve)
     setShowLoader(true);
     setLoaderHint('Fetching data');
     resetStoredItem();
@@ -160,8 +160,8 @@ const DetailsPage = ({ history, match, cookies }) => {
     const promise = new Promise(async (resolve, reject) => {
       try {
         await fetchItem(
-          item.mam.root,
-          item.mam.sideKey,
+          itemToRetrieve.mam.root,
+          itemToRetrieve.mam.sideKey,
           storeItemCallback,
           setStateCalback
         );
@@ -192,14 +192,14 @@ const DetailsPage = ({ history, match, cookies }) => {
     });
   };
 
-  const onUploadComplete = metadata => {
+  const onUploadComplete = uploadedMetadata => {
     const { params: { containerId } } = match;
-    console.log("Upload complete metatdata:", metadata)
-    setMetadata(metadata);
+    console.log("Upload complete metatdata:", uploadedMetadata)
+    setMetadata(uploadedMetadata);
     setFileUploadEnabled(false);
     setActiveTabIndex(2);
     notifySuccess('File upload complete!');
-    appendToItem(null, metadata);
+    appendToItem(null, uploadedMetadata);
     ReactGA.event({
       category: 'Document upload',
       action: 'Uploaded document(s)',
@@ -222,8 +222,8 @@ const DetailsPage = ({ history, match, cookies }) => {
 
   useEffect(() => {
     if (!currentItem || !currentItem.status) return;
-    const nextEvents = user.nextEvents[currentItem.status.toLowerCase().replace(/[- ]/g, '')];
-    setNextEvents(nextEvents);
+    const nextUserEvents = user.nextEvents[currentItem.status.toLowerCase().replace(/[- ]/g, '')];
+    setNextEvents(nextUserEvents);
   }, [user, currentItem]);
 
   return (

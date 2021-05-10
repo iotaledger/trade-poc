@@ -33,7 +33,7 @@ const Temperature = ({ cookies, data, callback, size: { width }, match }) => {
   }, [cookies]);
 
   useEffect(() => {
-    let filteredData = data.filter(({ temperature }) => temperature);
+    let filteredData = data.filter(data => data.temperature);
     if (filteredData.length < 2) {
       filteredData = getFakeData().concat(filteredData);
     }
@@ -44,17 +44,18 @@ const Temperature = ({ cookies, data, callback, size: { width }, match }) => {
 
   const addTemperature = async event => {
     event.preventDefault();
+    console.log("Added Temperature: ", addedTemperature.value)
     const isTemperatureSet = addedTemperature && addedTemperature.value;
     if (!isTemperatureSet) return;
     if (data && data[data.length - 1]) {
-      const last = data[data.length - 1];
-
-      last.temperature = addedTemperature.value;
-      last.timestamp = Date.now();
+      const lastData = data[data.length - 1];
+      console.log("Last data:", lastData)
+      lastData.temperature = addedTemperature.value;
+      lastData.timestamp = Date.now();
       setShowLoader(true);
       setLoaderHint('Updating Tangle');
-      const itemInformation = { project, item, items, match};
-      const result = await appendTemperatureLocation(last, itemInformation);
+      const itemInformation = { project, item, items, match };
+      const result = await appendTemperatureLocation(lastData, itemInformation);
 
       setShowLoader(false);
       setLoaderHint(null);
@@ -63,33 +64,33 @@ const Temperature = ({ cookies, data, callback, size: { width }, match }) => {
     }
   }
 
-  const getTemperatureData = data => {
-    return data.map(({ temperature, timestamp }) => ({
+  const getTemperatureData = filteredData => {
+    return filteredData.map(({ temperature, timestamp }) => ({
       x: moment(timestamp).format('YYYY-MM-DD HH:mm'),
       y: Number(temperature),
     }));
   };
 
-  const getXRange = data => {
-    const dataSet = sortBy(data, 'timestamp');
+  const getXRange = filteredData => {
+    const dataSet = sortBy(filteredData, 'timestamp');
     return [
       moment(dataSet[0].timestamp).format('YYYY-MM-DD HH:mm'),
       moment(last(dataSet).timestamp).add(1, 'h').format('YYYY-MM-DD HH:mm'),
     ];
   };
 
-  const getYRange = data => {
-    const temps = data.map(({ temperature }) => temperature);
+  const getYRange = filteredData => {
+    const temps = filteredData.map(({ temperature }) => temperature);
     return [Math.ceil(Math.min(...temps) - 5), Math.ceil(Math.max(...temps) + 5)];
   };
 
   const getFakeData = () => {
     const temperatures = [15, 12, 10, 13, 15, 17, 18, 15, 14, 12];
-    const data = Array.from(new Array(10), (_, index) => ({
+    const temperatureData = Array.from(new Array(10), (_, index) => ({
       timestamp: Date.now() - 3600000 * (10 - index),
       temperature: temperatures[index]
     }));
-    return data;
+    return temperatureData;
   }
 
   return (

@@ -13,8 +13,8 @@ const Autosuggest = ({ project, items, onSelect, trackingUnit }) => {
   // https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
   const escapeRegexCharacters = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-  const getSuggestions = value => {
-    const escapedValue = escapeRegexCharacters(value.trim());
+  const getSuggestions = inputText => {
+    const escapedValue = escapeRegexCharacters(inputText.trim());
 
     if (escapedValue === '') {
       return [];

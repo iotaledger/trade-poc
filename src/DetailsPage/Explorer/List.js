@@ -35,13 +35,12 @@ const List = ({ messages, cookies }) => {
     }
   };
 
-  const toggleExpandedState = expanded => {
+  const toggleExpandedState = isExpanded => {
     updateStep(cookies, 6);
-    if (!expanded) {
-      setExpanded(expanded);
+    setExpanded(isExpanded);
+    if (!isExpanded) {
       setExpandedPanels([]);
     } else {
-      setExpanded(expanded);
       setExpandedPanels(Array.from(new Array(messages.length), (x, i) => i));
     }
   };

@@ -22,7 +22,7 @@ const MessageContent = ({ message }) => {
   return (
     <div className="highlightjs-component">
       <pre className="prettyprint lang-json">
-        <code className="json prettyprint lang-json" ref={code => setCode(code)}>
+        <code className="json prettyprint lang-json" ref={tempCode => setCode(tempCode)}>
           {JSON.stringify(message, null, 2)}
         </code>
       </pre>

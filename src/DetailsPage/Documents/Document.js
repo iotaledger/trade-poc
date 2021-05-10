@@ -10,9 +10,9 @@ const Document = (props) => {
     validate(props.document);
   }, [props.document])
 
-  const validate = async document => {
-    const result = await validateIntegrity(document);
-    setDocument({...document, ...result});
+  const validate = async documentToValidate => {
+    const validationResult = await validateIntegrity(documentToValidate);
+    setDocument({...documentToValidate, ...validationResult});
   }
 
   const getDocumentIcon = doc => {

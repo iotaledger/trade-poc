@@ -222,7 +222,7 @@ const CreateItemPage = ({ history, cookies }) => {
           </div>
           {qrReader && showQR ? <video id="video-area" /> : null}
           <SelectField
-            ref={departure => (setDeparture(departure))}
+            ref={tempDeparture => (setDeparture(tempDeparture))}
             id="departure"
             required
             label="Departure Port"
@@ -234,7 +234,7 @@ const CreateItemPage = ({ history, cookies }) => {
             dropdownIcon={<FontIcon>expand_more</FontIcon>}
           />
           <SelectField
-            ref={destination => (setDestination(destination))}
+            ref={tempDestination => (setDestination(tempDestination))}
             id="destination"
             label="Destination Port"
             menuItems={PORTS}
@@ -242,7 +242,7 @@ const CreateItemPage = ({ history, cookies }) => {
             {...selectFieldProps}
           />
           <SelectField
-            ref={cargo => (setCargo(cargo))}
+            ref={tempCargo => (setCargo(tempCargo))}
             id="cargo"
             label="Cargo"
             menuItems={CARGO}
@@ -250,7 +250,7 @@ const CreateItemPage = ({ history, cookies }) => {
             {...selectFieldProps}
           />
           <SelectField
-            ref={type => (setType(type))}
+            ref={tempType => (setType(tempType))}
             id="type"
             label={`${unit} type`}
             menuItems={TYPE}

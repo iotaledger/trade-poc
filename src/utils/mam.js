@@ -169,9 +169,6 @@ export const appendTemperatureLocation = async (payload, props) => {
   } = props;
   const container = items[containerId];
   if (!container) return containerId;
-  console.log("Payload to append:", payload)
-  console.log('Container: ', container)
-  console.log('Props:', props)
   const promise = new Promise(async (resolve, reject) => {
     try {
       if (payload) {

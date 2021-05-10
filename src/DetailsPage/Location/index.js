@@ -57,8 +57,8 @@ const Location = (props) => {
   }, []);
 
   useEffect(() => {
-    const { data } = props;
-    setData([...data]);
+    const propsData = props.data;
+    setData([...propsData]);
   }, [props.data]);
 
   useEffect(() => {
@@ -82,25 +82,25 @@ const Location = (props) => {
   };
 
   // draw lines
-  const updateLine = data => {
-    if (!mapStyle.hasIn(['sources', data.containerId])) {
+  const updateLine = updateData => {
+    if (!mapStyle.hasIn(['sources', updateData.containerId])) {
       mapStyle = mapStyle
-        .setIn(['sources', data.containerId], fromJS({ type: 'geojson' }))
-        .set('layers', mapStyle.get('layers').push(lineLayer(data.containerId)));
+        .setIn(['sources', updateData.containerId], fromJS({ type: 'geojson' }))
+        .set('layers', mapStyle.get('layers').push(lineLayer(updateData.containerId)));
 
       mapStyle = mapStyle.setIn(
-        ['sources', data.containerId, 'data'],
+        ['sources', updateData.containerId, 'data'],
         fromJS({
           type: 'Feature',
           geometry: {
             type: 'LineString',
-            coordinates: [[data.position.lng, data.position.lat]],
+            coordinates: [[updateData.position.lng, updateData.position.lat]],
           },
         })
       );
     } else {
       mapStyle = mapStyle.updateIn(
-        ['sources', data.containerId, 'data', 'geometry', 'coordinates'],
+        ['sources', updateData.containerId, 'data', 'geometry', 'coordinates'],
         list => fromJS(toGeoJson())
       );
     }

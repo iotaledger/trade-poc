@@ -22,7 +22,7 @@ export const storeItems = (user, containerId = null) => {
       } else {
         for await (const status of user.previousEvent) {
           items.push(await getItems(status));
-        };
+        }
       }
 
       if (containerId) {

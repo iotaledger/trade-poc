@@ -35,41 +35,41 @@ const ItemsProvider = ({ children }) => {
   };
 
   const storeItems = async (user, containerId = null) => {
-      try {
-        const results = {};
-        const items = [];
+    try {
+      const results = {};
+      const itemsToStore = [];
 
-        if (user.role === 'shipper') {
-          // Add containers of the shipper
-          items.push(await getItems());
-        } else {
-          for await (const status of user.previousEvent) {
-            items.push(await getItems(status));
-          };
+      if (user.role === 'shipper') {
+        // Add containers of the shipper
+        itemsToStore.push(await getItems());
+      } else {
+        for await (const status of user.previousEvent) {
+          itemsToStore.push(await getItems(status));
         }
-
-        if (containerId) {
-          // Add a container under review, which status was already changed
-          items.push(await getItem(containerId));
-        }
-
-        items.forEach(item => {
-          // Sort by most recently changed first
-          Object.values(item).sort((a, b) => b.timestamp - a.timestamp).forEach(result => {
-            if (!results[result.containerId]) {
-              results[result.containerId] = result;
-            }
-          });
-        });
-
-        if (!isEmpty(results)) {
-          setItems(results);
-        } else {
-          setItems(() => { return { error: 'No items found' } });
-        }
-      } catch (error) {
-        setItems(() => { return { error: null } });
       }
+
+      if (containerId) {
+        // Add a container under review, which status was already changed
+        itemsToStore.push(await getItem(containerId));
+      }
+
+      itemsToStore.forEach(item => {
+        // Sort by most recently changed first
+        Object.values(item).sort((a, b) => b.timestamp - a.timestamp).forEach(result => {
+          if (!results[result.containerId]) {
+            results[result.containerId] = result;
+          }
+        });
+      });
+
+      if (!isEmpty(results)) {
+        setItems(results);
+      } else {
+        setItems(() => { return { error: 'No items found' } });
+      }
+    } catch (error) {
+      setItems(() => { return { error: null } });
+    }
   };
 
   return (
