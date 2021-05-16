@@ -42,8 +42,6 @@
   },
   "devDependencies": {
     "@firebase/app-types": "^0.6.2",
-    "eslint": "^7.26.0",
-    "eslint-plugin-react": "^7.23.2",
     "prop-types": "^15.7.2",
     "react-scripts": "^3.4.3",
     "redux-logger": "^3.0.6",
@@ -53,7 +51,6 @@
     "start": "react-scripts start",
     "build": "export GENERATE_SOURCEMAP=false && react-scripts --expose-gc --max_old_space_size=8192 --max-old-space-size=8192 build",
     "test": "react-scripts test",
-    "lint": "eslint src/**/*.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

@@ -21,7 +21,7 @@ const createNewChannel = async (payload) => {
     await mamAttach(node, mamMessage, "TRACKANDTRACE");
     return channelState;
   } catch (error) {
-    console.log('Channel create error', error);
+    console.error('Channel create error', error);
     return null;
   }
 };
@@ -29,12 +29,12 @@ const createNewChannel = async (payload) => {
 const appendToChannel = async (payload, savedChannelState) => {
   try {
     let channelState = savedChannelState;
-    console.log("Payload:", payload)
+    // console.log("Payload:", payload)
     const mamMessage = createMessage(channelState, TrytesHelper.fromAscii(JSON.stringify(payload)));
     await mamAttach(node, mamMessage, "TRACKANDTRACE");
     return channelState;
   } catch (error) {
-    console.log('Channel append error', error);
+    console.error('Channel append error', error);
     return null;
   }
 };
@@ -44,7 +44,7 @@ export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalb
     const itemEvents = [];
     const convertData = data => {
       const itemEvent = JSON.parse(TrytesHelper.toAscii(data));
-      console.log("Fetched event: ", itemEvent)
+      // console.log("Fetched event: ", itemEvent)
       storeItemCallback(itemEvent);
       itemEvents.push(itemEvent);
       setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
@@ -92,7 +92,7 @@ export const createItemChannel = (project, containerId, request) => {
 
       return resolve(eventBody);
     } catch (error) {
-      console.log('createItemChannel error', error);
+      console.error('createItemChannel error', error);
       return reject();
     }
   });
@@ -118,7 +118,6 @@ export const appendItemChannel = async (metadata, props, documentExists, status)
       if (item) {
         const timestamp = Date.now();
         const newStatus = meta ? last(item).status : status;
-
         metadata.forEach(({ name }) => {
           documents.forEach(existingDocument => {
             if (existingDocument.name === name) {
@@ -185,8 +184,10 @@ export const appendTemperatureLocation = async (payload, props) => {
           return resolve(containerId);
         }
       }
+      console.error("No payload to append")
       return reject();
     } catch (error) {
+      console.error(error)
       return reject();
     }
   });

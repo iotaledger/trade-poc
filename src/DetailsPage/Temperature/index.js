@@ -33,7 +33,7 @@ const Temperature = ({ cookies, data, callback, size: { width }, match }) => {
   }, [cookies]);
 
   useEffect(() => {
-    let filteredData = data.filter(data => data.temperature);
+    let filteredData = data.filter(tempData => tempData.temperature);
     if (filteredData.length < 2) {
       filteredData = getFakeData().concat(filteredData);
     }
@@ -44,18 +44,24 @@ const Temperature = ({ cookies, data, callback, size: { width }, match }) => {
 
   const addTemperature = async event => {
     event.preventDefault();
-    console.log("Added Temperature: ", addedTemperature.value)
+    // console.log("Added Temperature: ", addedTemperature.value)
     const isTemperatureSet = addedTemperature && addedTemperature.value;
     if (!isTemperatureSet) return;
+    // console.log("Data:", data)
     if (data && data[data.length - 1]) {
       const lastData = data[data.length - 1];
-      console.log("Last data:", lastData)
+      // console.log("Last data:", lastData)
       lastData.temperature = addedTemperature.value;
       lastData.timestamp = Date.now();
       setShowLoader(true);
       setLoaderHint('Updating Tangle');
       const itemInformation = { project, item, items, match };
-      const result = await appendTemperatureLocation(lastData, itemInformation);
+      let result;
+      try {
+         result = await appendTemperatureLocation(lastData, itemInformation);
+      } catch (e) {
+        console.log("Could not append temperature location:", e)
+      }
 
       setShowLoader(false);
       setLoaderHint(null);

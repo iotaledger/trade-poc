@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ReactGA from 'react-ga';
 import { withRouter } from 'react-router';
 import { withCookies } from 'react-cookie';
@@ -61,7 +61,7 @@ const DetailsPage = ({ history, match, cookies }) => {
   const { item, storeItem, resetStoredItem } = useContext(ItemContext);
   const { items, storeItems } = useContext(ItemsContext);
   const { project } = useContext(ProjectContext);
-  
+
 
   useEffect(() => {
     const { params: { containerId } } = match;
@@ -83,23 +83,24 @@ const DetailsPage = ({ history, match, cookies }) => {
 
   //debug
   useEffect(() => {
-    console.log("Current status", statuses)
+    // console.log("Current status", statuses)
   }, [statuses]);
 
   const notifySuccess = message => toast.success(message);
   const notifyWarning = message => toast.warn(message);
   const notifyError = message => toast.error(message);
 
-  const getUniqueStatuses = itemEvents => 
+  const getUniqueStatuses = itemEvents =>
     uniqBy(itemEvents.map(event => pick(event, ['status', 'timestamp'])), 'status');
-   
+
   const documentExists = documentName => {
     setShowLoader(false);
     notifyError(`Document named ${documentName} already exists`);
   };
 
   const appendToItem = async (statusToAppend, metadataToAppend) => {
-    console.log("Append to item: ", statusToAppend)
+    // console.log("Append to item: ", statusToAppend)
+    // console.log("Meta data", metadataToAppend)
     const { params: { containerId } } = match;
     const meta = metadataToAppend.length;
     // console.log("Status", status)
@@ -115,8 +116,13 @@ const DetailsPage = ({ history, match, cookies }) => {
     setFetchComplete(false);
     setLoaderHint('Updating Tangle');
     const infos = { item, items, project, match }
-    const response = await appendItemChannel(metadataToAppend, infos, documentExists, statusToAppend);
-    console.log("Response append to item: ", response)
+    let response;
+    try {
+       response = await appendItemChannel(metadataToAppend, infos, documentExists, statusToAppend);
+    } catch (e) {
+      console.error("Could not apppend item to channel:", e)
+    }
+    // console.log("Response append to item: ", response)
     if (response) {
       updateStep(cookies, 9);
       statusToAppend === 'Gate-in' && updateStep(cookies, 14);
@@ -138,13 +144,13 @@ const DetailsPage = ({ history, match, cookies }) => {
   };
 
   const storeItemCallback = itemToStore => {
-    console.log("Store Item:", itemToStore)
+    // console.log("Store Item:", itemToStore)
     storeItem(itemToStore);
   };
 
   const setStateCalback = (itemForCallback, statusForCallback) => {
-    console.log("setStateCallback item", itemForCallback)
-    console.log("setStateCallback statuses", statusForCallback)
+    // console.log("setStateCallback item", itemForCallback)
+    // console.log("setStateCallback statuses", statusForCallback)
     setCurrentItem(itemForCallback);
     setStatuses(statusForCallback);
   };
@@ -152,7 +158,7 @@ const DetailsPage = ({ history, match, cookies }) => {
   const retrieveItem = containerId => {
     const { trackingUnit } = project;
     const itemToRetrieve = items[containerId];
-    console.log("Retrieve Item: ", itemToRetrieve)
+    // console.log("Retrieve Item: ", itemToRetrieve)
     setShowLoader(true);
     setLoaderHint('Fetching data');
     resetStoredItem();
@@ -194,7 +200,7 @@ const DetailsPage = ({ history, match, cookies }) => {
 
   const onUploadComplete = uploadedMetadata => {
     const { params: { containerId } } = match;
-    console.log("Upload complete metatdata:", uploadedMetadata)
+    // console.log("Upload complete metatdata:", uploadedMetadata)
     setMetadata(uploadedMetadata);
     setFileUploadEnabled(false);
     setActiveTabIndex(2);

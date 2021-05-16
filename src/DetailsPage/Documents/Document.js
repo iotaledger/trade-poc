@@ -11,7 +11,12 @@ const Document = (props) => {
   }, [props.document])
 
   const validate = async documentToValidate => {
-    const validationResult = await validateIntegrity(documentToValidate);
+    let validationResult;
+    try {
+       validationResult = await validateIntegrity(documentToValidate);
+    } catch (e) {
+      console.error("Could not validate document:", e)
+    }
     setDocument({...documentToValidate, ...validationResult});
   }
 

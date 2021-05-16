@@ -13,9 +13,9 @@ const ErrorBoundary = (props) => {
         ...props,
       }));
     });
-  } catch (error) {
-    setError(error);
-    console.error(error.toString());
+  } catch (e) {
+    setError(e);
+    console.error("Error in Boundary: ", e.toString());
     return (null);
   }
 

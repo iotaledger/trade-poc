@@ -14,13 +14,18 @@ const UserProvider = ({ children }) => {
     }, [user]);
 
     const storeEvents = async role => {
-        const events = await getEvents(role);
-        setUser(prevUser => {
-            return {
-                ...prevUser,
-                ...events
-            }
-        });
+        try {
+            const events = await getEvents(role);
+            setUser(prevUser => {
+                return {
+                    ...prevUser,
+                    ...events
+                }
+            });
+        } catch (e) {
+            console.error("Could not get events:", e)
+        }
+        
     }
     const storeCredentials = credentials => {
         setUser(prevUser => {
