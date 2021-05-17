@@ -4,14 +4,14 @@
   "dependencies": {
     "@iota/core": "1.0.0-beta.30",
     "@iota/http-client": "1.0.0-beta.30",
-    "@iota/mam.js": "github:iotaledger/mam.js#main",
+    "@iota/mam.js": "github:iotaledger/mam.js",
     "@zxing/library": "^0.18.5",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "classnames": "^2.3.1",
-    "filepond": "^4.27.0",
+    "filepond": "^4.27.1",
     "filepond-plugin-image-preview": "^4.6.6",
-    "firebase": "^8.4.2",
+    "firebase": "^8.6.1",
     "highlightjs": "^9.16.2",
     "immutable": "^4.0.0-rc.12",
     "js-sha256": "^0.9.0",
@@ -64,9 +64,14 @@
   "resolutions": {
     "acorn": "^7.1.1",
     "fetch-blob": "^2.1.2",
+    "immer": "^8.0.1",
     "kind-of": "^6.0.3",
     "minimist": "^1.2.5",
     "node-fetch": "^3.0.0-beta.9",
+    "node-notifier": "^8.0.1",
+    "postcss": "^8.2.10",
+    "react-dev-utils": "^11.0.4",
+    "ssri": "^8.0.1",
     "yargs-parser": "^18.1.3"
   }
 }
