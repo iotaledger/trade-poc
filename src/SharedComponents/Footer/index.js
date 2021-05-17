@@ -1,28 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Col, Row } from 'reactstrap';
 
-class Footer extends Component {
+const Footer = ({ anchors }) => {
 
-  onAnchorClick(event, anchor) {
+  const onAnchorClick = (event, anchor) => {
     event.preventDefault();
     const target = document.querySelector(`#${anchor}`);
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  render() {
     return (
       <footer>
         <Row>
           <Col>
             <div className="footer-heading">This Site</div>
             {
-              this.props.anchors.map(({ anchor, text }) =>
+              anchors.map(({ anchor, text }) =>
                 <a
                   href="/"
                   key={anchor}
                   className="anchor"
                   tabIndex="1"
-                  onClick={e => this.onAnchorClick(e, anchor)}
+                  onClick={e => onAnchorClick(e, anchor)}
                 >{text}</a>
               )
             }
@@ -59,7 +58,7 @@ class Footer extends Component {
           <Col className="footer-text-info">
             &copy; 2018 IOTA Foundation - Privacy Policy<br />
             Email: contact@iota.org<br />
-            Board of Directors: Dominik Schiener, David Sønstebø, Serguei Popov &amp; Navin Ramachandran<br />
+            Board of Directors: Dominik Schiener, Serguei Popov &amp; Navin Ramachandran<br />
             ID/Company No.: 3416/1234/2<br />
             EU public ID number in the EU Transparency Register:
             500027331119-04
@@ -67,7 +66,6 @@ class Footer extends Component {
         </Row>
       </footer>
     );
-  }
 }
 
 export default Footer;

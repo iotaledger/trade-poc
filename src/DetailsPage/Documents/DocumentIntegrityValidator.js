@@ -19,10 +19,10 @@ export const validateIntegrity = async document => {
           };
         })
         .catch(error => {
-          reject();
+          reject(error);
         });
     } catch (error) {
-      return reject();
+      return reject(error);
     }
   });
   return promise;

@@ -3,11 +3,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import WebFontLoader from 'webfontloader';
 import ReactGA from 'react-ga';
-import { Provider } from 'react-redux';
 import Router from './Router';
 import * as serviceWorker from './serviceWorker';
-import configureStore from './store/configure';
 import './assets/scss/index.scss';
+import UserProvider from './contexts/user.provider'
+import ItemProvider from './contexts/item.provider';
+import ItemsProvider from './contexts/items.provider';
+import ProjectProvider from './contexts/project.provider';
 
 WebFontLoader.load({
   google: {
@@ -15,15 +17,26 @@ WebFontLoader.load({
   },
 });
 
-const store = configureStore();
 
 ReactGA.initialize('UA-133441365-1'); // (trackingID, { debug: true })
 ReactGA.set({ anonymizeIp: true });
 
+let debug = false;
+
+if (process.env.NODE_ENV === 'development') {
+  debug = true
+}
+
 const renderApp = () => (
-  <Provider store={store}>
-    <Router />
-  </Provider>
+  <UserProvider debug={debug}>
+    <ProjectProvider debug={debug}>
+      <ItemsProvider debug={debug}>
+        <ItemProvider debug={debug}>
+          <Router />
+        </ItemProvider>
+      </ItemsProvider>
+    </ProjectProvider>
+  </UserProvider>
 );
 
 ReactDOM.render(renderApp(), document.getElementById('root'));

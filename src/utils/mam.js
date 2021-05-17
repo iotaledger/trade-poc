@@ -21,7 +21,7 @@ const createNewChannel = async (payload) => {
     await mamAttach(node, mamMessage, "TRACKANDTRACE");
     return channelState;
   } catch (error) {
-    console.log('Channel create error', error);
+    console.error('Channel create error', error);
     return null;
   }
 };
@@ -33,7 +33,7 @@ const appendToChannel = async (payload, savedChannelState) => {
     await mamAttach(node, mamMessage, "TRACKANDTRACE");
     return channelState;
   } catch (error) {
-    console.log('Channel append error', error);
+    console.error('Channel append error', error);
     return null;
   }
 };
@@ -48,7 +48,7 @@ export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalb
       setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
     }
 
-    const fetched = await mamFetchAll(node, root, 'restricted', secretKey, 5);
+    const fetched = await mamFetchAll(node, root, 'restricted', secretKey, 20);
     if (fetched && fetched.length > 0) {
       for (let i = 0; i < fetched.length; i++) {
         convertData(fetched[i].message);
@@ -61,7 +61,7 @@ export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalb
   }
 };
 
-const getUniqueStatuses = itemEvents =>
+const getUniqueStatuses = itemEvents => 
   uniqBy(itemEvents.map(event => pick(event, ['status', 'timestamp'])), 'status');
 
 export const createItemChannel = (project, containerId, request) => {
@@ -90,7 +90,7 @@ export const createItemChannel = (project, containerId, request) => {
 
       return resolve(eventBody);
     } catch (error) {
-      console.log('createItemChannel error', error);
+      console.error('createItemChannel error', error);
       return reject();
     }
   });
@@ -116,7 +116,6 @@ export const appendItemChannel = async (metadata, props, documentExists, status)
       if (item) {
         const timestamp = Date.now();
         const newStatus = meta ? last(item).status : status;
-
         metadata.forEach(({ name }) => {
           documents.forEach(existingDocument => {
             if (existingDocument.name === name) {
@@ -167,7 +166,6 @@ export const appendTemperatureLocation = async (payload, props) => {
   } = props;
   const container = items[containerId];
   if (!container) return containerId;
-
   const promise = new Promise(async (resolve, reject) => {
     try {
       if (payload) {
@@ -178,14 +176,16 @@ export const appendTemperatureLocation = async (payload, props) => {
           project.firebaseFields.forEach(field => (eventBody[field] = last(item)[field]));
           eventBody.status = payload.status;
           eventBody.timestamp = payload.timestamp;
-
+          
           await updateItem(eventBody, newChannelState);
 
           return resolve(containerId);
         }
       }
+      console.error("No payload to append")
       return reject();
     } catch (error) {
+      console.error(error)
       return reject();
     }
   });
