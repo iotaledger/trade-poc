@@ -50,7 +50,7 @@ export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalb
       setStateCalback(itemEvent, getUniqueStatuses(itemEvents));
     }
 
-    const fetched = await mamFetchAll(node, root, 'restricted', secretKey, 5);
+    const fetched = await mamFetchAll(node, root, 'restricted', secretKey, 20);
     if (fetched && fetched.length > 0) {
       for (let i = 0; i < fetched.length; i++) {
         convertData(fetched[i].message);

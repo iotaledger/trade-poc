@@ -46,11 +46,11 @@ const ItemTabs = (props) => {
   const locations = itemEvents.filter(({ position }) => !isEmpty(position));
 
   const components = [
-    <StatusList statuses={statuses} />,
-    <Explorer />,
-    <Documents item={item} onUploadComplete={onUploadComplete} fileUploadEnabled={fileUploadEnabled} />,
-    <Temperature data={itemEvents} callback={onAddTemperatureCallback} />,
-    <Location data={locations} />
+    <StatusList key={1} statuses={statuses} />,
+    <Explorer key={2} />,
+    <Documents key={3} item={item} onUploadComplete={onUploadComplete} fileUploadEnabled={fileUploadEnabled} />,
+    <Temperature key={4} data={itemEvents} callback={onAddTemperatureCallback} />,
+    <Location key={5} data={locations} />
   ]
 
   return (

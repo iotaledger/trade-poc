@@ -40,7 +40,7 @@ const Temperature = ({ cookies, data, callback, size: { width }, match }) => {
     setTemperature(getTemperatureData(filteredData));
     xRange.current = getXRange(filteredData);
     yRange.current = getYRange(filteredData);
-  }, []);
+  }, [data]);
 
   const addTemperature = async event => {
     event.preventDefault();

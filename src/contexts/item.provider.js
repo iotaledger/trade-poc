@@ -7,7 +7,7 @@ const ItemProvider = ({ children }) => {
     const [item, setItem] = useState([]);
 
     useEffect(() => {
-        console.log('%c UPDATED ITEM: ', 'background: #222; color: #f200ff', item)
+        console.log('%c UPDATED EVENTS: ', 'background: #222; color: #f200ff', item)
     }, [item]);
 
     const storeItem = data => {

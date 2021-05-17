@@ -87,7 +87,6 @@ const DetailsPage = ({ history, match, cookies }) => {
   }, [statuses]);
 
   const notifySuccess = message => toast.success(message);
-  const notifyWarning = message => toast.warn(message);
   const notifyError = message => toast.error(message);
 
   const getUniqueStatuses = itemEvents =>
@@ -155,7 +154,7 @@ const DetailsPage = ({ history, match, cookies }) => {
     setStatuses(statusForCallback);
   };
 
-  const retrieveItem = containerId => {
+  const retrieveItem = async containerId => {
     const { trackingUnit } = project;
     const itemToRetrieve = items[containerId];
     // console.log("Retrieve Item: ", itemToRetrieve)
@@ -163,26 +162,22 @@ const DetailsPage = ({ history, match, cookies }) => {
     setLoaderHint('Fetching data');
     resetStoredItem();
     storeItems(user, containerId);
-    const promise = new Promise(async (resolve, reject) => {
-      try {
-        await fetchItem(
-          itemToRetrieve.mam.root,
-          itemToRetrieve.mam.sideKey,
-          storeItemCallback,
-          setStateCalback
-        );
-        setShowLoader(false);
-        setFetchComplete(true);
-        setLoaderHint(null);
-        return resolve();
-      } catch (error) {
-        setShowLoader(false);
-        setLoaderHint(null);
-        return reject(notifyError(`Error loading ${trackingUnit} data`));
-      }
-    });
+    try {
+      await fetchItem(
+        itemToRetrieve.mam.root,
+        itemToRetrieve.mam.sideKey,
+        storeItemCallback,
+        setStateCalback
+      );
+      setShowLoader(false);
+      setFetchComplete(true);
+      setLoaderHint(null);
+    } catch (error) {
+      setShowLoader(false);
+      setLoaderHint(null);
+      notifyError(`Error loading ${trackingUnit} data`);
+    }
 
-    return promise;
   };
 
   const onTabChange = newActiveTabIndex => {

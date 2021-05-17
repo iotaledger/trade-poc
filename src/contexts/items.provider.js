@@ -9,7 +9,7 @@ const ItemsProvider = ({ children }) => {
   const [items, setItems] = useState({});
 
   useEffect(() => {
-    console.log('%c UPDATED ITEMS: ', 'background: #222; color: #37ff00', items)
+    console.log('%c UPDATED CONTAINER: ', 'background: #222; color: #37ff00', items)
   }, [items]);
 
   const addItem = async containerId => {
@@ -50,9 +50,10 @@ const ItemsProvider = ({ children }) => {
 
       if (containerId) {
         // Add a container under review, which status was already changed
-        itemsToStore.push(await getItem(containerId));
+        const item = await getItem(containerId)
+        itemsToStore.push({[containerId]: item });
       }
-
+      
       itemsToStore.forEach(item => {
         // Sort by most recently changed first
         Object.values(item).sort((a, b) => b.timestamp - a.timestamp).forEach(result => {
@@ -65,10 +66,10 @@ const ItemsProvider = ({ children }) => {
       if (!isEmpty(results)) {
         setItems(results);
       } else {
-        setItems(() => { return { error: 'No items found' } });
+        setItems({ error: 'No items found' });
       }
     } catch (error) {
-      setItems(() => { return { error: null } });
+      setItems({ error: null });
     }
   };
 
