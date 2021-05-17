@@ -53,8 +53,7 @@ const CreateItemPage = ({ history, cookies }) => {
       history.push('/login');
     }
     ReactGA.pageview('/new');
-  }, []);
-
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onBlur = () => {
     updateStep(cookies, 3);

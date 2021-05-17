@@ -11,7 +11,7 @@ const List = ({ messages, cookies }) => {
 
   useEffect(() => {
     setSwitchState();
-  }, [expandedPanels]);
+  }, [expandedPanels]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onExpandToggle = (toggleOpen, key) => {
     if (toggleOpen) {

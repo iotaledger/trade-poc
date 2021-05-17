@@ -33,7 +33,7 @@ const ListPage = ({ history, cookies }) => {
       setShowLoader(true);
       storeItems(user);      
     }
-  }, [user]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if(firstRender.current) return   

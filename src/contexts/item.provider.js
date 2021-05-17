@@ -8,7 +8,7 @@ const ItemProvider = ({ children , debug}) => {
 
     useEffect(() => {
         if (debug) console.log('%c UPDATED EVENTS: ', 'background: #222; color: #f200ff', item)
-    }, [item]);
+    }, [item]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const storeItem = data => {
         setItem(prevItem => {

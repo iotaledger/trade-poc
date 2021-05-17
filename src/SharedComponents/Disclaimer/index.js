@@ -12,7 +12,7 @@ const Disclaimer = ({ cookies }) => {
       document.body.classList.add('cookie-bar-top-bar');
       setAck(false);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const dismiss = () => {
     cookies.set('ack', true, { path: '/' });

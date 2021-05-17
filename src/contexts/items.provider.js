@@ -10,7 +10,7 @@ const ItemsProvider = ({ children, debug }) => {
 
   useEffect(() => {
     if (debug) console.log('%c UPDATED CONTAINER: ', 'background: #222; color: #37ff00', items)
-  }, [items]);
+  }, [items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const addItem = async containerId => {
     try {

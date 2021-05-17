@@ -16,7 +16,7 @@ const Router = () => {
 
   useEffect(() => {
     storeProjectSettings();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (project && project.provider) {

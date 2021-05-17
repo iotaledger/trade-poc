@@ -62,7 +62,6 @@ const DetailsPage = ({ history, match, cookies }) => {
   const { items, storeItems } = useContext(ItemsContext);
   const { project } = useContext(ProjectContext);
 
-
   useEffect(() => {
     const { params: { containerId } } = match;
     if (isEmpty(user)) {
@@ -78,7 +77,7 @@ const DetailsPage = ({ history, match, cookies }) => {
       setStatuses(getUniqueStatuses(item));
     }
     ReactGA.pageview('/details');
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (currentItem) setFetchComplete(true);

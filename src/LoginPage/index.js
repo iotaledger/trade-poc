@@ -30,7 +30,6 @@ const LoginPage = ({ cookies, history }) => {
 
   useEffect(() => {
     const loadSettings = async () => {
-
       await storeProjectSettings();
       ReactGA.pageview('/login');
       storeEventMappings();
@@ -40,8 +39,7 @@ const LoginPage = ({ cookies, history }) => {
       }
     }
     loadSettings();
-  }, [])
-
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loginAs = (event, role) => {
     event.preventDefault();

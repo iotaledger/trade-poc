@@ -109,7 +109,7 @@ const FileUpload = ({ existingDocuments, pathTofile, uploadComplete }) => {
       uploadComplete(metadata);
       setIsUploading(false);
     }
-  }, [metadata]);
+  }, [metadata]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>

@@ -49,12 +49,23 @@ const Location = (props) => {
 
 
   useEffect(() => {
+    const { match: { params: { containerId } } } = props;
+
+    setMapData([]);
+    if (!isEmpty(data)) {
+      setMapData(data.filter(({ position }) => position && !isEmpty(position)));
+    }
+
+    if (!mapData.length) {
+      setMapData(simulatedRoute.map(position => ({ containerId, position })));
+    }
+
     window.addEventListener('resize', _resize);
     _resize();
     return () => {
       window.removeEventListener('resize', _resize);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const propsData = props.data;
@@ -63,7 +74,7 @@ const Location = (props) => {
 
   useEffect(() => {
     data.map(updateLine);
-  }, [data]);
+  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const _resize = () => {
     // Make map fill screen
@@ -114,19 +125,6 @@ const Location = (props) => {
       </Marker>
     )
   };
-
-  useEffect(() => {
-    const { match: { params: { containerId } } } = props;
-
-    setMapData([]);
-    if (!isEmpty(data)) {
-      setMapData(data.filter(({ position }) => position && !isEmpty(position)));
-    }
-
-    if (!mapData.length) {
-      setMapData(simulatedRoute.map(position => ({ containerId, position })));
-    }
-  }, []);
 
   return (
     <MapGL

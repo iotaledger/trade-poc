@@ -9,7 +9,7 @@ const ProjectProvider = ({ children, debug }) => {
 
     useEffect(() => {
         if (debug) console.log('%c UPDATED PROJECT: ', 'background: #222; color: #ff0022', project)
-    }, [project]);
+    }, [project]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const storeProjectSettings = async () => {
         try {

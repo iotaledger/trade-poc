@@ -11,7 +11,7 @@ const UserProvider = ({ children, debug }) => {
 
     useEffect(() => {
         if (debug) console.log('%c UPDATED USER: ', 'background: #222; color: #bada55', user)
-    }, [user]);
+    }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const storeEvents = async role => {
         try {
