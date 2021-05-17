@@ -1,4 +1,4 @@
-import React, { PureComponent, memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import sizeMe from 'react-sizeme';
 import { withCookies } from 'react-cookie';
 import { TabsContainer, Tabs, Tab } from 'react-md';

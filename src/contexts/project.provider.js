@@ -4,11 +4,11 @@ import { getEventMappings, getProjectSettings } from '../utils/firebase';
 
 export const ProjectContext = createContext({});
 
-const ProjectProvider = ({ children }) => {
+const ProjectProvider = ({ children, debug }) => {
     const [project, setProject] = useState({});
 
     useEffect(() => {
-        console.log('%c UPDATED PROJECT: ', 'background: #222; color: #ff0022', project)
+        if (debug) console.log('%c UPDATED PROJECT: ', 'background: #222; color: #ff0022', project)
     }, [project]);
 
     const storeProjectSettings = async () => {

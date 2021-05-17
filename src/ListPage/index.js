@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import ReactGA from 'react-ga';
 import { toast } from 'react-toastify';
 import { Col } from 'reactstrap';
@@ -19,10 +19,11 @@ import { ItemsContext } from '../contexts/items.provider';
 
 const ListPage = ({ history, cookies }) => {
 
-  const [showLoader, setShowLoader] = useState(false);
+  const [showLoader, setShowLoader] = useState(true);
   const { user } = useContext(UserContext);
   const { project } = useContext(ProjectContext);
   const { items, storeItems } = useContext(ItemsContext);
+  const firstRender = useRef(true);
 
   useEffect(() => {
     if (isEmpty(user) || isEmpty(project)) {
@@ -35,6 +36,7 @@ const ListPage = ({ history, cookies }) => {
   }, [user]);
 
   useEffect(() => {
+    if(firstRender.current) return   
     if (!isEmpty(items)) {
       setShowLoader(false);
     }
@@ -42,6 +44,10 @@ const ListPage = ({ history, cookies }) => {
       notifyError(items.error);
     }
   }, [items])
+
+  useEffect(() => {
+    firstRender.current = false;
+  }, [])
 
   const createNewContainer = () => {
     updateStep(cookies, 2);

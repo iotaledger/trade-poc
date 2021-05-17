@@ -21,11 +21,17 @@ WebFontLoader.load({
 ReactGA.initialize('UA-133441365-1'); // (trackingID, { debug: true })
 ReactGA.set({ anonymizeIp: true });
 
+let debug = false;
+
+if (process.env.NODE_ENV === 'development') {
+  debug = true
+}
+
 const renderApp = () => (
-  <UserProvider>
-    <ProjectProvider>
-      <ItemsProvider>
-        <ItemProvider>
+  <UserProvider debug={debug}>
+    <ProjectProvider debug={debug}>
+      <ItemsProvider debug={debug}>
+        <ItemProvider debug={debug}>
           <Router />
         </ItemProvider>
       </ItemsProvider>

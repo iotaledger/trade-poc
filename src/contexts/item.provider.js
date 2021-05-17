@@ -3,11 +3,11 @@ import { createContext, useState, useEffect } from 'react';
 
 export const ItemContext = createContext({});
 
-const ItemProvider = ({ children }) => {
+const ItemProvider = ({ children , debug}) => {
     const [item, setItem] = useState([]);
 
     useEffect(() => {
-        console.log('%c UPDATED EVENTS: ', 'background: #222; color: #f200ff', item)
+        if (debug) console.log('%c UPDATED EVENTS: ', 'background: #222; color: #f200ff', item)
     }, [item]);
 
     const storeItem = data => {

@@ -16,10 +16,6 @@ const FileUpload = ({ existingDocuments, pathTofile, uploadComplete }) => {
   const [isUploading, setIsUploading] = useState(false);
   const pond = useRef();
 
-  //debug
-  useEffect(() => {
-    // console.log("Is Uploading:", isUploading)
-  }, [isUploading]);
 
   const notifyWarning = message => toast.warn(message);
 
@@ -110,7 +106,6 @@ const FileUpload = ({ existingDocuments, pathTofile, uploadComplete }) => {
     if(!isUploading) return;
     const totalFiles = pond.current.getFiles().length;
     if (metadata.length === totalFiles) {
-      // console.log("Upload complete metadata", metadata);
       uploadComplete(metadata);
       setIsUploading(false);
     }

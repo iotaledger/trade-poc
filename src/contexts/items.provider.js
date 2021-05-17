@@ -5,11 +5,11 @@ import { getItem, getItems } from '../utils/firebase';
 
 export const ItemsContext = createContext({});
 
-const ItemsProvider = ({ children }) => {
+const ItemsProvider = ({ children, debug }) => {
   const [items, setItems] = useState({});
 
   useEffect(() => {
-    console.log('%c UPDATED CONTAINER: ', 'background: #222; color: #37ff00', items)
+    if (debug) console.log('%c UPDATED CONTAINER: ', 'background: #222; color: #37ff00', items)
   }, [items]);
 
   const addItem = async containerId => {

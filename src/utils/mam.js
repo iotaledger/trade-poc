@@ -29,7 +29,6 @@ const createNewChannel = async (payload) => {
 const appendToChannel = async (payload, savedChannelState) => {
   try {
     let channelState = savedChannelState;
-    // console.log("Payload:", payload)
     const mamMessage = createMessage(channelState, TrytesHelper.fromAscii(JSON.stringify(payload)));
     await mamAttach(node, mamMessage, "TRACKANDTRACE");
     return channelState;
@@ -44,7 +43,6 @@ export const fetchItem = async (root, secretKey, storeItemCallback, setStateCalb
     const itemEvents = [];
     const convertData = data => {
       const itemEvent = JSON.parse(TrytesHelper.toAscii(data));
-      // console.log("Fetched event: ", itemEvent)
       storeItemCallback(itemEvent);
       itemEvents.push(itemEvent);
       setStateCalback(itemEvent, getUniqueStatuses(itemEvents));

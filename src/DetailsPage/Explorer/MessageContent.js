@@ -7,14 +7,15 @@ const MessageContent = ({ message }) => {
   const [code, setCode] = useState(null);
 
   useEffect(() => {
-    highlight();
-  });
+    if (code) highlight();
+  }, [message]);
 
   const highlight = () => {
+    
     try {
       hljs.highlightBlock(code);
     } catch (e) {
-      console.log(hljs, window.hljs);
+      console.error("Highlight error", hljs, e);
     }
   };
 

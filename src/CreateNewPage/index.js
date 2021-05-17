@@ -60,7 +60,6 @@ const CreateItemPage = ({ history, cookies }) => {
     updateStep(cookies, 3);
   }
 
-  const notifySuccess = message => toast.success(message);
   const notifyError = message => toast.error(message);
 
   const validate = () => {

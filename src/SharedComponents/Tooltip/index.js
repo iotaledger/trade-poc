@@ -20,11 +20,8 @@ const Tooltip = ({ cookies, customTooltip, fetchComplete, activeTabIndex }) => {
   const [showMobileTooltip, setShowMobileTooltip] = useState(false);
   const [closeFn, setCloseFn] = useState(null);
   const [tooltips, setToolTips] = useState(tooltips_data.map(tooltip => ({ ...tooltip, disableBeacon: true })));
-  // state = {
-  //   showMobileTooltip: false,
-  //   closeFn: null,
-  //   tooltips: tooltips.map(tooltip => ({ ...tooltip, disableBeacon: true }))
-  // };
+
+  const stepIndex = Number(cookies.get('tourStep') || 0);
 
   const callback = ({ action, index }) => {
     if (action === 'skip') {
@@ -53,7 +50,7 @@ const Tooltip = ({ cookies, customTooltip, fetchComplete, activeTabIndex }) => {
     setShowMobileTooltip(false);
   }
 
-  const stepIndex = Number(cookies.get('tourStep') || 0);
+
 
   if (fetchComplete === false) {
     return null;

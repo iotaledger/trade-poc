@@ -52,7 +52,7 @@ const DetailsPage = ({ history, match, cookies }) => {
   const [fetchComplete, setFetchComplete] = useState(false);
   const [metadata, setMetadata] = useState([]);
   const [fileUploadEnabled, setFileUploadEnabled] = useState(true);
-  const [statusUpdated, setStatusUpdated] = useState(false);
+  const [statusUpdated] = useState(false);
   const [statuses, setStatuses] = useState([]);
   const [currentItem, setCurrentItem] = useState(null);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -74,17 +74,15 @@ const DetailsPage = ({ history, match, cookies }) => {
       retrieveItem(containerId);
     } else {
       setShowLoader(false);
-      setFetchComplete(true);
       setCurrentItem(last(item));
       setStatuses(getUniqueStatuses(item));
     }
     ReactGA.pageview('/details');
   }, []);
 
-  //debug
   useEffect(() => {
-    // console.log("Current status", statuses)
-  }, [statuses]);
+    if (currentItem) setFetchComplete(true);
+  }, [currentItem])
 
   const notifySuccess = message => toast.success(message);
   const notifyError = message => toast.error(message);
@@ -98,11 +96,8 @@ const DetailsPage = ({ history, match, cookies }) => {
   };
 
   const appendToItem = async (statusToAppend, metadataToAppend) => {
-    // console.log("Append to item: ", statusToAppend)
-    // console.log("Meta data", metadataToAppend)
     const { params: { containerId } } = match;
     const meta = metadataToAppend.length;
-    // console.log("Status", status)
     if (statusToAppend) {
       ReactGA.event({
         category: 'Status update',
@@ -121,7 +116,7 @@ const DetailsPage = ({ history, match, cookies }) => {
     } catch (e) {
       console.error("Could not apppend item to channel:", e)
     }
-    // console.log("Response append to item: ", response)
+
     if (response) {
       updateStep(cookies, 9);
       statusToAppend === 'Gate-in' && updateStep(cookies, 14);
@@ -143,13 +138,10 @@ const DetailsPage = ({ history, match, cookies }) => {
   };
 
   const storeItemCallback = itemToStore => {
-    // console.log("Store Item:", itemToStore)
     storeItem(itemToStore);
   };
 
   const setStateCalback = (itemForCallback, statusForCallback) => {
-    // console.log("setStateCallback item", itemForCallback)
-    // console.log("setStateCallback statuses", statusForCallback)
     setCurrentItem(itemForCallback);
     setStatuses(statusForCallback);
   };
@@ -157,7 +149,6 @@ const DetailsPage = ({ history, match, cookies }) => {
   const retrieveItem = async containerId => {
     const { trackingUnit } = project;
     const itemToRetrieve = items[containerId];
-    // console.log("Retrieve Item: ", itemToRetrieve)
     setShowLoader(true);
     setLoaderHint('Fetching data');
     resetStoredItem();
@@ -195,7 +186,6 @@ const DetailsPage = ({ history, match, cookies }) => {
 
   const onUploadComplete = uploadedMetadata => {
     const { params: { containerId } } = match;
-    // console.log("Upload complete metatdata:", uploadedMetadata)
     setMetadata(uploadedMetadata);
     setFileUploadEnabled(false);
     setActiveTabIndex(2);
