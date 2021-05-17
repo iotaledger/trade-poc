@@ -58,7 +58,7 @@ const Footer = ({ anchors }) => {
           <Col className="footer-text-info">
             &copy; 2018 IOTA Foundation - Privacy Policy<br />
             Email: contact@iota.org<br />
-            Board of Directors: Dominik Schiener, David Sønstebø, Serguei Popov &amp; Navin Ramachandran<br />
+            Board of Directors: Dominik Schiener, Serguei Popov &amp; Navin Ramachandran<br />
             ID/Company No.: 3416/1234/2<br />
             EU public ID number in the EU Transparency Register:
             500027331119-04
