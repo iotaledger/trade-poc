@@ -18,7 +18,7 @@
     "lodash": "^4.17.21",
     "mapbox-gl": "^1.10.2",
     "moment": "^2.29.1",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "react": "^17.0.2",
     "react-app-polyfill": "^1.0.6",
     "react-autosuggest": "^10.1.0",
